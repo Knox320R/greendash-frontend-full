@@ -116,4 +116,4 @@ export interface RegistrationVerification {
     profile_image?: string;
     wallet_address?: string;
     referral_code?: string;
-} 
+}

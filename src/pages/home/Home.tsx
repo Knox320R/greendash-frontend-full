@@ -9,12 +9,10 @@ import RoadmapSection from './sections/RoadmapSection';
 import TestimonialsSection from './sections/TestimonialsSection';
 import ContactSection from './sections/ContactSection';
 import ConclusionSection from './sections/ConclusionSection';
-import { useStaking } from '@/hooks/useStaking';
 import { useDispatch, useSelector } from 'react-redux';
 import { getLandingData } from '@/store/admin';
 import type { RootState } from '@/store';
 import type { AppDispatch } from '@/store';
-import { authApi } from '@/store/auth';
 
 // TODO: Import and wire up Redux, hooks, and props as needed for each section
 
@@ -23,8 +21,6 @@ const Home: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const benefitsEmblaRef = useRef<HTMLDivElement>(null);
-  const [benefitsSlide, setBenefitsSlide] = useState(0);
   const [openTokenDialog, setOpenTokenDialog] = useState(false);
 
   // Testimonials carousel state
@@ -33,31 +29,6 @@ const Home: React.FC = () => {
   const slidesPerView = 3;
 
   const adminData = useSelector((state: RootState) => state.adminData);
-
-  // Example data (replace with real data/props as you extract more sections)
-  const benefits = [
-    {
-      id: 1,
-      title: 'Sustainable Mobility',
-      description: 'Revolutionizing urban transportation with electric vehicles and eco-friendly practices.',
-      icon: () => <div className="w-12 h-12 bg-green-500 rounded-md flex items-center justify-center text-white">🚗</div>,
-      image: '/6.png'
-    },
-    {
-      id: 2,
-      title: 'Profit Sharing',
-      description: 'Everyone can become a stakeholder and profit from the platform\'s growth.',
-      icon: () => <div className="w-12 h-12 bg-blue-500 rounded-md flex items-center justify-center text-white">��</div>,
-      image: '/7.png'
-    },
-    {
-      id: 3,
-      title: 'Decentralized Governance',
-      description: 'Community-driven decisions and transparent operations.',
-      icon: () => <div className="w-12 h-12 bg-purple-500 rounded-md flex items-center justify-center text-white">🏛️</div>,
-      image: '/8.png'
-    }
-  ];
 
   // Mock testimonials data
   const testimonials = [
@@ -103,11 +74,6 @@ const Home: React.FC = () => {
     }
   ];
 
-  const benefitsEmblaApi = null;
-  const scrollPrevBenefit = () => { };
-  const scrollNextBenefit = () => { };
-  const { getStakingPackages } = useStaking()
-
   // Testimonials carousel functions
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % (testimonials.length - slidesPerView + 1));
@@ -144,11 +110,6 @@ const Home: React.FC = () => {
   const handleBuyToken = (tokenType: string) => {
     console.log(`Buying ${tokenType} token`);
     setOpenTokenDialog(false);
-  };
-
-  // Handler for staking section
-  const handleStartStaking = (pkg: any) => {
-    console.log('Starting staking with package:', pkg);
   };
 
   return (

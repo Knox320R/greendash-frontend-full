@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,27 +13,84 @@ import {
   FaArrowDown,
   FaClock,
   FaCheckCircle,
-  FaExclamationTriangle
+  FaExclamationTriangle,
+  FaUserShield,
+  FaSitemap,
+  FaUserFriends
 } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
-import { useStaking } from '@/hooks/useStaking';
 import { formatCurrency, formatNumber, formatDate } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { setLoading } from '@/store/auth';
 import { useDispatch } from 'react-redux';
+import { addDays, format as formatDateFns, differenceInDays, parseISO } from 'date-fns';
+
+const packageColorMap: Record<string, string> = {
+  'Daily Ride': '#22c55e', // green
+  'Weekly Pass': '#3b82f6', // blue
+  'Economy Car': '#a78bfa', // purple
+  'Business Fleet': '#f59e42', // orange
+  'Personal EV': '#eab308', // yellow
+  'Luxury Fleet': '#f43f5e', // red
+  'Corporate Mobility Hub': '#06b6d4', // cyan
+};
+
+const ReferralTree = ({ nodes, level = 0 }) => (
+  <ul className={`pl-${level * 4} border-l-2 border-gray-300 ml-2`}>
+    {nodes.map(node => (
+      <li key={node.id} className="relative mb-4">
+        <div className={`flex items-center gap-2 py-1 px-2 rounded ${level === 0 ? 'bg-blue-50' : 'bg-green-50'}`}>
+          <FaUserFriends className="text-blue-500" />
+          <span className="font-semibold">{node.referred_user.name}</span>
+          <span className="text-xs text-gray-500">(Level {node.level})</span>
+          <span className="ml-2 text-green-600">{node.commission_income} EGD</span>
+        </div>
+        {node.sub_referrals && node.sub_referrals.length > 0 && (
+          <ReferralTree nodes={node.sub_referrals} level={level + 1} />
+        )}
+      </li>
+    ))}
+  </ul>
+);
 
 const Dashboard = () => {
   const { user, user_base_data, isLoading } = useAuth();
-  const { userStakings, isLoading: stakingLoading } = useStaking();
-
-  const nav = useNavigate()
-  const dispatch = useDispatch()
+  const nav = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setLoading(!user_base_data))
+    dispatch(setLoading(!user_base_data));
   }, [user_base_data]);
 
+  // Compute stats from user_base_data
+  const egdBalance = user?.egd_balance || 0;
+  const withdrawals = user?.withdrawals || 0;
+  const referralCode = user?.referral_code || '';
+  const walletAddress = user?.wallet_address || '';
+  const isAdmin = user?.is_admin;
+  const name = user?.name || '';
+
+  // Staking summary
+  const stakingSummary = user_base_data?.staking;
+  const totalStakingCount = stakingSummary?.entire_stakings || 0;
+  const totalStaked = stakingSummary?.total_staked || 0;
+  const totalRewardsEarned = stakingSummary?.total_rewards_earned || 0;
+  const totalRewardsClaimed = stakingSummary?.total_rewards_claimed || 0;
+  const entireStakings = stakingSummary?.entire_stakings || 0;
+  const stakings = stakingSummary?.stakings || [];
+
+  // Referral summary
+  const referralSummary = user_base_data?.referrals;
+  const totalEarnFromAffiliation = referralSummary?.total_earn_from_affiliation || 0;
+  const eachLevelIncome = referralSummary?.each_level_income || [];
+  const eachLevelAffiliaterNumber = referralSummary?.each_level_affiliater_number || [];
+  const referralNetwork = referralSummary?.network || [];
+
+  // Transactions
+  const recentTransactions = user_base_data?.recent_transactions || [];
+
+  // Helper for transaction status
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
@@ -47,7 +103,6 @@ const Dashboard = () => {
         return <FaClock className="text-gray-500" />;
     }
   };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
@@ -82,7 +137,7 @@ const Dashboard = () => {
           className="mb-8"
         >
           <h1 className="text-3xl font-bold text-gray-900">
-            Welcome back, {user?.first_name}!
+            Welcome back, {name}!
           </h1>
           <p className="text-gray-600 mt-2">
             Here's your GreenDash overview
@@ -102,107 +157,52 @@ const Dashboard = () => {
               <FaCoins className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{(user?.egd_balance || 0)} EGD</div>
+              <div className="text-2xl font-bold">{egdBalance} EGD</div>
               <p className="text-xs text-muted-foreground">
-                ≈ {(Number(user?.egd_balance || 0) * 0.01)} USD
+                ≈ {(Number(egdBalance) * 0.01).toLocaleString(undefined, { style: 'currency', currency: 'USD' })}
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">USDT Balance</CardTitle>
-              <FaWallet className="h-4 w-4 text-blue-600" />
+              <CardTitle className="text-sm font-medium">Withdrawals</CardTitle>
+              <FaArrowDown className="h-4 w-4 text-blue-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{Number(user?.usdt_balance || 0)}</div>
+              <div className="text-2xl font-bold">{withdrawals} USDT</div>
               <p className="text-xs text-muted-foreground">
-                Available for staking
+                Total withdrawn
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Invested</CardTitle>
-              <FaChartLine className="h-4 w-4 text-purple-600" />
+              <CardTitle className="text-sm font-medium">Total Staked</CardTitle>
+              <FaLock className="h-4 w-4 text-purple-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{Number(user?.total_invested || 0)}</div>
+              <div className="text-2xl font-bold">{totalStaked} EGD</div>
               <p className="text-xs text-muted-foreground">
-                Lifetime investment
+                Across {entireStakings} stakings
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Earned</CardTitle>
-              <FaArrowUp className="h-4 w-4 text-green-600" />
+              <CardTitle className="text-sm font-medium">Referral Earnings</CardTitle>
+              <FaUsers className="h-4 w-4 text-orange-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{Number(user?.total_earned || 0)}</div>
+              <div className="text-2xl font-bold">{totalEarnFromAffiliation} USDT</div>
               <p className="text-xs text-muted-foreground">
-                Lifetime earnings
+                From your network
               </p>
             </CardContent>
           </Card>
         </motion.div>
-
-        {/* Stats Overview */}
-        {stats && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FaLock className="h-5 w-5 text-green-600" />
-                  Active Stakings
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">{stats.active_stakings}</div>
-                <p className="text-sm text-muted-foreground">
-                  Total staked: {formatCurrency(stats.total_staked)}
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FaUsers className="h-5 w-5 text-blue-600" />
-                  Referral Network
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">{stats.total_referrals}</div>
-                <p className="text-sm text-muted-foreground">
-                  Earnings: {formatCurrency(stats.referral_earnings)}
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FaArrowDown className="h-5 w-5 text-orange-600" />
-                  Pending Withdrawals
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">{stats.pending_withdrawals}</div>
-                <p className="text-sm text-muted-foreground">
-                  Awaiting approval
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
 
         {/* Main Content Tabs */}
         <motion.div
@@ -211,36 +211,16 @@ const Dashboard = () => {
           transition={{ delay: 0.3 }}
         >
           <Tabs defaultValue="overview" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="staking">Staking</TabsTrigger>
+              <TabsTrigger value="referrals">Referrals</TabsTrigger>
               <TabsTrigger value="activity">Recent Activity</TabsTrigger>
             </TabsList>
 
+            {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Quick Actions */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Quick Actions</CardTitle>
-                    <CardDescription>Manage your GreenDash account</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <Button className="w-full" onClick={() => nav('/staking')}>
-                      <FaChartLine className="mr-2 h-4 w-4" />
-                      Start Staking
-                    </Button>
-                    <Button variant="outline" className="w-full" onClick={() => nav('/affiliates')}>
-                      <FaUsers className="mr-2 h-4 w-4" />
-                      View Referrals
-                    </Button>
-                    <Button variant="outline" className="w-full" onClick={() => nav('/profile')}>
-                      <FaWallet className="mr-2 h-4 w-4" />
-                      Update Profile
-                    </Button>
-                  </CardContent>
-                </Card>
-
                 {/* Account Status */}
                 <Card>
                   <CardHeader>
@@ -249,121 +229,191 @@ const Dashboard = () => {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Email Verification</span>
-                      <Badge variant={user?.is_email_verified ? "default" : "destructive"}>
-                        {user?.is_email_verified ? "Verified" : "Pending"}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">Wallet Connected</span>
-                      <Badge variant={user?.wallet_address ? "default" : "secondary"}>
-                        {user?.wallet_address ? "Connected" : "Not Connected"}
+                      <Badge variant={walletAddress ? "default" : "secondary"}>
+                        {walletAddress ? "Connected" : "Not Connected"}
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">Referral Code</span>
                       <code className="text-sm bg-gray-100 px-2 py-1 rounded">
-                        {user?.referral_code}
+                        {referralCode}
                       </code>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Member Since</span>
-                      <span className="text-sm text-muted-foreground">
-                        {(user?.createdAt || '')}
-                      </span>
+                      <span className="text-sm font-medium">Admin</span>
+                      <Badge variant={isAdmin ? "default" : "secondary"}>
+                        {isAdmin ? "Yes" : "No"}
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+                {/* Staking and Rewards Summary */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Staking & Rewards</CardTitle>
+                    <CardDescription>Your staking performance</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Total Count of Staking</span>
+                      <span className="font-semibold">{totalStakingCount} times</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Total Staked</span>
+                      <span className="font-semibold">{totalStaked} EGD</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Total Rewards Earned</span>
+                      <span className="font-semibold">{totalRewardsEarned} EGD</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Total Rewards Claimed</span>
+                      <span className="font-semibold">{totalRewardsClaimed} EGD</span>
                     </div>
                   </CardContent>
                 </Card>
               </div>
             </TabsContent>
 
+            {/* Staking Tab */}
             <TabsContent value="staking" className="space-y-6">
-              {stakingLoading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-                  <p className="mt-2 text-gray-600">Loading staking data...</p>
-                </div>
-              ) : userStakings.length > 0 ? (
+              {stakings.length > 0 ? (
                 <div className="space-y-4">
-                  {userStakings.slice(0, 5).map((staking) => (
-                    <Card key={staking.id}>
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <div>
-                            <h3 className="font-semibold">{staking.package?.name || 'Staking Package'}</h3>
-                            <p className="text-sm text-muted-foreground">
-                              Started {formatDate(staking.start_date)}
-                            </p>
+                  {stakings.map((staking) => {
+                    const startDate = parseISO(staking.start_date);
+                    const nowDate = parseISO(staking.now);
+                    const lockDays = staking.package?.lock_period_days || 0;
+                    const endDate = addDays(startDate, lockDays);
+                    const totalPeriod = differenceInDays(endDate, startDate);
+                    const elapsed = Math.min(differenceInDays(nowDate, startDate), totalPeriod);
+                    const percent = totalPeriod > 0 ? (elapsed / totalPeriod) * 100 : 0;
+                    const barColor = packageColorMap[staking.package?.name || ''] || '#22c55e';
+                    return (
+                      <Card key={staking.id}>
+                        <CardContent className="p-6">
+                          <div className="flex items-center justify-between mb-4">
+                            <div>
+                              <h3 className="font-semibold">{staking.package?.name || 'Staking Package'}</h3>
+                              <p className="text-sm text-muted-foreground">
+                                Started {formatDate(staking.start_date)}
+                              </p>
+                            </div>
+                            <Badge variant={staking.status === 'active' ? 'default' : 'secondary'}>
+                              {staking.status}
+                            </Badge>
                           </div>
-                          <Badge variant={staking.status === 'active' ? 'default' : 'secondary'}>
-                            {staking.status}
-                          </Badge>
-                        </div>
-
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                          <div>
-                            <p className="text-sm text-muted-foreground">Staked Amount</p>
-                            <p className="font-semibold">{parseFloat(staking.stake_amount)} EGD</p>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                            <div>
+                              <p className="text-sm text-muted-foreground">Staked Amount</p>
+                              <p className="font-semibold">{parseFloat(staking.stake_amount)} EGD</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-muted-foreground">Daily Yield</p>
+                              <p className="font-semibold">{staking.package?.daily_yield_percentage}%</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-muted-foreground">Lock Period</p>
+                              <p className="font-semibold">{staking.package?.lock_period_days} days</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-muted-foreground">Status</p>
+                              <p className="font-semibold">{staking.status}</p>
+                            </div>
                           </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">Daily Reward</p>
-                            <p className="font-semibold">{parseFloat(staking.daily_reward_amount)} EGD</p>
+                          {/* Progress Bar with Dates */}
+                          <div className="mb-2 flex items-center justify-between text-xs font-medium text-gray-500">
+                            <span>{formatDateFns(startDate, 'yyyy-MM-dd')}</span>
+                            <span>{formatDateFns(endDate, 'yyyy-MM-dd')}</span>
                           </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">Total Earned</p>
-                            <p className="font-semibold">{parseFloat(staking.total_rewards_earned)} EGD</p>
+                          <div className="relative h-4 rounded-full bg-gray-200 overflow-hidden mb-2">
+                            <div
+                              className="absolute top-0 left-0 h-4 rounded-full"
+                              style={{ width: `${percent}%`, background: barColor, transition: 'width 0.5s' }}
+                            ></div>
+                            {/* Marker for today */}
+                            <div
+                              className="absolute top-0 h-4 w-1 bg-blue-600"
+                              style={{ left: `${percent}%`, transition: 'left 0.5s' }}
+                            ></div>
                           </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">Progress</p>
-                            <p className="font-semibold">{parseFloat(staking.completion_percentage).toFixed(1)}%</p>
+                          <div className="flex justify-between text-xs text-gray-400">
+                            <span>Start</span>
+                            <span>End</span>
                           </div>
-                        </div>
-
-                        <Progress value={parseFloat(staking.completion_percentage)} className="mb-4" />
-
-                        <div className="flex items-center justify-between text-sm text-muted-foreground">
-                          <span>Unlock Date: {formatDate(staking.unlock_date)}</span>
-                          <span>{staking.days_remaining} days remaining</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-
-                  {userStakings.length > 5 && (
-                    <div className="text-center">
-                      <Button variant="outline" onClick={() => nav('/staking')}>
-                        View All Stakings
-                      </Button>
-                    </div>
-                  )}
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
                 </div>
               ) : (
                 <Card>
                   <CardContent className="p-8 text-center">
                     <FaChartLine className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No Active Stakings</h3>
+                    <h3 className="text-lg font-semibold mb-2">No Stakings</h3>
                     <p className="text-muted-foreground mb-4">
                       Start your first staking to earn daily rewards
                     </p>
-                    <Button onClick={() => nav('/staking')}>
-                      Start Staking
-                    </Button>
                   </CardContent>
                 </Card>
               )}
             </TabsContent>
 
+            {/* Referrals Tab */}
+            <TabsContent value="referrals" className="space-y-12 w-full">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Referral Network</CardTitle>
+                  <CardDescription>Your direct and indirect referrals</CardDescription>
+                </CardHeader>
+                <CardContent className='w-full'>
+                  <div className="mb-4">
+                    <span className="font-semibold">Total Referral Earnings: </span>
+                    <span className='text-[30px] m-3 text-green-600 font-bold'> {totalEarnFromAffiliation} </span>
+                    EGD
+                  </div>
+                  <div className="mb-4 w-full">
+                    <span className="font-semibold">Each Level Income: </span>
+                    <div className="flex flex-wrap gap-3 mt-2 w-full justify-between">
+                      {eachLevelIncome.map((income, idx) => (
+                        <div key={idx} className="bg-white shadow rounded-lg px-4 py-2 flex-1 flex flex-col items-center min-w-[120px] border border-gray-200">
+                          <span className="text-xs font-bold text-gray-500 mb-1">Level {idx + 1}</span>
+                          <span className="text-lg font-bold text-green-600">{income} EGD</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <span className="font-semibold">Each Level Affiliater Number: </span>
+                    <div className="flex flex-wrap gap-3 mt-2 mt-2 w-full justify-between">
+                      {eachLevelAffiliaterNumber.map((num, idx) => (
+                        <div key={idx} className="bg-white shadow rounded-lg px-4 py-2 flex-1 flex flex-col items-center min-w-[120px] border border-gray-200">
+                          <span className="text-xs font-bold text-gray-500 mb-1">Level {idx + 1}</span>
+                          <span className="text-lg font-bold text-blue-600">{num}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <span className="font-semibold">Network:</span>
+                    <ReferralTree nodes={referralNetwork} />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Recent Activity Tab */}
             <TabsContent value="activity" className="space-y-6">
-              {recentActivity.length > 0 ? (
+              {recentTransactions.length > 0 ? (
                 <div className="space-y-4">
-                  {recentActivity.map((activity) => (
+                  {recentTransactions.map((activity) => (
                     <Card key={activity.id}>
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             {getStatusIcon(activity.status)}
                             <div>
-                              <p className="font-medium">{activity.description}</p>
+                              <p className="font-medium">{activity.type.charAt(0).toUpperCase() + activity.type.slice(1)} - {activity.notes}</p>
                               <p className="text-sm text-muted-foreground">
                                 {formatDate(activity.created_at)}
                               </p>
@@ -371,7 +421,7 @@ const Dashboard = () => {
                           </div>
                           <div className="text-right">
                             <p className="font-semibold">
-                              {activity.amount > 0 ? '+' : ''}{formatNumber(activity.amount)} {activity.currency}
+                              {activity.direction === 'in' ? '-' : '+'}{formatNumber(activity.amount)} {activity.currency}
                             </p>
                             <Badge className={getStatusColor(activity.status)}>
                               {activity.status}

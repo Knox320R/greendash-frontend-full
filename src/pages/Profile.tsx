@@ -30,37 +30,22 @@ import { api } from '@/lib/api';
 import { formatCurrency, formatDate, truncateAddress } from '@/lib/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { UserProfile } from '@/types/user';
+import { UserBaseData, UserData } from '@/types/landing';
 import { setUser, updateUser } from '@/store/auth';
 import { toast } from 'react-toastify';
 
-interface ProfileForm {
-  first_name: string;
-  last_name: string;
-  phone: string;
-  wallet_address: string;
-  country: string;
-  city: string;
-  timezone: string;
-  language: string;
-}
-
 const Profile = () => {
 
-  const user = useSelector((store: RootState) => store.auth.user) as UserProfile | null;
+  const user = useSelector((store: RootState) => store.auth.user) as UserData | null;
+  const user_base_data = useSelector((store: RootState) => store.auth.user_base_data) as UserBaseData | null;
 
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [formData, setFormData] = useState<ProfileForm>({
-    first_name: '',
-    last_name: '',
-    phone: '',
+  const [formData, setFormData] = useState<Partial<UserData>>({
+    name: '',
+    email: '',
     wallet_address: '',
-    country: "",
-    city: '',
-    timezone: '',
-    language: ''
   });
   const dispatch = useDispatch()
   const [showChangePassword, setShowChangePassword] = useState(false);
@@ -74,19 +59,14 @@ const Profile = () => {
   useEffect(() => {
     if (user) {
       setFormData({
-        first_name: user.first_name || '',
-        last_name: user.last_name || '',
-        phone: user.phone || '',
+        name: user.name || '',
+        email: user.email || '',
         wallet_address: user.wallet_address || '',
-        country: user.country || "",
-        city: user.city || '',
-        timezone: user.timezone || '',
-        language: user.language || ''
       });
     }
   }, [user]);
 
-  const handleInputChange = (field: keyof ProfileForm, value: string) => {
+  const handleInputChange = (field: keyof UserData, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -97,9 +77,7 @@ const Profile = () => {
   const handleSave = async () => {
     try {
       setIsLoading(true);
-
-      const response = await api.put<{ success: boolean; data: { user: UserProfile } }>('/users/profile', formData);
-
+      const response = await api.put<{ success: boolean; data: { user: UserData } }>('/users/profile', formData);
       if (response.success) {
         dispatch(setUser(response.data.user)); // Refresh user data
         setIsEditing(false);
@@ -116,14 +94,9 @@ const Profile = () => {
   const handleCancel = () => {
     if (user) {
       setFormData({
-        first_name: user.first_name || '',
-        last_name: user.last_name || '',
-        phone: user.phone || '',
+        name: user.name || '',
+        email: user.email || '',
         wallet_address: user.wallet_address || '',
-        country: user.country || "",
-        city: user.city || '',
-        timezone: user.timezone || '',
-        language: user.language || ''
       });
     }
     setIsEditing(false);
@@ -270,64 +243,30 @@ const Profile = () => {
                     <CardContent className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="first_name">First Name</Label>
+                          <Label htmlFor="name">Name</Label>
                           <Input
-                            id="first_name"
-                            value={formData.first_name}
-                            onChange={(e) => handleInputChange('first_name', e.target.value)}
+                            id="name"
+                            value={formData.name}
+                            onChange={(e) => handleInputChange('name', e.target.value)}
                             disabled={!isEditing}
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="last_name">Last Name</Label>
+                          <Label htmlFor="email">Email Address</Label>
                           <Input
-                            id="last_name"
-                            value={formData.last_name}
-                            onChange={(e) => handleInputChange('last_name', e.target.value)}
-                            disabled={!isEditing}
+                            id="email"
+                            type="email"
+                            value={formData.email}
+                            disabled
                           />
                         </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email Address</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          value={user.email}
-                          disabled
-                        />
-                        <div className="flex items-center gap-2 mt-1">
-                          {user.is_email_verified ? (
-                            <>
-                              <FaCheckCircle className="h-4 w-4 text-green-500" />
-                              <span className="text-sm text-green-600">Email verified</span>
-                            </>
-                          ) : (
-                            <>
-                              <FaExclamationTriangle className="h-4 w-4 text-yellow-500" />
-                              <span className="text-sm text-yellow-600">Email not verified</span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="phone">Phone Number</Label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={(e) => handleInputChange('phone', e.target.value)}
-                          disabled={!isEditing}
-                        />
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="wallet_address">Wallet Address (BEP-20)</Label>
                         <Input
                           id="wallet_address"
-                          value={formData.wallet_address}
+                          value={formData.wallet_address || ''}
                           onChange={(e) => handleInputChange('wallet_address', e.target.value)}
                           disabled={!isEditing}
                           placeholder="0x..."
@@ -337,46 +276,6 @@ const Profile = () => {
                             {truncateAddress(formData.wallet_address)}
                           </p>
                         )}
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="country">Country</Label>
-                          <Input
-                            id="country"
-                            value={formData.country || ''}
-                            onChange={(e) => handleInputChange('country', e.target.value)}
-                            disabled={!isEditing}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="city">City</Label>
-                          <Input
-                            id="city"
-                            value={formData.city || ''}
-                            onChange={(e) => handleInputChange('city', e.target.value)}
-                            disabled={!isEditing}
-                          />
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="timezone">Timezone</Label>
-                          <Input
-                            id="timezone"
-                            value={formData.timezone || ''}
-                            onChange={(e) => handleInputChange('timezone', e.target.value)}
-                            disabled={!isEditing}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="language">Language</Label>
-                          <Input
-                            id="language"
-                            value={formData.language || ''}
-                            onChange={(e) => handleInputChange('language', e.target.value)}
-                            disabled={!isEditing}
-                          />
-                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -394,47 +293,23 @@ const Profile = () => {
                     <CardContent className="space-y-4">
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">Member Since</span>
-                        <span className="text-sm font-medium">{formatDate(user.createdAt)}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Account Status</span>
-                        <Badge variant={user.is_email_verified ? "default" : "secondary"}>
-                          {user.is_email_verified ? "Verified" : "Pending"}
-                        </Badge>
+                        <span className="text-sm font-medium">{formatDate(user.created_at)}</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">Total Invested</span>
-                        <span className="text-sm font-medium">{parseFloat(user.total_invested)}</span>
+                        <span className="text-sm font-medium text-pink-600">{user_base_data.staking.total_staked} EGD</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">Total Earned</span>
-                        <span className="text-sm font-medium text-green-600">{parseFloat(user.total_earned)}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Total Withdrawn</span>
-                        <span className="text-sm font-medium text-red-600">{parseFloat(user.total_withdrawn)}</span>
+                        <span className="text-sm font-medium text-blue-600">{user_base_data.staking.total_rewards_earned}<span className='ml-1 text-[#888] text-[12px]'>EGD</span></span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">EGD Balance</span>
-                        <span className="text-sm font-medium">{parseFloat(user.egd_balance)}</span>
+                        <span className="text-sm font-medium text-green-600">{user.egd_balance}<span className='ml-1 text-[#888] text-[12px]'>EGD</span></span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">USDT Balance</span>
-                        <span className="text-sm font-medium">{parseFloat(user.usdt_balance)}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Referral Level</span>
-                        <span className="text-sm font-medium">{user.referral_level}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Referred By</span>
-                        <span className="text-sm font-medium">{user.referred_by || '-'}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Two-Factor Enabled</span>
-                        <Badge variant={user.two_factor_enabled ? "default" : "secondary"}>
-                          {user.two_factor_enabled ? "Enabled" : "Disabled"}
-                        </Badge>
+                        <span className="text-sm text-muted-foreground">Available withdrawals</span>
+                        <span className="text-sm font-medium text-yellow-600">{user.withdrawals}<span className='ml-1 text-[#888] text-[12px]'>USDT</span></span>
                       </div>
                     </CardContent>
                   </Card>
@@ -593,7 +468,7 @@ const Profile = () => {
                         <p className="text-sm text-muted-foreground">No wallet connected</p>
                         <Button variant="outline" className="mt-2">
                           Connect Wallet
-                        </Button> 
+                        </Button>
                       </div>
                     )}
                   </CardContent>

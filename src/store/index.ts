@@ -3,12 +3,10 @@ import { combineReducers } from '@reduxjs/toolkit';
 
 // Import slices
 import auth from './auth';
-import staking from './staking';
 import adminData from "./admin";
 
 const rootReducer = combineReducers({
   auth,
-  staking,
   adminData
   // Add other reducers here as needed
 });
@@ -16,7 +14,6 @@ const rootReducer = combineReducers({
 export const store = configureStore({
   reducer: {
     auth,
-    staking,
     adminData
   }
 });

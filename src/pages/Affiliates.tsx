@@ -1,131 +1,78 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { 
-  FaUsers, 
-  FaShareAlt, 
-  FaCopy, 
-  FaCoins, 
-  FaArrowUp,
-  FaArrowDown,
-  FaLink,
-  FaCheckCircle,
-  FaExclamationTriangle,
-  FaQrcode,
-  FaNetworkWired,
-  FaChartLine,
-  FaUserPlus,
-  FaGift
-} from 'react-icons/fa';
+import { FaUsers, FaUserFriends, FaSitemap, FaArrowUp, FaArrowDown, FaCopy, FaCheckCircle, FaEnvelopeOpenText } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
-import { api } from '@/lib/api';
-import { formatNumber, formatDate } from '@/lib/utils';
-import {
-  ReferralTreeResponse,
-  ReferralEntry,
-  ReferralRewardsResponse,
-  ReferralRewardTransaction,
-} from '@/types/referral';
+import { formatNumber } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const Affiliates = () => {
-  const { user } = useAuth();
-  const [tree, setTree] = useState<ReferralTreeResponse | null>(null);
-  const [rewards, setRewards] = useState<ReferralRewardTransaction[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [copied, setCopied] = useState(false);
-  const [tab, setTab] = useState<'overview' | 'referrals' | 'earnings'>('overview');
-
-  useEffect(() => {
-    const fetchReferralData = async () => {
-      try {
-        setIsLoading(true);
-        // Fetch referral tree
-        const treeRes = await api.get<{ success: boolean; data?: ReferralTreeResponse }>('/referrals/referral-tree');
-        if (treeRes.success && treeRes.data) {
-          setTree(treeRes.data);
-        } else {
-          setTree(null);
-        }
-        // Fetch referral rewards
-        const rewardsRes = await api.get<{ success: boolean; data?: ReferralRewardsResponse }>('/referrals/referral-rewards');
-        if (
-          rewardsRes.success &&
-          rewardsRes.data &&
-          rewardsRes.data.data &&
-          Array.isArray(rewardsRes.data.data.transactions)
-        ) {
-          setRewards(rewardsRes.data.data.transactions);
-        } else {
-          setRewards([]);
-        }
-      } catch (error) {
-        console.error('Failed to fetch referral data:', error);
-        setTree(null);
-        setRewards([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchReferralData();
-  }, []);
-
+  const { user, user_base_data } = useAuth();
+  const referralSummary = user_base_data?.referrals;
+  const totalEarnFromAffiliation = referralSummary?.total_earn_from_affiliation || 0;
+  const eachLevelIncome = referralSummary?.each_level_income || [];
+  const eachLevelAffiliaterNumber = referralSummary?.each_level_affiliater_number || [];
+  const referralNetwork = referralSummary?.network || [];
+  const uplineUsers = user_base_data?.upline_users || [];
+  const [copied, setCopied] = React.useState(false);
+  const [inviteEmail, setInviteEmail] = React.useState('');
+  const [inviteError, setInviteError] = React.useState('');
+  const [inviteSuccess, setInviteSuccess] = React.useState(false);
+  const referralLink = `${window.location.origin}/register?ref=${user?.referral_code}`;
   const copyReferralLink = async () => {
-    const referralLink = `${window.location.origin}/register?ref=${user?.referral_code}`;
     try {
       await navigator.clipboard.writeText(referralLink);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error('Failed to copy referral link:', error);
+      // ignore
     }
   };
-
-  const copyReferralCode = async () => {
-    try {
-      await navigator.clipboard.writeText(user?.referral_code || '');
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      console.error('Failed to copy referral code:', error);
+  const handleInvite = () => {
+    setInviteError('');
+    setInviteSuccess(false);
+    const email = inviteEmail.trim();
+    if (!email) {
+      setInviteError('Please enter an email address.');
+      return;
     }
-  };
-
-  const getLevelColor = (level: number) => {
-    const colors = [
-      'bg-green-100 text-green-800',
-      'bg-blue-100 text-blue-800',
-      'bg-purple-100 text-purple-800',
-      'bg-orange-100 text-orange-800',
-      'bg-red-100 text-red-800'
-    ];
-    return colors[level - 1] || 'bg-gray-100 text-gray-800';
-  };
-
-  const getCommissionRate = (level: number) => {
-    const rates = [5, 3, 2, 1, 0.5];
-    return rates[level - 1] || 0;
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading referral data...</p>
-        </div>
-      </div>
+    // Simple email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setInviteError('Please enter a valid email address.');
+      return;
+    }
+    const subject = encodeURIComponent('Join me on GreenDash!');
+    const body = encodeURIComponent(
+      `Hi there,%0D%0A%0D%0AI'd like to invite you to join GreenDash, a platform for sustainable investing and rewards. Use my referral link to sign up and start earning together!%0D%0A%0D%0AReferral Link: ${referralLink}%0D%0A%0D%0ASee you inside!`
     );
-  }
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    setInviteSuccess(true);
+    setInviteEmail('');
+    setTimeout(() => setInviteSuccess(false), 3000);
+  };
 
-  const overall = tree?.overall || { total_referrals: 0, total_invested: 0, total_earnings: 0 };
-  const byLevel = tree?.by_level || {};
-  const recentReferrals = tree?.recent_referrals || [];
-  const safeRewards = Array.isArray(rewards) ? rewards : [];
+  // Recursive tree rendering for referral network
+  const renderReferralTree = (network, level = 1) => (
+    <ul className={`pl-${level * 4} border-l-2 border-gray-200 ml-2`}>
+      {network.map(node => (
+        <li key={node.id} className="mb-2">
+          <div className={`flex items-center gap-2 py-1 px-2 rounded ${level === 1 ? 'bg-blue-50' : 'bg-green-50'}`}>
+            <FaUserFriends className="text-blue-500" />
+            <span className="font-semibold">{node.referred_user.name}</span>
+            <span className="text-xs text-gray-500">(Level {node.level})</span>
+            <span className="ml-2 text-green-600">{node.commission_income} EGD</span>
+          </div>
+          {node.sub_referrals && node.sub_referrals.length > 0 && (
+            renderReferralTree(node.sub_referrals, level + 1)
+          )}
+        </li>
+      ))}
+    </ul>
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -138,326 +85,153 @@ const Affiliates = () => {
         >
           <h1 className="text-3xl font-bold text-gray-900">Affiliate Program</h1>
           <p className="text-gray-600 mt-2">
-            Build your network and earn rewards up to 5 levels deep
+            Build your network and earn rewards.
           </p>
-        </motion.div>
-
-        {/* Stats Cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
-        >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Referrals</CardTitle>
-              <FaUsers className="h-4 w-4 text-blue-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{overall?.total_referrals || 0}</div>
-              <p className="text-xs text-muted-foreground">
-                Across all levels
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
-              <FaCoins className="h-4 w-4 text-green-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{overall?.total_earnings || 0}</div>
-              <p className="text-xs text-muted-foreground">
-                Lifetime earnings
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Invested</CardTitle>
-              <FaNetworkWired className="h-4 w-4 text-purple-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {overall?.total_invested || 0}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                By your network
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Referral Code</CardTitle>
-              <FaQrcode className="h-4 w-4 text-orange-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-lg font-bold font-mono">{user?.referral_code}</div>
-              <p className="text-xs text-muted-foreground">
-                Your unique code
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Referral Link Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-8"
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FaShareAlt className="h-5 w-5 text-green-600" />
-                Share Your Referral Link
-              </CardTitle>
-              <CardDescription>
-                Invite friends and earn rewards when they join and stake
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex gap-2">
-                <Input
-                  value={`${window.location.origin}/register?ref=${user?.referral_code}`}
-                  readOnly
-                  className="flex-1"
-                />
-                <Button onClick={copyReferralLink} variant="outline">
-                  {copied ? (
-                    <>
-                      <FaCheckCircle className="mr-2 h-4 w-4" />
-                      Copied!
-                    </>
-                  ) : (
-                    <>
-                      <FaCopy className="mr-2 h-4 w-4" />
-                      Copy Link
-                    </>
-                  )}
-                </Button>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-green-50 rounded-lg">
-                  <FaUserPlus className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                  <h3 className="font-semibold text-green-800">Level 1</h3>
-                  <p className="text-sm text-green-600">5% Commission</p>
-                </div>
-                <div className="text-center p-4 bg-blue-50 rounded-lg">
-                  <FaUsers className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                  <h3 className="font-semibold text-blue-800">Level 2</h3>
-                  <p className="text-sm text-blue-600">3% Commission</p>
-                </div>
-                <div className="text-center p-4 bg-purple-50 rounded-lg">
-                  <FaNetworkWired className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-                  <h3 className="font-semibold text-purple-800">Level 3-5</h3>
-                  <p className="text-sm text-purple-600">2%, 1%, 0.5%</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </motion.div>
 
         {/* Main Content Tabs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.2 }}
         >
           <Tabs defaultValue="overview" className="space-y-6">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="referrals">My Referrals</TabsTrigger>
-              <TabsTrigger value="earnings">Earnings</TabsTrigger>
+              <TabsTrigger value="levels">Levels</TabsTrigger>
+              <TabsTrigger value="network">Network Tree</TabsTrigger>
             </TabsList>
 
+            {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Commission Structure */}
                 <Card>
                   <CardHeader>
-                    <CardTitle>Commission Structure</CardTitle>
-                    <CardDescription>Earn rewards from your network</CardDescription>
+                    <CardTitle>Referral Earnings</CardTitle>
+                    <CardDescription>Total earned from your network</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      {[1, 2, 3, 4, 5].map((level) => (
-                        <div key={level} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                          <div className="flex items-center gap-3">
-                            <Badge className={getLevelColor(level)}>
-                              Level {level}
-                            </Badge>
-                            <span className="text-sm text-muted-foreground">
-                              {level === 1 ? 'Direct referrals' : `Level ${level - 1} referrals`}
-                            </span>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-semibold text-green-600">{getCommissionRate(level)}%</p>
-                            <p className="text-xs text-muted-foreground">
-                              {byLevel[level]?.total_earnings ? byLevel[level].total_earnings : '$0'}
-                            </p>
-                          </div>
+                    <div className="text-3xl font-bold text-green-600 mb-2">{totalEarnFromAffiliation} EGD</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Referral Code</CardTitle>
+                    <CardDescription>Your unique code</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-lg font-bold font-mono mb-4">{user?.referral_code}</div>
+                    <div className="flex gap-2 items-center">
+                      <Input value={referralLink} readOnly className="flex-1" />
+                      <Button onClick={copyReferralLink} variant="outline">
+                        {copied ? (
+                          <>
+                            <FaCheckCircle className="mr-2 h-4 w-4 text-green-600" />
+                            Copied!
+                          </>
+                        ) : (
+                          <>
+                            <FaCopy className="mr-2 h-4 w-4" />
+                            Copy Link
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                    <div className="flex gap-2 items-center mt-4">
+                      <Input
+                        placeholder='Input Email address to send your referral link'
+                        className="placeholder:text-[12px] flex-1"
+                        value={inviteEmail}
+                        onChange={e => setInviteEmail(e.target.value)}
+                        type="email"
+                        autoComplete="off"
+                        aria-label="Invite Email"
+                      />
+                      <Button onClick={handleInvite} variant="outline" className='flex-1 min-w-[100px]'>
+                        <FaEnvelopeOpenText className="mr-2 h-4 w-4" />
+                        Invite
+                      </Button>
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      Enter an email address and click Invite to send your referral link via email.
+                    </div>
+                    {inviteError && <div className="text-xs text-red-600 mt-1">{inviteError}</div>}
+                    {inviteSuccess && <div className="text-xs text-green-600 mt-1">Invitation email window opened!</div>}
+                  </CardContent>
+                </Card>
+              </div>
+              {uplineUsers.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Your Upline Users</CardTitle>
+                    <CardDescription>See your sponsor lineage</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-3 mt-2">
+                      {uplineUsers.map((upline) => (
+                        <div key={upline.user.id} className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 flex flex-col items-center min-w-[120px]">
+                          <span className="text-xs font-bold text-gray-500 mb-1">Level {upline.level}</span>
+                          <span className="font-semibold">{upline.user.name}</span>
+                          <span className="text-xs text-gray-400">{upline.user.email}</span>
                         </div>
                       ))}
                     </div>
                   </CardContent>
                 </Card>
-
-                {/* Level Breakdown */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Network Breakdown</CardTitle>
-                    <CardDescription>Your referral network by level</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {[1, 2, 3, 4, 5].map((level) => {
-                        const count = byLevel[level]?.count || 0;
-                        const earnings = byLevel[level]?.total_earnings || 0;
-                        return (
-                          <div key={level} className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <Badge className={getLevelColor(level)}>
-                                Level {level}
-                              </Badge>
-                              <span className="text-sm">{count} users</span>
-                            </div>
-                            <div className="text-right">
-                              <p className="font-semibold">{earnings}</p>
-                              <p className="text-xs text-muted-foreground">
-                                {getCommissionRate(level)}% commission
-                              </p>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="referrals" className="space-y-6">
-              {recentReferrals.length > 0 ? (
-                <div className="space-y-4">
-                  {recentReferrals.map((referral) => (
-                    <Card key={referral.id}>
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                              <FaUsers className="w-5 h-5 text-gray-600" />
-                            </div>
-                            <div>
-                              <h3 className="font-semibold">
-                                {referral.referred.first_name} {referral.referred.last_name}
-                              </h3>
-                              <p className="text-sm text-muted-foreground">
-                                {referral.referred.email}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <Badge className={getLevelColor(Number(referral.level))}>
-                              Level {Number(referral.level)}
-                            </Badge>
-                            <p className="text-sm text-muted-foreground mt-1">
-                              {formatDate(referral.joined_at)}
-                            </p>
-                          </div>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          <div>
-                            <p className="text-sm text-muted-foreground">Commission Rate</p>
-                            <p className="font-semibold">{referral.commission_rate}%</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">Total Earned</p>
-                            <p className="font-semibold text-green-600">
-                              {parseFloat(referral.total_earned)}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">User Investment</p>
-                            <p className="font-semibold">
-                              {parseFloat(referral.referred.total_invested)}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">Status</p>
-                            <Badge variant={referral.referred.is_email_verified ? "default" : "secondary"}>
-                              {referral.referred.is_email_verified ? "Verified" : "Pending"}
-                            </Badge>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              ) : (
-                <Card>
-                  <CardContent className="p-8 text-center">
-                    <FaUsers className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No Referrals Yet</h3>
-                    <p className="text-muted-foreground mb-4">
-                      Start sharing your referral link to build your network
-                    </p>
-                    <Button onClick={copyReferralLink}>
-                      <FaShareAlt className="mr-2 h-4 w-4" />
-                      Share Referral Link
-                    </Button>
-                  </CardContent>
-                </Card>
               )}
             </TabsContent>
 
-            <TabsContent value="earnings" className="space-y-6">
-              {safeRewards.length > 0 ? (
-                <div className="space-y-4">
-                  {safeRewards.map((earning) => (
-                    <Card key={earning.id}>
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <FaGift className="h-5 w-5 text-green-600" />
-                            <div>
-                              <p className="font-medium">{earning.description}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {formatDate(earning.createdAt)}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-semibold text-green-600">
-                              +{parseFloat(earning.amount)}
-                            </p>
-                            <Badge className={getLevelColor(Number(earning.metadata?.referral_level || 1))}>
-                              Level {Number(earning.metadata?.referral_level || 1)}
-                            </Badge>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              ) : (
-                <Card>
-                  <CardContent className="p-8 text-center">
-                    <FaGift className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No Earnings Yet</h3>
-                    <p className="text-muted-foreground">
-                      Your referral earnings will appear here
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
+            {/* Levels Tab */}
+            <TabsContent value="levels" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Each Level Income</CardTitle>
+                  <CardDescription>Income by referral level</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-3 mt-2 w-full justify-between">
+                    {eachLevelIncome.map((income, idx) => (
+                      <div key={idx} className="bg-white shadow rounded-lg px-4 py-2 flex-1 flex flex-col items-center min-w-[120px] border border-gray-200">
+                        <span className="text-xs font-bold text-gray-500 mb-1">Level {idx + 1}</span>
+                        <span className="text-lg font-bold text-green-600">{income} EGD</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Each Level Affiliater Number</CardTitle>
+                  <CardDescription>Number of affiliates by level</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-3 mt-2 w-full justify-between">
+                    {eachLevelAffiliaterNumber.map((num, idx) => (
+                      <div key={idx} className="bg-white shadow rounded-lg px-4 py-2 flex-1 flex flex-col items-center min-w-[120px] border border-gray-200">
+                        <span className="text-xs font-bold text-gray-500 mb-1">Level {idx + 1}</span>
+                        <span className="text-lg font-bold text-blue-600">{num}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Network Tree Tab */}
+            <TabsContent value="network" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Referral Network Tree</CardTitle>
+                  <CardDescription>Visualize your direct and indirect referrals</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {referralNetwork.length > 0 ? (
+                    renderReferralTree(referralNetwork)
+                  ) : (
+                    <div className="text-center text-gray-400">No referral network yet.</div>
+                  )}
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </motion.div>

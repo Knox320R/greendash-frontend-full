@@ -6,6 +6,7 @@ export interface UserData {
   is_admin: boolean;
   egd_balance: number;
   withdrawals: number;
+  created_at: string;
   wallet_address: string | null;
 }
 
@@ -13,6 +14,20 @@ export interface UserBaseData {
   staking: StakingSummary;
   referrals: ReferralSummary;
   recent_transactions: Transaction[];
+  upline_users: Upline[];
+}
+
+
+export interface UplineUser {
+  id: number;
+  name: string;
+  email: string;
+  egd_balance: string; // precise decimal as string
+}
+
+export interface Upline {
+  level: number;
+  user: UplineUser;
 }
 
 export interface StakingSummary {
