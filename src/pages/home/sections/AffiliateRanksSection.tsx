@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaTrophy, FaMedal, FaCrown, FaGem, FaCar, FaPlane, FaGlobe } from 'react-icons/fa';
+import { FaTrophy, FaMedal, FaCrown, FaGem, FaCar, FaGlobe } from 'react-icons/fa';
 import type { RankPlan } from '@/types/landing';
 
 interface AffiliateRanksSectionProps {

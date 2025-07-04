@@ -1,6 +1,5 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { FaTrophy, FaClipboardList, FaSyncAlt, FaCar, FaMobileAlt, FaGlobe, FaCoins, FaLeaf } from 'react-icons/fa';
+import { FaCar, FaMobileAlt, FaGlobe, FaCoins, FaLeaf } from 'react-icons/fa';
 
 const phaseColors = [
   'from-green-400 via-green-200 to-green-100',

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,24 +10,22 @@ import {
   FaUsers,
   FaCoins,
   FaLock,
-  FaUnlock,
   FaArrowUp,
   FaArrowDown,
   FaClock,
   FaCheckCircle,
   FaExclamationTriangle
 } from 'react-icons/fa';
-import { motion, number } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { useStaking } from '@/hooks/useStaking';
-import { api } from '@/lib/api';
 import { formatCurrency, formatNumber, formatDate } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { setLoading } from '@/store/auth';
 import { useDispatch } from 'react-redux';
 
 const Dashboard = () => {
-  const { user, isAuthenticated, user_base_data, isLoading } = useAuth();
+  const { user, user_base_data, isLoading } = useAuth();
   const { userStakings, isLoading: stakingLoading } = useStaking();
 
   const nav = useNavigate()

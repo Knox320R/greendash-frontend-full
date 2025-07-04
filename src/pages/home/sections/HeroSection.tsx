@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
-import { FaArrowRight, FaCalculator, FaChartLine, FaRocket, FaUsers, FaShieldAlt } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import type { AdminSetting } from '@/types/landing';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';

@@ -1,10 +1,7 @@
 import React from 'react';
-import { FaCoins, FaLeaf, FaChartLine, FaGift, FaSeedling, FaUsers, FaExchangeAlt, FaLock, FaVoteYea, FaClipboardList, FaSyncAlt, FaTrophy, FaMoneyBillWave, FaNetworkWired, FaGlobeAmericas, FaBolt, FaUserPlus } from 'react-icons/fa';
+import { FaCoins, FaChartLine, FaGift, FaSeedling, FaUsers, FaExchangeAlt, FaVoteYea, FaTrophy, FaMoneyBillWave, FaNetworkWired, FaGlobeAmericas, FaBolt, FaUserPlus } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogClose, DialogDescription } from '@/components/ui/dialog';
-import type { TokenAllocation, AdminSetting } from '@/types/landing';
 
 const tokenUtilities = [
   {

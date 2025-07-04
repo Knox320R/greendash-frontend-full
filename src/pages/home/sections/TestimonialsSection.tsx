@@ -1,7 +1,5 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { FaArrowRight, FaPause, FaPlay } from 'react-icons/fa';
-import { Button } from '@/components/ui/button';
 
 const TestimonialsSection = ({ testimonials, isAutoPlaying, setIsAutoPlaying, currentSlide, setCurrentSlide, slidesPerView, goToSlide, nextSlide, prevSlide }: any) => {
   const dots = Array.from({ length: testimonials.length - slidesPerView + 1 }, (_, i) => i);
