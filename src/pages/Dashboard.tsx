@@ -23,54 +23,19 @@ import { useStaking } from '@/hooks/useStaking';
 import { api } from '@/lib/api';
 import { formatCurrency, formatNumber, formatDate } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
-
-interface DashboardStats {
-  total_staked: number;
-  total_earned: number;
-  active_stakings: number;
-  total_referrals: number;
-  referral_earnings: number;
-  pending_withdrawals: number;
-}
-
-interface RecentActivity {
-  id: number;
-  type: string;
-  amount: number;
-  currency: string;
-  status: string;
-  description: string;
-  created_at: string;
-}
+import { setLoading } from '@/store/auth';
+import { useDispatch } from 'react-redux';
 
 const Dashboard = () => {
-  const { user, getCurrentUser } = useAuth();
+  const { user, isAuthenticated, user_base_data, isLoading } = useAuth();
   const { userStakings, isLoading: stakingLoading } = useStaking();
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+
   const nav = useNavigate()
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        setIsLoading(true);
-
-        // Fetch dashboard stats
-        // const statsResponse = await api.get<{ success: boolean; data: DashboardStats }>('/users/dashboard');
-        // if (statsResponse.success) {
-        //   setStats(statsResponse.data);
-        // }
-
-      } catch (error) {
-        console.error('Failed to fetch dashboard data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchDashboardData();
-  }, []);
+    dispatch(setLoading(!user_base_data))
+  }, [user_base_data]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {

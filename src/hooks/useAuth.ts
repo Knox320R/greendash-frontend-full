@@ -14,6 +14,7 @@ export const useAuth = () => {
     isAuthenticated: auth.isAuthenticated,
     isLoading: auth.isLoading,
     error: auth.error,
+    user_base_data: auth.user_base_data,
 
     // Actions
     login: (credentials: LoginForm) => dispatch(authApi.login(credentials)),

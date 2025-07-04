@@ -72,3 +72,65 @@ export interface Transaction {
   created_at: string; // ISO date
 }
 
+
+/** Admin setting row */
+export interface AdminSetting {
+  id: number;
+  title: string;
+  description: string;
+  value: string;
+  createdAt: string; // ISO Date string
+  updatedAt: string; // ISO Date string
+}
+
+/** Staking package row */
+export interface StakingPackage {
+  id: number;
+  name: string;
+  description: string;
+  stake_amount: string; // precise decimal as string
+  daily_yield_percentage: number;
+  lock_period_days: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Rank plan row */
+export interface RankPlan {
+  id: number;
+  rank: string;
+  bonus_amount: string; // stored as string for precise decimal
+  volume: string;       // stored as string for precise decimal
+  equivalent: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Commission plan row */
+export interface CommissionPlan {
+  id: number;
+  level: number;
+  commission_percent: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Total token allocation row */
+export interface TotalToken {
+  id: number;
+  title: string;
+  description: string;
+  percent: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Full settings payload structure */
+export interface AdminData {
+  admin_settings: AdminSetting[];
+  staking_packages: StakingPackage[];
+  rank_plans: RankPlan[];
+  commission_plans: CommissionPlan[];
+  total_tokens: TotalToken[];
+}
+
