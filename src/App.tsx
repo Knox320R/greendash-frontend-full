@@ -9,7 +9,7 @@ import Dashboard from '@/pages/Dashboard';
 import Staking from '@/pages/Staking';
 import Affiliates from '@/pages/Affiliates';
 import Profile from '@/pages/Profile';
-import Admin from '@/pages/Admin';
+import Admin from '@/pages/admin/Admin';
 import Home from './pages/home/Home';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

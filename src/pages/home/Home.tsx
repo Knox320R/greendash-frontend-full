@@ -10,7 +10,7 @@ import TestimonialsSection from './sections/TestimonialsSection';
 import ContactSection from './sections/ContactSection';
 import ConclusionSection from './sections/ConclusionSection';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLandingData } from '@/store/admin';
+import { getMainSettings } from '@/store/admin';
 import type { RootState } from '@/store';
 import type { AppDispatch } from '@/store';
 
@@ -88,7 +88,7 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatch(getLandingData());
+    dispatch(getMainSettings());
   }, [])
 
   // Auto-play effect

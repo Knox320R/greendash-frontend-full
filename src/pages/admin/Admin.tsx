@@ -1,35 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '@/store';
+import { getAdminData } from '@/store/admin';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
-  FaUsers,
-  FaClipboardList,
-  FaCubes,
-  FaSitemap,
-  FaCommentDots,
   FaCog,
-  FaHistory,
+  FaCubes,
+  FaTrophy,
+  FaPercent,
+  FaCoins,
   FaChevronRight,
 } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import UserManagement from './sections/UserManagement';
-import OrderManagement from './sections/OrderManagement';
-import StakingPackages from './sections/StakingPackages';
-import ReferralTree from './sections/ReferralTree';
-import Testimonials from './sections/Testimonials';
-import SystemSettings from './sections/SystemSettings';
-import ActivityLogs from './sections/ActivityLogs';
+import AdminSettings from '@/pages/admin/sections/AdminSettings';
+import StakingPackages from '@/pages/admin/sections/StakingPackages';
+import RankPlans from '@/pages/admin/sections/RankPlans';
+import CommissionPlans from '@/pages/admin/sections/CommissionPlans';
+import TotalTokens from '@/pages/admin/sections/TotalTokens';
 
 const sections = [
   {
-    key: 'users',
-    label: 'User Management',
-    icon: FaUsers,
-  },
-  {
-    key: 'orders',
-    label: 'Order Management',
-    icon: FaClipboardList,
+    key: 'settings',
+    label: 'Admin Settings',
+    icon: FaCog,
   },
   {
     key: 'staking',
@@ -37,39 +31,39 @@ const sections = [
     icon: FaCubes,
   },
   {
-    key: 'referral',
-    label: 'Referral Tree Overview',
-    icon: FaSitemap,
+    key: 'ranks',
+    label: 'Rank Plans',
+    icon: FaTrophy,
   },
   {
-    key: 'testimonials',
-    label: 'Testimonial Moderation',
-    icon: FaCommentDots,
+    key: 'commissions',
+    label: 'Commission Plans',
+    icon: FaPercent,
   },
   {
-    key: 'settings',
-    label: 'System Settings',
-    icon: FaCog,
-  },
-  {
-    key: 'activity',
-    label: 'Activity Logs',
-    icon: FaHistory,
+    key: 'tokens',
+    label: 'Total Tokens',
+    icon: FaCoins,
   },
 ];
 
 const sectionTitles: Record<string, string> = {
-  users: 'User Management',
-  orders: 'Order Management',
+  settings: 'Admin Settings Management',
   staking: 'Staking Package Management',
-  referral: 'Referral Tree Overview',
-  testimonials: 'Testimonial Moderation',
-  settings: 'System Settings',
-  activity: 'Activity Logs',
+  ranks: 'Rank Plan Management',
+  commissions: 'Commission Plan Management',
+  tokens: 'Total Token Management',
 };
 
 const Admin: React.FC = () => {
-  const [selected, setSelected] = useState('users');
+  const dispatch = useDispatch<AppDispatch>();
+  const adminData = useSelector((state: RootState) => state.adminData);
+  const [selected, setSelected] = useState('settings');
+
+  useEffect(() => {
+    // Fetch admin data when component mounts
+    // dispatch(getAdminData());
+  }, []);
 
   return (
     <div className="min-h-screen mt-[60px] flex bg-gray-50">
@@ -83,7 +77,7 @@ const Admin: React.FC = () => {
             <Button
               key={section.key}
               variant={selected === section.key ? 'default' : 'ghost'}
-              className={`w-full  flex items-center justify-start gap-3 px-6 py-3 rounded-none text-md font-medium transition-all ${selected === section.key ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-green-50'}`}
+              className={`w-full flex items-center justify-start gap-3 px-6 py-3 rounded-none text-md font-medium transition-all ${selected === section.key ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-green-50'}`}
               onClick={() => setSelected(section.key)}
             >
               <section.icon className="w-5 h-5" />
@@ -93,6 +87,7 @@ const Admin: React.FC = () => {
           ))}
         </nav>
       </aside>
+      
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center p-6">
         <motion.div
@@ -110,13 +105,11 @@ const Admin: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {selected === 'users' && <UserManagement />}
-              {selected === 'orders' && <OrderManagement />}
-              {selected === 'staking' && <StakingPackages />}
-              {selected === 'referral' && <ReferralTree />}
-              {selected === 'testimonials' && <Testimonials />}
-              {selected === 'settings' && <SystemSettings />}
-              {selected === 'activity' && <ActivityLogs />}
+              {selected === 'settings' && <AdminSettings data={adminData.admin_settings} />}
+              {selected === 'staking' && <StakingPackages data={adminData.staking_packages} />}
+              {selected === 'ranks' && <RankPlans data={adminData.rank_plans} />}
+              {selected === 'commissions' && <CommissionPlans data={adminData.commission_plans} />}
+              {selected === 'tokens' && <TotalTokens data={adminData.total_tokens} />}
             </CardContent>
           </Card>
         </motion.div>

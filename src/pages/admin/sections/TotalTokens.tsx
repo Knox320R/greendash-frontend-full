@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StakingPackage } from '@/types/landing';
+import { TotalToken } from '@/types/landing';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
@@ -11,90 +11,82 @@ import { useForm } from 'react-hook-form';
 import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 import { formatDate } from '@/lib/utils';
 
-interface StakingPackagesProps {
-  data: StakingPackage[];
+interface TotalTokensProps {
+  data: TotalToken[];
 }
 
-interface StakingPackageForm {
-  name: string;
+interface TotalTokenForm {
+  title: string;
   description: string;
-  stake_amount: string;
-  daily_yield_percentage: number;
-  lock_period_days: number;
+  percent: number;
 }
 
-const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
+const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [editPackage, setEditPackage] = useState<StakingPackage | null>(null);
-  const [deletePackageId, setDeletePackageId] = useState<number | null>(null);
-  const [packages, setPackages] = useState<StakingPackage[]>(data);
+  const [editToken, setEditToken] = useState<TotalToken | null>(null);
+  const [deleteTokenId, setDeleteTokenId] = useState<number | null>(null);
+  const [tokens, setTokens] = useState<TotalToken[]>(data);
 
-  const form = useForm<StakingPackageForm>({
+  const form = useForm<TotalTokenForm>({
     defaultValues: {
-      name: '',
+      title: '',
       description: '',
-      stake_amount: '',
-      daily_yield_percentage: 0,
-      lock_period_days: 0,
+      percent: 0,
     },
   });
 
   React.useEffect(() => {
-    if (editPackage) {
+    if (editToken) {
       form.reset({
-        name: editPackage.name,
-        description: editPackage.description,
-        stake_amount: editPackage.stake_amount,
-        daily_yield_percentage: editPackage.daily_yield_percentage,
-        lock_period_days: editPackage.lock_period_days,
+        title: editToken.title,
+        description: editToken.description,
+        percent: editToken.percent,
       });
     } else {
       form.reset({
-        name: '',
+        title: '',
         description: '',
-        stake_amount: '',
-        daily_yield_percentage: 0,
-        lock_period_days: 0,
+        percent: 0,
       });
     }
-  }, [editPackage, form]);
+  }, [editToken, form]);
 
-  const handleSubmit = async (formData: StakingPackageForm) => {
+  const handleSubmit = async (formData: TotalTokenForm) => {
     try {
-      if (editPackage) {
+      if (editToken) {
         // Mock update operation
-        const updatedPackages = packages.map(pkg =>
-          pkg.id === editPackage.id
-            ? { ...pkg, ...formData, updatedAt: new Date().toISOString() }
-            : pkg
+        const updatedTokens = tokens.map(token =>
+          token.id === editToken.id
+            ? { ...token, ...formData, updatedAt: new Date().toISOString() }
+            : token
         );
-        setPackages(updatedPackages);
+        setTokens(updatedTokens);
       } else {
         // Mock create operation
-        const newPackage: StakingPackage = {
+        const newToken: TotalToken = {
           id: Date.now(), // Mock ID
           ...formData,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
-        setPackages([...packages, newPackage]);
+        setTokens([...tokens, newToken]);
       }
       setOpenDialog(false);
-      setEditPackage(null);
+      setEditToken(null);
     } catch (error) {
-      console.error('Error saving package:', error);
+      console.error('Error saving token:', error);
     }
   };
 
   const handleDelete = async () => {
-    if (deletePackageId) {
+    if (deleteTokenId) {
       try {
         // Mock delete operation
-        const filteredPackages = packages.filter(pkg => pkg.id !== deletePackageId);
-        setPackages(filteredPackages);
-        setDeletePackageId(null);
+        const filteredTokens = tokens.filter(token => token.id !== deleteTokenId);
+        setTokens(filteredTokens);
+        setDeleteTokenId(null);
       } catch (error) {
-        console.error('Error deleting package:', error);
+        console.error('Error deleting token:', error);
       }
     }
   };
@@ -102,26 +94,26 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <span className="text-lg font-semibold">Staking Packages</span>
+        <span className="text-lg font-semibold">Total Token Allocations</span>
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
             <Button 
-              onClick={() => { setEditPackage(null); setOpenDialog(true); }} 
+              onClick={() => { setEditToken(null); setOpenDialog(true); }} 
               className="bg-green-600 hover:bg-green-700 text-white"
             >
               <FaPlus className="w-4 h-4 mr-2" />
-              Add Package
+              Add Token Allocation
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>{editPackage ? 'Edit Package' : 'Add Package'}</DialogTitle>
+              <DialogTitle>{editToken ? 'Edit Token Allocation' : 'Add Token Allocation'}</DialogTitle>
             </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-                <FormField name="name" control={form.control} render={({ field }) => (
+                <FormField name="title" control={form.control} render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Title</FormLabel>
                     <FormControl><Input {...field} required /></FormControl>
                     <FormMessage />
                   </FormItem>
@@ -133,30 +125,16 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
                     <FormMessage />
                   </FormItem>
                 )} />
-                <FormField name="stake_amount" control={form.control} render={({ field }) => (
+                <FormField name="percent" control={form.control} render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Stake Amount (USDT)</FormLabel>
-                    <FormControl><Input {...field} required type="number" min="0" step="0.01" /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField name="daily_yield_percentage" control={form.control} render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Daily Yield (%)</FormLabel>
-                    <FormControl><Input {...field} required type="number" min="0" step="0.01" /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField name="lock_period_days" control={form.control} render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Lock Period (days)</FormLabel>
-                    <FormControl><Input {...field} required type="number" min="0" step="1" /></FormControl>
+                    <FormLabel>Percentage (%)</FormLabel>
+                    <FormControl><Input {...field} required type="number" min="0" max="100" step="0.01" /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
                 <DialogFooter>
                   <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white w-full">
-                    {editPackage ? 'Update' : 'Create'}
+                    {editToken ? 'Update' : 'Create'}
                   </Button>
                 </DialogFooter>
               </form>
@@ -169,32 +147,28 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead>Title</TableHead>
               <TableHead>Description</TableHead>
-              <TableHead>Stake Amount</TableHead>
-              <TableHead>Daily Yield</TableHead>
-              <TableHead>Lock Period</TableHead>
+              <TableHead>Percentage</TableHead>
               <TableHead>Created</TableHead>
               <TableHead>Updated</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {packages.map((pkg) => (
-              <TableRow key={pkg.id}>
-                <TableCell className="font-medium">{pkg.name}</TableCell>
-                <TableCell className="max-w-xs truncate">{pkg.description}</TableCell>
-                <TableCell>{pkg.stake_amount} USDT</TableCell>
-                <TableCell>{pkg.daily_yield_percentage}%</TableCell>
-                <TableCell>{pkg.lock_period_days} days</TableCell>
-                <TableCell>{formatDate(pkg.createdAt)}</TableCell>
-                <TableCell>{formatDate(pkg.updatedAt)}</TableCell>
+            {tokens.map((token) => (
+              <TableRow key={token.id}>
+                <TableCell className="font-medium">{token.title}</TableCell>
+                <TableCell className="max-w-xs truncate">{token.description}</TableCell>
+                <TableCell>{token.percent}%</TableCell>
+                <TableCell>{formatDate(token.createdAt)}</TableCell>
+                <TableCell>{formatDate(token.updatedAt)}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => { setEditPackage(pkg); setOpenDialog(true); }}
+                      onClick={() => { setEditToken(token); setOpenDialog(true); }}
                     >
                       <FaEdit className="w-4 h-4" />
                     </Button>
@@ -203,16 +177,16 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => setDeletePackageId(pkg.id)}
+                          onClick={() => setDeleteTokenId(token.id)}
                         >
                           <FaTrash className="w-4 h-4 text-red-500" />
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Delete Package</AlertDialogTitle>
+                          <AlertDialogTitle>Delete Token Allocation</AlertDialogTitle>
                           <AlertDialogDescription>
-                            Are you sure you want to delete "{pkg.name}"? This action cannot be undone.
+                            Are you sure you want to delete "{token.title}"? This action cannot be undone.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
@@ -234,4 +208,4 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
   );
 };
 
-export default StakingPackages; 
+export default TotalTokens; 

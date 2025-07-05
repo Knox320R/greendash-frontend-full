@@ -16,12 +16,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { isAuthenticated, user, getCurrentUser, isLoading } = useAuth();
   const location = useLocation();
 
-  useEffect(() => {
-    // If we have a token but no user data, try to get current user
-    if (isAuthenticated && !user && !isLoading) {
-      getCurrentUser();
-    }
-  }, [isAuthenticated, user, getCurrentUser, isLoading]);
+  // useEffect(() => {
+  //   // If we have a token but no user data, try to get current user
+  //   if (localStorage.getItem('token')) {
+  //     getCurrentUser();
+  //   }
+  // }, [isAuthenticated, user, isLoading]);
 
   // Show loading spinner while checking authentication
   if (isLoading) {

@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import {
   FaUser,
-  FaEnvelope,
-  FaPhone,
   FaWallet,
   FaShieldAlt,
   FaCog,
@@ -17,7 +14,6 @@ import {
   FaSave,
   FaTimes,
   FaCheckCircle,
-  FaExclamationTriangle,
   FaCopy,
   FaQrcode,
   FaHistory,
@@ -25,13 +21,12 @@ import {
   FaBell
 } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import { useAuth } from '@/hooks/useAuth';
 import { api } from '@/lib/api';
-import { formatCurrency, formatDate, truncateAddress } from '@/lib/utils';
+import { formatDate, truncateAddress } from '@/lib/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { UserBaseData, UserData } from '@/types/landing';
-import { setUser, updateUser } from '@/store/auth';
+import { setUser } from '@/store/auth';
 import { toast } from 'react-toastify';
 
 const Profile = () => {

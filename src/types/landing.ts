@@ -147,5 +147,6 @@ export interface AdminData {
   rank_plans: RankPlan[];
   commission_plans: CommissionPlan[];
   total_tokens: TotalToken[];
+  enterprise: any
 }
 

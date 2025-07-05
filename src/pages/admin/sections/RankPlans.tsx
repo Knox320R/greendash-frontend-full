@@ -1,100 +1,96 @@
 import React, { useState } from 'react';
-import { StakingPackage } from '@/types/landing';
+import { RankPlan } from '@/types/landing';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogFooter, AlertDialogAction, AlertDialogCancel, AlertDialogDescription } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 import { formatDate } from '@/lib/utils';
 
-interface StakingPackagesProps {
-  data: StakingPackage[];
+interface RankPlansProps {
+  data: RankPlan[];
 }
 
-interface StakingPackageForm {
-  name: string;
-  description: string;
-  stake_amount: string;
-  daily_yield_percentage: number;
-  lock_period_days: number;
+interface RankPlanForm {
+  rank: string;
+  bonus_amount: string;
+  volume: string;
+  equivalent: string;
 }
 
-const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
+const RankPlans: React.FC<RankPlansProps> = ({ data }) => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [editPackage, setEditPackage] = useState<StakingPackage | null>(null);
-  const [deletePackageId, setDeletePackageId] = useState<number | null>(null);
-  const [packages, setPackages] = useState<StakingPackage[]>(data);
+  const [editPlan, setEditPlan] = useState<RankPlan | null>(null);
+  const [deletePlanId, setDeletePlanId] = useState<number | null>(null);
+  const [plans, setPlans] = useState<RankPlan[]>(data);
 
-  const form = useForm<StakingPackageForm>({
+  const form = useForm<RankPlanForm>({
     defaultValues: {
-      name: '',
-      description: '',
-      stake_amount: '',
-      daily_yield_percentage: 0,
-      lock_period_days: 0,
+      rank: '',
+      bonus_amount: '',
+      volume: '',
+      equivalent: '',
     },
   });
 
   React.useEffect(() => {
-    if (editPackage) {
+    if (editPlan) {
       form.reset({
-        name: editPackage.name,
-        description: editPackage.description,
-        stake_amount: editPackage.stake_amount,
-        daily_yield_percentage: editPackage.daily_yield_percentage,
-        lock_period_days: editPackage.lock_period_days,
+        rank: editPlan.rank,
+        bonus_amount: editPlan.bonus_amount,
+        volume: editPlan.volume,
+        equivalent: editPlan.equivalent || '',
       });
     } else {
       form.reset({
-        name: '',
-        description: '',
-        stake_amount: '',
-        daily_yield_percentage: 0,
-        lock_period_days: 0,
+        rank: '',
+        bonus_amount: '',
+        volume: '',
+        equivalent: '',
       });
     }
-  }, [editPackage, form]);
+  }, [editPlan, form]);
 
-  const handleSubmit = async (formData: StakingPackageForm) => {
+  const handleSubmit = async (formData: RankPlanForm) => {
     try {
-      if (editPackage) {
+      if (editPlan) {
         // Mock update operation
-        const updatedPackages = packages.map(pkg =>
-          pkg.id === editPackage.id
-            ? { ...pkg, ...formData, updatedAt: new Date().toISOString() }
-            : pkg
+        const updatedPlans = plans.map(plan =>
+          plan.id === editPlan.id
+            ? { ...plan, ...formData, updatedAt: new Date().toISOString() }
+            : plan
         );
-        setPackages(updatedPackages);
+        setPlans(updatedPlans);
       } else {
         // Mock create operation
-        const newPackage: StakingPackage = {
+        const newPlan: RankPlan = {
           id: Date.now(), // Mock ID
           ...formData,
+          equivalent: formData.equivalent || null,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
-        setPackages([...packages, newPackage]);
+        setPlans([...plans, newPlan]);
       }
       setOpenDialog(false);
-      setEditPackage(null);
+      setEditPlan(null);
     } catch (error) {
-      console.error('Error saving package:', error);
+      console.error('Error saving plan:', error);
     }
   };
 
   const handleDelete = async () => {
-    if (deletePackageId) {
+    if (deletePlanId) {
       try {
         // Mock delete operation
-        const filteredPackages = packages.filter(pkg => pkg.id !== deletePackageId);
-        setPackages(filteredPackages);
-        setDeletePackageId(null);
+        const filteredPlans = plans.filter(plan => plan.id !== deletePlanId);
+        setPlans(filteredPlans);
+        setDeletePlanId(null);
       } catch (error) {
-        console.error('Error deleting package:', error);
+        console.error('Error deleting plan:', error);
       }
     }
   };
@@ -102,61 +98,54 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <span className="text-lg font-semibold">Staking Packages</span>
+        <span className="text-lg font-semibold">Rank Plans</span>
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
             <Button 
-              onClick={() => { setEditPackage(null); setOpenDialog(true); }} 
+              onClick={() => { setEditPlan(null); setOpenDialog(true); }} 
               className="bg-green-600 hover:bg-green-700 text-white"
             >
               <FaPlus className="w-4 h-4 mr-2" />
-              Add Package
+              Add Rank Plan
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>{editPackage ? 'Edit Package' : 'Add Package'}</DialogTitle>
+              <DialogTitle>{editPlan ? 'Edit Rank Plan' : 'Add Rank Plan'}</DialogTitle>
             </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-                <FormField name="name" control={form.control} render={({ field }) => (
+                <FormField name="rank" control={form.control} render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Rank</FormLabel>
                     <FormControl><Input {...field} required /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
-                <FormField name="description" control={form.control} render={({ field }) => (
+                <FormField name="bonus_amount" control={form.control} render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl><Textarea {...field} required /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField name="stake_amount" control={form.control} render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Stake Amount (USDT)</FormLabel>
+                    <FormLabel>Bonus Amount (USDT)</FormLabel>
                     <FormControl><Input {...field} required type="number" min="0" step="0.01" /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
-                <FormField name="daily_yield_percentage" control={form.control} render={({ field }) => (
+                <FormField name="volume" control={form.control} render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Daily Yield (%)</FormLabel>
+                    <FormLabel>Volume (USDT)</FormLabel>
                     <FormControl><Input {...field} required type="number" min="0" step="0.01" /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
-                <FormField name="lock_period_days" control={form.control} render={({ field }) => (
+                <FormField name="equivalent" control={form.control} render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Lock Period (days)</FormLabel>
-                    <FormControl><Input {...field} required type="number" min="0" step="1" /></FormControl>
+                    <FormLabel>Equivalent (Optional)</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
                 <DialogFooter>
                   <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white w-full">
-                    {editPackage ? 'Update' : 'Create'}
+                    {editPlan ? 'Update' : 'Create'}
                   </Button>
                 </DialogFooter>
               </form>
@@ -169,32 +158,30 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Stake Amount</TableHead>
-              <TableHead>Daily Yield</TableHead>
-              <TableHead>Lock Period</TableHead>
+              <TableHead>Rank</TableHead>
+              <TableHead>Bonus Amount</TableHead>
+              <TableHead>Volume</TableHead>
+              <TableHead>Equivalent</TableHead>
               <TableHead>Created</TableHead>
               <TableHead>Updated</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {packages.map((pkg) => (
-              <TableRow key={pkg.id}>
-                <TableCell className="font-medium">{pkg.name}</TableCell>
-                <TableCell className="max-w-xs truncate">{pkg.description}</TableCell>
-                <TableCell>{pkg.stake_amount} USDT</TableCell>
-                <TableCell>{pkg.daily_yield_percentage}%</TableCell>
-                <TableCell>{pkg.lock_period_days} days</TableCell>
-                <TableCell>{formatDate(pkg.createdAt)}</TableCell>
-                <TableCell>{formatDate(pkg.updatedAt)}</TableCell>
+            {plans.map((plan) => (
+              <TableRow key={plan.id}>
+                <TableCell className="font-medium">{plan.rank}</TableCell>
+                <TableCell>{plan.bonus_amount} USDT</TableCell>
+                <TableCell>{plan.volume} USDT</TableCell>
+                <TableCell>{plan.equivalent || '-'}</TableCell>
+                <TableCell>{formatDate(plan.createdAt)}</TableCell>
+                <TableCell>{formatDate(plan.updatedAt)}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => { setEditPackage(pkg); setOpenDialog(true); }}
+                      onClick={() => { setEditPlan(plan); setOpenDialog(true); }}
                     >
                       <FaEdit className="w-4 h-4" />
                     </Button>
@@ -203,16 +190,16 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => setDeletePackageId(pkg.id)}
+                          onClick={() => setDeletePlanId(plan.id)}
                         >
                           <FaTrash className="w-4 h-4 text-red-500" />
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Delete Package</AlertDialogTitle>
+                          <AlertDialogTitle>Delete Rank Plan</AlertDialogTitle>
                           <AlertDialogDescription>
-                            Are you sure you want to delete "{pkg.name}"? This action cannot be undone.
+                            Are you sure you want to delete "{plan.rank}"? This action cannot be undone.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
@@ -234,4 +221,4 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
   );
 };
 
-export default StakingPackages; 
+export default RankPlans; 

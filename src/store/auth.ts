@@ -119,25 +119,9 @@ export const authApi = {
         try {
             dispatch(setLoading(true));
             dispatch(clearError());
-
             const response = await api.post<string>('/auth/register', userData);
             dispatch(setLoading(false));
-
             return response
-            // if (response.success) {
-            //     // Store token in localStorage
-            //     localStorage.setItem('token', response.data.token);
-
-            //     // Update state
-            //     dispatch(setUser(response.data.user));
-            //     dispatch(setToken(response.data.token));
-            //     dispatch(setAuthenticated(true));
-
-            //     toast.success(response.message || 'Registration successful! Please check your email for verification.');
-            //     return response.data;
-            // } else {
-            //     throw new Error(response.message || 'Registration failed');
-            // }
         } catch (err: any) {
             console.log(err.data.response);
 
@@ -154,15 +138,19 @@ export const authApi = {
         try {
             dispatch(setLoading(true));
 
-            const response = await api.get<{ success: boolean; data: { user: UserProfile } }>('/auth/me');
+            // const response = await api.get<{ success: boolean; data: { user: UserProfile } }>('/auth/me');
+            const response = await api.get<{ message: string, success: boolean, data: { token: string, user: UserData, user_base_data: UserBaseData } }>('/auth/me');
             dispatch(setLoading(false));
 
             if (response.success) {
-                dispatch(setUser(response.data.user));
-                dispatch(setAuthenticated(true));
-                return response.data;
+                // Store token in localStorage
+                localStorage.setItem('token', response.data.token);
+                // Update state
+                dispatch(setUser(response.data));
+                toast.success(response.message || 'Login successful!');
+                return { sucess: true }
             } else {
-                throw new Error('Failed to get user data');
+                return { success: false, msg: response['response']?.data?.message || "You should pass email verification!" };
             }
         } catch (err: any) {
             // If token is invalid, clear auth state
