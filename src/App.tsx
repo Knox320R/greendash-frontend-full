@@ -21,7 +21,7 @@ function App() {
           <main className="flex-1 mt-[70px]">
             <Routes>
               {
-                routes.map(route => (isAuthenticated || route.public) && <Route {...route} />)
+                routes.map(route => (isAuthenticated || route.public) && <Route key={route.path} {...route} />)
               }
               {is_admin && <Route path='/admin' element={<Admin />} />}
             </Routes>

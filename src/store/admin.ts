@@ -11,6 +11,18 @@ const initialState: AdminData = {
     rank_plans: [],
     staking_packages: [],
     total_tokens: [],
+    users: {
+        isMore: true,
+        list: []
+    },
+    stakings: {
+        isMore: true,
+        list: []
+    },
+    transactions: {
+        isMore: true,
+        list: []
+    },
     enterprise: {}
 };
 
@@ -19,15 +31,21 @@ const adminSlice = createSlice({
     name: 'admin settings',
     initialState,
     reducers: {
-        setAdminSettings: (state, action) => {
-            return { enterprise: {}, ...action.payload };
-        },
         setEnterprise: (state, action) => {
             state.enterprise = action.payload
+        },
+        setAdminSettings: (state, action) => {
+            return { ...state, ...action.payload }
         },
         createAdminSetting: (state, action) => {
             const { field_name, data } = action.payload
             state[field_name].push(data)
+        },
+        concatPageDataSlice: (state, action) => {
+            const { table_name, list, isMore } = action.payload
+            if (!(['users', 'stakings', 'transactions'].includes(table_name))) return;
+            state[table_name] = state[table_name].list.concat(list)
+            state[table_name].isMore = isMore
         },
         updateAdminSetting: (state, action) => {
             const { field_name, data } = action.payload
@@ -45,14 +63,29 @@ export const {
     createAdminSetting,
     updateAdminSetting,
     deleteAdminSetting,
+    concatPageDataSlice,
     setEnterprise
 } = adminSlice.actions;
 
-export const getAdminData = () => async (dispatch: AppDispatch) => {
+export const fetchPageData = (limit: number, offset: number, table_name: string) => async (dispatch: AppDispatch) => {
     try {
         dispatch(setLoading(true))
-        const res = await api.get<{ success: boolean, data: any }>('/admin/main')
-        if (res.success) dispatch(setEnterprise(res.data))
+        const res = await api.post<{ success: boolean, list: [], isMore: boolean }>('/admin/pagenation', { limit, offset, table_name })
+        if (res.success) dispatch(concatPageDataSlice({ table_name, list: res.list, isMore: res.isMore }))
+        else throw { message: "failed to fetch table data" }
+    } catch (e) {
+        console.log(e);
+        toast.error(e.message)
+    } finally {
+        dispatch(setLoading(false))
+    }
+}
+
+export const getMainSettings = () => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(setLoading(true))
+        const res = await api.get<{ success: boolean, data: AdminData }>('/auth/landing')
+        if (res.success) dispatch(setAdminSettings(res.data))
         else throw { message: "failed to get admin data" }
     } catch (e) {
         console.log(e);
@@ -62,12 +95,11 @@ export const getAdminData = () => async (dispatch: AppDispatch) => {
     }
 }
 
-
-export const getMainSettings = () => async (dispatch: AppDispatch) => {
+export const getAdminData = () => async (dispatch: AppDispatch) => {
     try {
         dispatch(setLoading(true))
-        const res = await api.get<{ success: boolean, data: AdminData }>('/auth/landing')
-        if (res.success) dispatch(setAdminSettings(res.data))
+        const res = await api.get<{ success: boolean, data: any }>('/admin/main')
+        if (res.success) dispatch(setEnterprise(res.data))
         else throw { message: "failed to get admin data" }
     } catch (e) {
         console.log(e);

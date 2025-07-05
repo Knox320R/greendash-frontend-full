@@ -1,4 +1,4 @@
-import { AdminDashboardSummary } from "./admin";
+import { AdminDashboardSummary, StakingList, TransactionList, UserList } from "./admin";
 
 export interface UserData {
   id: number;
@@ -149,6 +149,9 @@ export interface AdminData {
   rank_plans: RankPlan[];
   commission_plans: CommissionPlan[];
   total_tokens: TotalToken[];
+  users: UserList;
+  stakings: StakingList;
+  transactions: TransactionList;
   enterprise?: AdminDashboardSummary;
 }
 

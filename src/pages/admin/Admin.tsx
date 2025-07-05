@@ -11,6 +11,8 @@ import {
   FaCoins,
   FaChevronRight,
   FaChartLine,
+  FaUser,
+  FaExchangeAlt,
 } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import AdminSettings from '@/pages/admin/sections/AdminSettings';
@@ -48,6 +50,21 @@ const sections = [
     icon: FaPercent,
   },
   {
+    key: 'user_list',
+    label: 'Users',
+    icon: FaUser,
+  },
+  {
+    key: 'staking_list',
+    label: 'Stakings',
+    icon: FaCubes,
+  },
+  {
+    key: 'transaction_list',
+    label: 'Transactions',
+    icon: FaExchangeAlt,
+  },
+  {
     key: 'tokens',
     label: 'Total Tokens',
     icon: FaCoins,
@@ -56,6 +73,9 @@ const sections = [
 
 const sectionTitles: Record<string, string> = {
   dashboard: 'Enterprise Dashboard',
+  user_list: 'Users',
+  staking_list: 'Stakings',
+  transaction_list: 'Transactions',
   settings: 'Admin Settings Management',
   staking: 'Staking Package Management',
   ranks: 'Rank Plan Management',
