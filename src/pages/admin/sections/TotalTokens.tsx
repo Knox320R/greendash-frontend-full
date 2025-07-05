@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/store';
+import { createAdminSettingApi, updateAdminSettingApi, deleteAdminSettingApi } from '@/store/admin';
 import { TotalToken } from '@/types/landing';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
@@ -22,10 +25,10 @@ interface TotalTokenForm {
 }
 
 const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [openDialog, setOpenDialog] = useState(false);
   const [editToken, setEditToken] = useState<TotalToken | null>(null);
   const [deleteTokenId, setDeleteTokenId] = useState<number | null>(null);
-  const [tokens, setTokens] = useState<TotalToken[]>(data);
 
   const form = useForm<TotalTokenForm>({
     defaultValues: {
@@ -54,22 +57,29 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
   const handleSubmit = async (formData: TotalTokenForm) => {
     try {
       if (editToken) {
-        // Mock update operation
-        const updatedTokens = tokens.map(token =>
-          token.id === editToken.id
-            ? { ...token, ...formData, updatedAt: new Date().toISOString() }
-            : token
-        );
-        setTokens(updatedTokens);
+        // Update existing token
+        const updateData = {
+          field_name: 'total_tokens' as const,
+          data: {
+            ...editToken,
+            ...formData,
+            updatedAt: new Date().toISOString(),
+          }
+        };
+        await dispatch(updateAdminSettingApi(updateData));
       } else {
-        // Mock create operation
+        // Create new token
         const newToken: TotalToken = {
-          id: Date.now(), // Mock ID
+          id: Date.now(), // Will be replaced by backend
           ...formData,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
-        setTokens([...tokens, newToken]);
+        const createData = {
+          field_name: 'total_tokens' as const,
+          data: newToken
+        };
+        await dispatch(createAdminSettingApi(createData));
       }
       setOpenDialog(false);
       setEditToken(null);
@@ -81,9 +91,14 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
   const handleDelete = async () => {
     if (deleteTokenId) {
       try {
-        // Mock delete operation
-        const filteredTokens = tokens.filter(token => token.id !== deleteTokenId);
-        setTokens(filteredTokens);
+        const tokenToDelete = data.find(token => token.id === deleteTokenId);
+        if (tokenToDelete) {
+          const deleteData = {
+            field_name: 'total_tokens' as const,
+            data: tokenToDelete
+          };
+          await dispatch(deleteAdminSettingApi(deleteData));
+        }
         setDeleteTokenId(null);
       } catch (error) {
         console.error('Error deleting token:', error);
@@ -156,7 +171,7 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tokens.map((token) => (
+            {data.map((token) => (
               <TableRow key={token.id}>
                 <TableCell className="font-medium">{token.title}</TableCell>
                 <TableCell className="max-w-xs truncate">{token.description}</TableCell>

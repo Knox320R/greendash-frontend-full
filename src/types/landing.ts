@@ -1,3 +1,5 @@
+import { AdminDashboardSummary } from "./admin";
+
 export interface UserData {
   id: number;
   email: string;
@@ -147,6 +149,6 @@ export interface AdminData {
   rank_plans: RankPlan[];
   commission_plans: CommissionPlan[];
   total_tokens: TotalToken[];
-  enterprise: any
+  enterprise?: AdminDashboardSummary;
 }
 

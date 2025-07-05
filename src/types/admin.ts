@@ -1,146 +1,95 @@
-// user states
+// User summary stats
 export interface UserStats {
     total: number;
     active: number;
     verified: number;
     new_today: number;
-}
-
-// staking states
-export interface StakingStats {
+  }
+  
+  // Staking summary stats
+  export interface StakingStats {
     total: number;
     active: number;
     total_staked: number;
     total_rewards_paid: number;
-}
-
-// financial states
-export interface FinancialStats {
+  }
+  
+  // Financial summary stats
+  export interface FinancialStats {
     total_invested: number;
     total_earned: number;
     total_withdrawn: number;
-}
-
-// transaction states
-export interface TransactionStats {
+  }
+  
+  // Transaction summary stats
+  export interface TransactionStats {
     total: number;
     pending: number;
     completed: number;
-}
-
-// withdrawal states
-export interface WithdrawalStats {
+  }
+  
+  // Withdrawals summary stats
+  export interface WithdrawalsStats {
     pending: number;
     pending_amount: number;
-}
-
-// dashboard statistics
-export interface DashboardStatistics {
-    adminSettings: AdminSetting[];
-    users: UserStats;
-    staking: StakingStats;
-    financial: FinancialStats;
-    transactions: TransactionStats;
-    withdrawals: WithdrawalStats;
-    recent_activities: RecentActivities;
-}
-
-// recent users
-export interface RecentUser {
+  }
+  
+  // Recent user activity entry
+  export interface RecentActivityUser {
     id: number;
     email: string;
-    first_name: string;
-    last_name: string;
-    created_at: string;
+    name: string;
+    created_at: string; // ISO date string
     is_email_verified: boolean;
-}
-
-// recent stakings
-export interface RecentStaking {
-    id: number;
-    start_date: string;
-    end_date: string;
-    last_reward_date: string | null;
-    status: string;
-    payment_amount: string;
-    created_at: string;
-    user: {
-        email: string;
-        first_name: string;
-        last_name: string;
-    };
-    package: {
-        name: string;
-    };
-}
-
-// recent transactions
-export interface RecentTransaction {
-    id: number;
-    transaction_type: string;
-    amount: string;
-    status: string;
-    created_at: string;
-    user: {
-        email: string;
-        first_name: string;
-        last_name: string;
-    };
-}
-
-// recent activities
-export interface RecentActivities {
-    users: RecentUser[];
-    stakings: RecentStaking[];
-    transactions: RecentTransaction[];
-}
-
-// admin settings
-export interface AdminSetting {
-    id: number;
-    title: string;
-    description?: string;
-    value: string;
-    updated_at: string;
-}
-
-// user list
-export interface UserListResponse {
-    users: UserItem[];
-    pagination: Pagination;
-}
-
-export interface UserItem {
-    id: number;
+    is_active: boolean;
+  }
+  
+  // Related user for staking/transaction
+  export interface RelatedUser {
     email: string;
-    first_name: string;
-    last_name: string;
-    phone: string;
-    wallet_address: string | null;
-    total_invested: string;
-    egd_balance: string;
-    last_login: string;
-    created_at: string;
-}
-
-// staking list
-export interface StakingListResponse {
-    stakings: StakingItem[];
-    pagination: Pagination;
-}
-
-export interface StakingItem {
+    name: string;
+  }
+  
+  // Related staking package for recent staking activity
+  export interface StakingPackage {
+    name: string;
+    stake_amount: string; // keep as string for precision display
+  }
+  
+  // Recent staking activity entry
+  export interface RecentActivityStaking {
     id: number;
-    user_id: number;
-    package_id: number;
-    stake_amount: string; // decimal as string
-    start_date: string;   // ISO date string
-    transaction_hash: string | null;
-}
-
-export interface Pagination {
-    current_page: number;
-    total_pages: number;
-    total_items: number;
-    items_per_page: number;
-}
+    status: 'active' | 'completed' | string;
+    created_at: string; // ISO date string
+    user: RelatedUser;
+    package: StakingPackage;
+  }
+  
+  // Recent transaction activity entry
+  export interface RecentActivityTransaction {
+    id: number;
+    type: 'staking' | 'withdrawal' | 'referral' | string;
+    direction: 'in' | 'out' | string;
+    amount: number;
+    status: 'pending' | 'completed' | string;
+    created_at: string; // ISO date string
+    user: RelatedUser;
+  }
+  
+  // Recent activities aggregation
+  export interface RecentActivities {
+    users: RecentActivityUser[];
+    stakings: RecentActivityStaking[];
+    transactions: RecentActivityTransaction[];
+  }
+  
+  // Full dashboard summary response
+  export interface AdminDashboardSummary {
+    users?: UserStats;
+    staking?: StakingStats;
+    financial?: FinancialStats;
+    transactions?: TransactionStats;
+    withdrawals?: WithdrawalsStats;
+    recent_activities?: RecentActivities;
+  }
+  

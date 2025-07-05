@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/store';
+import { createAdminSettingApi, updateAdminSettingApi, deleteAdminSettingApi } from '@/store/admin';
 import { StakingPackage } from '@/types/landing';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
@@ -24,10 +27,10 @@ interface StakingPackageForm {
 }
 
 const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [openDialog, setOpenDialog] = useState(false);
   const [editPackage, setEditPackage] = useState<StakingPackage | null>(null);
   const [deletePackageId, setDeletePackageId] = useState<number | null>(null);
-  const [packages, setPackages] = useState<StakingPackage[]>(data);
 
   const form = useForm<StakingPackageForm>({
     defaultValues: {
@@ -62,22 +65,29 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
   const handleSubmit = async (formData: StakingPackageForm) => {
     try {
       if (editPackage) {
-        // Mock update operation
-        const updatedPackages = packages.map(pkg =>
-          pkg.id === editPackage.id
-            ? { ...pkg, ...formData, updatedAt: new Date().toISOString() }
-            : pkg
-        );
-        setPackages(updatedPackages);
+        // Update existing package
+        const updateData = {
+          field_name: 'staking_packages' as const,
+          data: {
+            ...editPackage,
+            ...formData,
+            updatedAt: new Date().toISOString(),
+          }
+        };
+        await dispatch(updateAdminSettingApi(updateData));
       } else {
-        // Mock create operation
+        // Create new package
         const newPackage: StakingPackage = {
-          id: Date.now(), // Mock ID
+          id: Date.now(), // Will be replaced by backend
           ...formData,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
-        setPackages([...packages, newPackage]);
+        const createData = {
+          field_name: 'staking_packages' as const,
+          data: newPackage
+        };
+        await dispatch(createAdminSettingApi(createData));
       }
       setOpenDialog(false);
       setEditPackage(null);
@@ -89,9 +99,14 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
   const handleDelete = async () => {
     if (deletePackageId) {
       try {
-        // Mock delete operation
-        const filteredPackages = packages.filter(pkg => pkg.id !== deletePackageId);
-        setPackages(filteredPackages);
+        const packageToDelete = data.find(pkg => pkg.id === deletePackageId);
+        if (packageToDelete) {
+          const deleteData = {
+            field_name: 'staking_packages' as const,
+            data: packageToDelete
+          };
+          await dispatch(deleteAdminSettingApi(deleteData));
+        }
         setDeletePackageId(null);
       } catch (error) {
         console.error('Error deleting package:', error);
@@ -180,7 +195,7 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {packages.map((pkg) => (
+            {data.map((pkg) => (
               <TableRow key={pkg.id}>
                 <TableCell className="font-medium">{pkg.name}</TableCell>
                 <TableCell className="max-w-xs truncate">{pkg.description}</TableCell>

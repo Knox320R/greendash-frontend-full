@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/store';
+import { createAdminSettingApi, updateAdminSettingApi, deleteAdminSettingApi } from '@/store/admin';
 import { AdminSetting } from '@/types/landing';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
@@ -22,10 +25,10 @@ interface AdminSettingForm {
 }
 
 const AdminSettings: React.FC<AdminSettingsProps> = ({ data }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [openDialog, setOpenDialog] = useState(false);
   const [editSetting, setEditSetting] = useState<AdminSetting | null>(null);
   const [deleteSettingId, setDeleteSettingId] = useState<number | null>(null);
-  const [settings, setSettings] = useState<AdminSetting[]>(data);
 
   const form = useForm<AdminSettingForm>({
     defaultValues: {
@@ -54,22 +57,29 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ data }) => {
   const handleSubmit = async (formData: AdminSettingForm) => {
     try {
       if (editSetting) {
-        // Mock update operation
-        const updatedSettings = settings.map(setting =>
-          setting.id === editSetting.id
-            ? { ...setting, ...formData, updatedAt: new Date().toISOString() }
-            : setting
-        );
-        setSettings(updatedSettings);
+        // Update existing setting
+        const updateData = {
+          field_name: 'admin_settings' as const,
+          data: {
+            ...editSetting,
+            ...formData,
+            updatedAt: new Date().toISOString(),
+          }
+        };
+        await dispatch(updateAdminSettingApi(updateData));
       } else {
-        // Mock create operation
+        // Create new setting
         const newSetting: AdminSetting = {
-          id: Date.now(), // Mock ID
+          id: Date.now(), // Will be replaced by backend
           ...formData,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
-        setSettings([...settings, newSetting]);
+        const createData = {
+          field_name: 'admin_settings' as const,
+          data: newSetting
+        };
+        await dispatch(createAdminSettingApi(createData));
       }
       setOpenDialog(false);
       setEditSetting(null);
@@ -81,9 +91,14 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ data }) => {
   const handleDelete = async () => {
     if (deleteSettingId) {
       try {
-        // Mock delete operation
-        const filteredSettings = settings.filter(setting => setting.id !== deleteSettingId);
-        setSettings(filteredSettings);
+        const settingToDelete = data.find(setting => setting.id === deleteSettingId);
+        if (settingToDelete) {
+          const deleteData = {
+            field_name: 'admin_settings' as const,
+            data: settingToDelete
+          };
+          await dispatch(deleteAdminSettingApi(deleteData));
+        }
         setDeleteSettingId(null);
       } catch (error) {
         console.error('Error deleting setting:', error);
@@ -156,7 +171,7 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ data }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {settings.map((setting) => (
+            {data.map((setting) => (
               <TableRow key={setting.id}>
                 <TableCell className="font-medium">{setting.title}</TableCell>
                 <TableCell className="max-w-xs truncate">{setting.description}</TableCell>

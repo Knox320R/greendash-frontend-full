@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
-import { getAdminData } from '@/store/admin';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,6 +10,7 @@ import {
   FaPercent,
   FaCoins,
   FaChevronRight,
+  FaChartLine,
 } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import AdminSettings from '@/pages/admin/sections/AdminSettings';
@@ -18,8 +18,15 @@ import StakingPackages from '@/pages/admin/sections/StakingPackages';
 import RankPlans from '@/pages/admin/sections/RankPlans';
 import CommissionPlans from '@/pages/admin/sections/CommissionPlans';
 import TotalTokens from '@/pages/admin/sections/TotalTokens';
+import Dashboard from '@/pages/admin/sections/Dashboard';
+import { getAdminData } from '@/store/admin';
 
 const sections = [
+  {
+    key: 'dashboard',
+    label: 'Dashboard',
+    icon: FaChartLine,
+  },
   {
     key: 'settings',
     label: 'Admin Settings',
@@ -48,6 +55,7 @@ const sections = [
 ];
 
 const sectionTitles: Record<string, string> = {
+  dashboard: 'Enterprise Dashboard',
   settings: 'Admin Settings Management',
   staking: 'Staking Package Management',
   ranks: 'Rank Plan Management',
@@ -56,14 +64,13 @@ const sectionTitles: Record<string, string> = {
 };
 
 const Admin: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const adminData = useSelector((state: RootState) => state.adminData);
-  const [selected, setSelected] = useState('settings');
-
+  const [selected, setSelected] = useState('dashboard');
+  const dispatch = useDispatch<AppDispatch>();
+  
   useEffect(() => {
-    // Fetch admin data when component mounts
-    // dispatch(getAdminData());
-  }, []);
+    dispatch(getAdminData());
+  }, [dispatch]);
 
   return (
     <div className="min-h-screen mt-[60px] flex bg-gray-50">
@@ -105,6 +112,7 @@ const Admin: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
+              {selected === 'dashboard' && <Dashboard />}
               {selected === 'settings' && <AdminSettings data={adminData.admin_settings} />}
               {selected === 'staking' && <StakingPackages data={adminData.staking_packages} />}
               {selected === 'ranks' && <RankPlans data={adminData.rank_plans} />}

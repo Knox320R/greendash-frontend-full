@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/store';
+import { createAdminSettingApi, updateAdminSettingApi, deleteAdminSettingApi } from '@/store/admin';
 import { RankPlan } from '@/types/landing';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
@@ -22,10 +25,10 @@ interface RankPlanForm {
 }
 
 const RankPlans: React.FC<RankPlansProps> = ({ data }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [openDialog, setOpenDialog] = useState(false);
   const [editPlan, setEditPlan] = useState<RankPlan | null>(null);
   const [deletePlanId, setDeletePlanId] = useState<number | null>(null);
-  const [plans, setPlans] = useState<RankPlan[]>(data);
 
   const form = useForm<RankPlanForm>({
     defaultValues: {
@@ -57,23 +60,31 @@ const RankPlans: React.FC<RankPlansProps> = ({ data }) => {
   const handleSubmit = async (formData: RankPlanForm) => {
     try {
       if (editPlan) {
-        // Mock update operation
-        const updatedPlans = plans.map(plan =>
-          plan.id === editPlan.id
-            ? { ...plan, ...formData, updatedAt: new Date().toISOString() }
-            : plan
-        );
-        setPlans(updatedPlans);
+        // Update existing plan
+        const updateData = {
+          field_name: 'rank_plans' as const,
+          data: {
+            ...editPlan,
+            ...formData,
+            equivalent: formData.equivalent || null,
+            updatedAt: new Date().toISOString(),
+          }
+        };
+        await dispatch(updateAdminSettingApi(updateData));
       } else {
-        // Mock create operation
+        // Create new plan
         const newPlan: RankPlan = {
-          id: Date.now(), // Mock ID
+          id: Date.now(), // Will be replaced by backend
           ...formData,
           equivalent: formData.equivalent || null,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
-        setPlans([...plans, newPlan]);
+        const createData = {
+          field_name: 'rank_plans' as const,
+          data: newPlan
+        };
+        await dispatch(createAdminSettingApi(createData));
       }
       setOpenDialog(false);
       setEditPlan(null);
@@ -85,9 +96,14 @@ const RankPlans: React.FC<RankPlansProps> = ({ data }) => {
   const handleDelete = async () => {
     if (deletePlanId) {
       try {
-        // Mock delete operation
-        const filteredPlans = plans.filter(plan => plan.id !== deletePlanId);
-        setPlans(filteredPlans);
+        const planToDelete = data.find(plan => plan.id === deletePlanId);
+        if (planToDelete) {
+          const deleteData = {
+            field_name: 'rank_plans' as const,
+            data: planToDelete
+          };
+          await dispatch(deleteAdminSettingApi(deleteData));
+        }
         setDeletePlanId(null);
       } catch (error) {
         console.error('Error deleting plan:', error);
@@ -168,7 +184,7 @@ const RankPlans: React.FC<RankPlansProps> = ({ data }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {plans.map((plan) => (
+            {data.map((plan) => (
               <TableRow key={plan.id}>
                 <TableCell className="font-medium">{plan.rank}</TableCell>
                 <TableCell>{plan.bonus_amount} USDT</TableCell>
