@@ -24,7 +24,12 @@ export default [
         element: <Register/>
     },
     {
-        path: '/verify-email',
+        path: '/register/:ref',
+        public: true,
+        element: <Register/>
+    },
+    {
+        path: '/verify-email/:token',
         public: true,
         element: <VerifyEmail/>
     },

@@ -18,9 +18,6 @@ const Affiliates = () => {
   const referralNetwork = referralSummary?.network || [];
   const uplineUsers = user_base_data?.upline_users || [];
   const [copied, setCopied] = React.useState(false);
-  const [inviteEmail, setInviteEmail] = React.useState('');
-  const [inviteError, setInviteError] = React.useState('');
-  const [inviteSuccess, setInviteSuccess] = React.useState(false);
   const referralLink = `${window.location.origin}/register?ref=${user?.referral_code}`;
   const copyReferralLink = async () => {
     try {
@@ -30,29 +27,6 @@ const Affiliates = () => {
     } catch (error) {
       // ignore
     }
-  };
-  const handleInvite = () => {
-    setInviteError('');
-    setInviteSuccess(false);
-    const email = inviteEmail.trim();
-    if (!email) {
-      setInviteError('Please enter an email address.');
-      return;
-    }
-    // Simple email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setInviteError('Please enter a valid email address.');
-      return;
-    }
-    const subject = encodeURIComponent('Join me on GreenDash!');
-    const body = encodeURIComponent(
-      `Hi there,%0D%0A%0D%0AI'd like to invite you to join GreenDash, a platform for sustainable investing and rewards. Use my referral link to sign up and start earning together!%0D%0A%0D%0AReferral Link: ${referralLink}%0D%0A%0D%0ASee you inside!`
-    );
-    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-    setInviteSuccess(true);
-    setInviteEmail('');
-    setTimeout(() => setInviteSuccess(false), 3000);
   };
 
   // Recursive tree rendering for referral network
@@ -137,26 +111,6 @@ const Affiliates = () => {
                         )}
                       </Button>
                     </div>
-                    <div className="flex gap-2 items-center mt-4">
-                      <Input
-                        placeholder='Input Email address to send your referral link'
-                        className="placeholder:text-[12px] flex-1"
-                        value={inviteEmail}
-                        onChange={e => setInviteEmail(e.target.value)}
-                        type="email"
-                        autoComplete="off"
-                        aria-label="Invite Email"
-                      />
-                      <Button onClick={handleInvite} variant="outline" className='flex-1 min-w-[100px]'>
-                        <FaEnvelopeOpenText className="mr-2 h-4 w-4" />
-                        Invite
-                      </Button>
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      Enter an email address and click Invite to send your referral link via email.
-                    </div>
-                    {inviteError && <div className="text-xs text-red-600 mt-1">{inviteError}</div>}
-                    {inviteSuccess && <div className="text-xs text-green-600 mt-1">Invitation email window opened!</div>}
                   </CardContent>
                 </Card>
               </div>

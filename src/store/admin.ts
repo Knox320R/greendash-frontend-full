@@ -44,8 +44,13 @@ const adminSlice = createSlice({
         concatPageDataSlice: (state, action) => {
             const { table_name, list, isMore } = action.payload
             if (!(['users', 'stakings', 'transactions'].includes(table_name))) return;
-            state[table_name] = state[table_name].list.concat(list)
+            state[table_name].list = state[table_name].list.concat(list)
             state[table_name].isMore = isMore
+        },
+        updatePageDataSlice: (state, action) => {
+            const { table_name, data } = action.payload
+            if (!(['users', 'stakings', 'transactions'].includes(table_name))) return;
+            state[table_name].list = state[table_name].list.map(item => item.id === data.id? data: item )
         },
         updateAdminSetting: (state, action) => {
             const { field_name, data } = action.payload
@@ -64,8 +69,23 @@ export const {
     updateAdminSetting,
     deleteAdminSetting,
     concatPageDataSlice,
-    setEnterprise
+    setEnterprise,
+    updatePageDataSlice
 } = adminSlice.actions;
+
+export const updateUserActive = (is_active: boolean, data: any ) => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(setLoading(true))
+        const res = await api.put<{ success: boolean, message: string }>('/admin/users/' + data.id, { is_active })
+        if(res.success) dispatch(updatePageDataSlice({ table_name: 'users', data}))
+        else throw "failed to update user info"
+    } catch (e) {
+        console.log(e);
+        toast.error("failed to update user info")
+    } finally {
+        dispatch(setLoading(false))
+    }
+}
 
 export const fetchPageData = (limit: number, offset: number, table_name: string) => async (dispatch: AppDispatch) => {
     try {

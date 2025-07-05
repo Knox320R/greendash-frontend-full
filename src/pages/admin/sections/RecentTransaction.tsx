@@ -7,12 +7,32 @@ import { fetchPageData } from '@/store/admin';
 
 const RecentTransaction: React.FC = () => {
   const { list, isMore } = useSelector((state: RootState) => state.adminData?.transactions || { list: [], isMore: true });
-  const [limit, setLimit] = useState(10)
+  const [limit, setLimit] = useState(5)
+  const [search, setSearch] = useState('');
 
   const dispatch = useDispatch<AppDispatch>()
+
   useEffect(() => {
-    if(isMore) dispatch(fetchPageData(limit, list.length, "users"))
+    if(isMore && list.length === 0) dispatch(fetchPageData(limit, list.length, "transactions"))
   }, [])
+
+  const flatten = (obj: any) => {
+    let result: any[] = [];
+    for (const key in obj) {
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        result = result.concat(flatten(obj[key]));
+      } else {
+        result.push(obj[key]);
+      }
+    }
+    return result;
+  };
+
+  const filtered = list.filter(tx =>
+    flatten(tx).some(val =>
+      (val !== null && val !== undefined && val.toString().toLowerCase().includes(search.toLowerCase()))
+    )
+  );
 
   return (
     <Card className="mb-6">
@@ -21,6 +41,15 @@ const RecentTransaction: React.FC = () => {
           <FaExchangeAlt className="text-purple-600" />
           Recent Transactions
         </CardTitle>
+        <div className="flex flex-col md:flex-row md:items-center gap-2 mt-4">
+          <input
+            type="text"
+            placeholder="Search by any field..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full mt-4 px-3 py-2 border rounded focus:outline-none focus:ring focus:border-green-400 text-sm"
+          />
+        </div>
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto">
@@ -36,7 +65,7 @@ const RecentTransaction: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {list.slice(0, 10).map((tx) => (
+              {filtered.slice(0, 10).map((tx) => (
                 <tr key={tx.id} className="border-b last:border-0">
                   <td className="px-3 py-2 whitespace-nowrap">{tx.user?.name || '-'}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{tx.type}</td>
@@ -60,6 +89,28 @@ const RecentTransaction: React.FC = () => {
           </table>
         </div>
       </CardContent>
+      <div className="flex justify-center items-center gap-4 pb-4">
+        <select
+          className="w-full md:w-32 px-3 py-2 border rounded focus:outline-none focus:ring focus:border-green-400 text-sm"
+          value={limit}
+          onChange={e => {
+            const newLimit = parseInt(e.target.value, 10);
+            setLimit(newLimit);
+            if (isMore) dispatch(fetchPageData(newLimit, list.length, "transactions"));
+          }}
+        >
+          {[10, 20, 50, 100].map(opt => (
+            <option key={opt} value={opt}>{opt}</option>
+          ))}
+        </select>
+        <button
+          className="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:bg-gray-400 transition"
+          disabled={!isMore}
+          onClick={() => dispatch(fetchPageData(limit, list.length, "transactions"))}
+        >
+          View More
+        </button>
+      </div>
     </Card>
   );
 };

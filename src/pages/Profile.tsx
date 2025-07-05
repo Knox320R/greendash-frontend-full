@@ -26,7 +26,7 @@ import { formatDate, truncateAddress } from '@/lib/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { UserBaseData, UserData } from '@/types/landing';
-import { setUser } from '@/store/auth';
+import { updateUser } from '@/store/auth';
 import { toast } from 'react-toastify';
 
 const Profile = () => {
@@ -74,7 +74,7 @@ const Profile = () => {
       setIsLoading(true);
       const response = await api.put<{ success: boolean; data: { user: UserData } }>('/users/profile', formData);
       if (response.success) {
-        dispatch(setUser(response.data.user)); // Refresh user data
+        dispatch(updateUser(formData)); // Refresh user data
         setIsEditing(false);
         alert('Profile updated successfully!');
       }
@@ -271,6 +271,16 @@ const Profile = () => {
                             {truncateAddress(formData.wallet_address)}
                           </p>
                         )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="phone">Your Phone Number</Label>
+                        <Input
+                          id="phone"
+                          value={formData.phone || ''}
+                          onChange={(e) => handleInputChange('phone', e.target.value)}
+                          disabled={!isEditing}
+                          placeholder={user.phone}
+                        />
                       </div>
                     </CardContent>
                   </Card>

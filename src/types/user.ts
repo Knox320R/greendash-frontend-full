@@ -1,11 +1,10 @@
 export interface UserProfile {
     id: number;
     email: string;
-    first_name: string;
-    last_name: string;
-    phone: string;
-    wallet_address: string;
-    referral_code: string;
+    name: string;
+    phone?: string;
+    wallet_address?: string;
+    referral_code?: string;
     referred_by: string | null;
     referral_level: number;
     egd_balance: string;

@@ -5,6 +5,7 @@ export interface UserData {
   email: string;
   name: string;
   referral_code: string;
+  phone?: string;
   is_admin: boolean;
   egd_balance: number;
   withdrawals: number;

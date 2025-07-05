@@ -166,14 +166,11 @@ export const authApi = {
         try {
             dispatch(setLoading(true));
             dispatch(clearError());
-
-            const response = await api.put<{ success: boolean; data: UserProfile; message: string }>('/users/profile', userData);
-            dispatch(setLoading(false));
-
+            const response = await api.put<{ success: boolean; message: string }>('/users/profile', userData);
             if (response.success) {
-                dispatch(setUser(response.data));
+                dispatch(updateUser(userData));
                 toast.success(response.message || 'Profile updated successfully!');
-                return response.data;
+                return
             } else {
                 throw new Error(response.message || 'Failed to update profile');
             }
@@ -182,7 +179,8 @@ export const authApi = {
             dispatch(setError(errorMessage));
             dispatch(setLoading(false));
             toast.error(errorMessage);
-
+        } finally {
+            dispatch(setLoading(false));
         }
     },
 

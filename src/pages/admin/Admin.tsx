@@ -22,6 +22,9 @@ import CommissionPlans from '@/pages/admin/sections/CommissionPlans';
 import TotalTokens from '@/pages/admin/sections/TotalTokens';
 import Dashboard from '@/pages/admin/sections/Dashboard';
 import { getAdminData } from '@/store/admin';
+import RecentUser from './sections/RecentUser';
+import RecentStaking from './sections/RecentStaking';
+import RecentTransaction from './sections/RecentTransaction';
 
 const sections = [
   {
@@ -138,6 +141,9 @@ const Admin: React.FC = () => {
               {selected === 'ranks' && <RankPlans data={adminData.rank_plans} />}
               {selected === 'commissions' && <CommissionPlans data={adminData.commission_plans} />}
               {selected === 'tokens' && <TotalTokens data={adminData.total_tokens} />}
+              {selected === 'user_list' && <RecentUser/>}
+              {selected === 'staking_list' && <RecentStaking/>}
+              {selected === 'transaction_list' && <RecentTransaction/>}
             </CardContent>
           </Card>
         </motion.div>

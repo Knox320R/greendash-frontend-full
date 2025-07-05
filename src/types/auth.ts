@@ -26,14 +26,10 @@ export interface RegisterForm {
 }
 
 export interface UpdateProfileForm {
-    first_name?: string;
-    last_name?: string;
+    name?: string;
+    wallet_address?: string;
     phone?: string;
-    country?: string;
-    city?: string;
-    timezone?: string;
-    language?: string;
-    profile_image?: string;
+    is_active?: string;
 }
 
 // API Response Types - Updated to match backend responses
