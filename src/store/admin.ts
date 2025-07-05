@@ -23,7 +23,8 @@ const initialState: AdminData = {
         isMore: true,
         list: []
     },
-    enterprise: {}
+    enterprise: {},
+    selectedTab: 'dashboard'
 };
 
 // Auth slice
@@ -52,6 +53,9 @@ const adminSlice = createSlice({
             if (!(['users', 'stakings', 'transactions'].includes(table_name))) return;
             state[table_name].list = state[table_name].list.map(item => item.id === data.id? data: item )
         },
+        setSelectedTab: (state, action) => {
+            state.selectedTab = action.payload
+        },
         updateAdminSetting: (state, action) => {
             const { field_name, data } = action.payload
             state[field_name] = state[field_name].map(item => item.id === data.id ? data : item)
@@ -70,7 +74,8 @@ export const {
     deleteAdminSetting,
     concatPageDataSlice,
     setEnterprise,
-    updatePageDataSlice
+    updatePageDataSlice,
+    setSelectedTab
 } = adminSlice.actions;
 
 export const updateUserActive = (is_active: boolean, data: any ) => async (dispatch: AppDispatch) => {

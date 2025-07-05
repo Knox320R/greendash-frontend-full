@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,7 +21,7 @@ import RankPlans from '@/pages/admin/sections/RankPlans';
 import CommissionPlans from '@/pages/admin/sections/CommissionPlans';
 import TotalTokens from '@/pages/admin/sections/TotalTokens';
 import Dashboard from '@/pages/admin/sections/Dashboard';
-import { getAdminData } from '@/store/admin';
+import { getAdminData, setSelectedTab } from '@/store/admin';
 import RecentUser from './sections/RecentUser';
 import RecentStaking from './sections/RecentStaking';
 import RecentTransaction from './sections/RecentTransaction';
@@ -88,12 +88,16 @@ const sectionTitles: Record<string, string> = {
 
 const Admin: React.FC = () => {
   const adminData = useSelector((state: RootState) => state.adminData);
-  const [selected, setSelected] = useState('dashboard');
+  const selected = useSelector((state: RootState) => state.adminData.selectedTab);
   const dispatch = useDispatch<AppDispatch>();
   
   useEffect(() => {
-    dispatch(getAdminData());
+    if(!adminData?.enterprise?.users?.total) dispatch(getAdminData());
   }, [dispatch]);
+
+  const handleTabChange = (tabKey: string) => {
+    dispatch(setSelectedTab(tabKey));
+  };
 
   return (
     <div className="min-h-screen mt-[60px] flex bg-gray-50">
@@ -108,7 +112,7 @@ const Admin: React.FC = () => {
               key={section.key}
               variant={selected === section.key ? 'default' : 'ghost'}
               className={`w-full flex items-center justify-start gap-3 px-6 py-3 rounded-none text-md font-medium transition-all ${selected === section.key ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-green-50'}`}
-              onClick={() => setSelected(section.key)}
+              onClick={() => handleTabChange(section.key)}
             >
               <section.icon className="w-5 h-5" />
               {section.label}

@@ -18,7 +18,6 @@ import type { AppDispatch } from '@/store';
 
 const Home: React.FC = () => {
   // State for carousel and other interactive elements
-
   const dispatch = useDispatch<AppDispatch>();
 
   const [openTokenDialog, setOpenTokenDialog] = useState(false);
@@ -88,7 +87,7 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatch(getMainSettings());
+    if(!adminData.admin_settings.length) dispatch(getMainSettings());
   }, [])
 
   // Auto-play effect

@@ -154,5 +154,6 @@ export interface AdminData {
   stakings: StakingList;
   transactions: TransactionList;
   enterprise?: AdminDashboardSummary;
+  selectedTab: string;
 }
 

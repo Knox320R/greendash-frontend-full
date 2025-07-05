@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { FaUser } from 'react-icons/fa';
-import { fetchPageData } from '@/store/admin';
+import { fetchPageData, updateUserActive } from '@/store/admin';
 
 const RecentUser: React.FC = () => {
   const { list, isMore } = useSelector((state: RootState) => state.adminData?.users || { list: [], isMore: true });
@@ -32,6 +32,11 @@ const RecentUser: React.FC = () => {
       (val !== null && val !== undefined && val.toString().toLowerCase().includes(search.toLowerCase()))
     )
   );
+
+  const handleToggleActive = (user: any) => {
+    const newActiveState = !user.is_active;
+    dispatch(updateUserActive(newActiveState, { ...user, is_active: newActiveState }));
+  };
 
   return (
     <Card className="mb-6">
@@ -76,11 +81,16 @@ const RecentUser: React.FC = () => {
                     )}
                   </td>
                   <td className="px-3 py-2 whitespace-nowrap">
-                    {user.is_active ? (
-                      <span className="text-green-600 font-bold">Yes</span>
-                    ) : (
-                      <span className="text-gray-400">No</span>
-                    )}
+                    <button
+                      onClick={() => handleToggleActive(user)}
+                      className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                        user.is_active
+                          ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                          : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                      }`}
+                    >
+                      {user.is_active ? 'Active' : 'Inactive'}
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -98,7 +108,7 @@ const RecentUser: React.FC = () => {
             if (isMore) dispatch(fetchPageData(newLimit, list.length, "users"));
           }}
         >
-          {[10, 20, 50, 100].map(opt => (
+          {[5, 10, 20, 50, 100].map(opt => (
             <option key={opt} value={opt}>{opt}</option>
           ))}
         </select>
@@ -114,4 +124,4 @@ const RecentUser: React.FC = () => {
   );
 };
 
-export default RecentUser; 
+export default RecentUser;

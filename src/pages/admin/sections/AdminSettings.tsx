@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
-import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaExclamationTriangle } from 'react-icons/fa';
 import { formatDate } from '@/lib/utils';
 
 interface AdminSettingsProps {
@@ -29,6 +29,8 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ data }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [editSetting, setEditSetting] = useState<AdminSetting | null>(null);
   const [deleteSettingId, setDeleteSettingId] = useState<number | null>(null);
+  const [showTitleWarning, setShowTitleWarning] = useState(false);
+  const [originalTitle, setOriginalTitle] = useState<string>('');
 
   const form = useForm<AdminSettingForm>({
     defaultValues: {
@@ -45,16 +47,28 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ data }) => {
         description: editSetting.description,
         value: editSetting.value,
       });
+      setOriginalTitle(editSetting.title);
     } else {
       form.reset({
         title: '',
         description: '',
         value: '',
       });
+      setOriginalTitle('');
     }
   }, [editSetting, form]);
 
+  const [confirmTitleChange, setConfirmTitleChange] = useState(false);
+  const [pendingFormData, setPendingFormData] = useState<AdminSettingForm | null>(null);
+
   const handleSubmit = async (formData: AdminSettingForm) => {
+    // Check if title has changed and show confirmation
+    if (editSetting && formData.title !== originalTitle && !confirmTitleChange) {
+      setPendingFormData(formData);
+      setConfirmTitleChange(true);
+      return;
+    }
+
     try {
       if (editSetting) {
         // Update existing setting
@@ -83,6 +97,9 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ data }) => {
       }
       setOpenDialog(false);
       setEditSetting(null);
+      setConfirmTitleChange(false);
+      setPendingFormData(null);
+      setShowTitleWarning(false);
     } catch (error) {
       console.error('Error saving setting:', error);
     }
@@ -103,6 +120,14 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ data }) => {
       } catch (error) {
         console.error('Error deleting setting:', error);
       }
+    }
+  };
+
+  const handleTitleChange = (newTitle: string) => {
+    if (editSetting && originalTitle && newTitle !== originalTitle) {
+      setShowTitleWarning(true);
+    } else {
+      setShowTitleWarning(false);
     }
   };
 
@@ -128,8 +153,28 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ data }) => {
               <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
                 <FormField name="title" control={form.control} render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl><Input {...field} required /></FormControl>
+                    <FormLabel className="flex items-center gap-2">
+                      Title
+                      {showTitleWarning && (
+                        <FaExclamationTriangle className="w-4 h-4 text-orange-500" title="Title change detected" />
+                      )}
+                    </FormLabel>
+                    <FormControl>
+                      <Input 
+                        {...field} 
+                        required 
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleTitleChange(e.target.value);
+                        }}
+                      />
+                    </FormControl>
+                    {showTitleWarning && (
+                      <div className="text-sm text-orange-600 bg-orange-50 p-2 rounded border border-orange-200">
+                        <strong>Warning:</strong> Changing the title may affect system references. 
+                        Other parts of the application may reference this setting by its current title.
+                      </div>
+                    )}
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -156,6 +201,53 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ data }) => {
             </Form>
           </DialogContent>
         </Dialog>
+
+        {/* Title Change Confirmation Dialog */}
+        <AlertDialog open={confirmTitleChange} onOpenChange={setConfirmTitleChange}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2">
+                <FaExclamationTriangle className="w-5 h-5 text-orange-500" />
+                Confirm Title Change
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                <div className="space-y-2">
+                  <p>You are about to change the setting title from:</p>
+                  <div className="bg-gray-100 p-2 rounded font-mono text-sm">
+                    "{originalTitle}"
+                  </div>
+                  <p>to:</p>
+                  <div className="bg-gray-100 p-2 rounded font-mono text-sm">
+                    "{pendingFormData?.title}"
+                  </div>
+                  <p className="text-red-600 font-medium mt-3">
+                    ⚠️ This change may affect system functionality if other parts of the application 
+                    reference this setting by its current title.
+                  </p>
+                  <p>Are you sure you want to proceed?</p>
+                </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => {
+                setConfirmTitleChange(false);
+                setPendingFormData(null);
+              }}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={() => {
+                  if (pendingFormData) {
+                    handleSubmit(pendingFormData);
+                  }
+                }}
+                className="bg-orange-600 hover:bg-orange-700"
+              >
+                Yes, Change Title
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
       
       <div className="overflow-x-auto rounded-lg border">
