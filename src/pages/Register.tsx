@@ -16,7 +16,8 @@ const Register = () => {
     confirmPassword: '',
     referral_code: '',
     phone: '',
-    wallet_address: ''
+    wallet_address: '',
+    parent_leg: 'left'
   });
   const [passwordError, setPasswordError] = useState('');
   const [ref, setRef] = useState('')
@@ -46,7 +47,7 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       setPasswordError('Passwords do not match');
@@ -69,7 +70,7 @@ const Register = () => {
     try {
       const { confirmPassword, ...registerData } = formData;
       const res = await register(registerData);
-      if(confirm(res)) navigate('/')
+      if (confirm(res)) navigate('/')
       // Navigation will be handled by the useEffect above
     } catch (err) {
       // Error is already handled by the auth slice
@@ -83,7 +84,7 @@ const Register = () => {
       ...prev,
       [e.target.name]: e.target.value
     }));
-    
+
     // Clear password error when user starts typing
     if (e.target.name === 'password' || e.target.name === 'confirmPassword') {
       setPasswordError('');
@@ -144,7 +145,7 @@ const Register = () => {
                   {passwordError}
                 </motion.div>
               )}
-              
+
               <motion.div
                 className="space-y-2"
                 initial={{ opacity: 0, x: -30 }}
@@ -298,6 +299,45 @@ const Register = () => {
                 className="space-y-2"
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.47 }}
+              >
+                <label className="text-sm font-medium text-gray-700 block mb-1">
+                  Parent Leg <span className="text-red-500">*</span>
+                </label>
+                <div className="flex gap-6">
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="parent_leg"
+                      value="left"
+                      checked={formData.parent_leg === 'left'}
+                      onChange={e => setFormData(prev => ({ ...prev, parent_leg: e.target.value }))}
+                      className="form-radio text-green-600 focus:ring-green-500"
+                      required
+                      disabled={isLoading}
+                    />
+                    <span className="ml-2 text-sm">Left</span>
+                  </label>
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="parent_leg"
+                      value="right"
+                      checked={formData.parent_leg === 'right'}
+                      onChange={e => setFormData(prev => ({ ...prev, parent_leg: e.target.value }))}
+                      className="form-radio text-green-600 focus:ring-green-500"
+                      required
+                      disabled={isLoading}
+                    />
+                    <span className="ml-2 text-sm">Right</span>
+                  </label>
+                </div>
+              </motion.div>
+
+              <motion.div
+                className="space-y-2"
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.65 }}
               >
                 <label htmlFor="wallet_address" className="text-sm font-medium text-gray-700">
@@ -323,8 +363,8 @@ const Register = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.7 }}
               >
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-green-600 hover:bg-green-700"
                   disabled={isLoading}
                 >

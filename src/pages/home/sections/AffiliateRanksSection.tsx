@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FaTrophy, FaMedal, FaCrown, FaGem, FaCar, FaGlobe } from 'react-icons/fa';
 import type { RankPlan } from '@/types/landing';
+import { useNavigate } from 'react-router-dom';
 
 interface AffiliateRanksSectionProps {
   rankPlans: RankPlan[];
@@ -21,6 +22,7 @@ const rankDisplayMap: Record<string, { icon: React.ElementType; color: string; b
 };
 
 const AffiliateRanksSection: React.FC<AffiliateRanksSectionProps> = ({ rankPlans }) => {
+  const navigate = useNavigate()
   return (
     <section className="py-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-50 via-white to-green-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -159,12 +161,12 @@ const AffiliateRanksSection: React.FC<AffiliateRanksSectionProps> = ({ rankPlans
             <p className="text-lg mb-6 opacity-90">
               Join GreenDash today and start building your affiliate network to unlock these amazing rewards.
             </p>
-            <a
-              href="#staking"
+            <button
               className="inline-block px-8 py-4 bg-white text-purple-600 font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              onClick={() => navigate('/login')}
             >
               Get Started Now
-            </a>
+            </button>
           </div>
         </motion.div>
       </div>

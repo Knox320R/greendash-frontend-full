@@ -23,8 +23,14 @@ const initialState: AppState = {
         email: "",
         referral_code: "",
         wallet_address: "",
+        referred_by: 1,
+        parent_leg: 'left',
+        left_volune: 0,
+        right_volume: 0,
         withdrawals: 0,
         egd_balance: 0,
+        created_at: "",
+        phone: ""
     } as UserData,
     user_base_data: {} as UserBaseData, // placeholder, adjust as needed
     token: "",

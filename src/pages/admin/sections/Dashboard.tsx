@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,9 +12,12 @@ import {
   FaEye,
   FaEdit,
 } from 'react-icons/fa';
+import { setSelectedTab } from '@/store/admin';
 
 const Dashboard: React.FC = () => {
   const enterprise = useSelector((state: RootState) => state.adminData.enterprise);
+  const dispatch = useDispatch()
+
   return (
     <div>
       <div className="mb-6">
@@ -170,19 +173,19 @@ const Dashboard: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <Button className="w-full justify-start" variant="outline">
+              <Button className="w-full justify-start" variant="outline" onClick={() => dispatch(setSelectedTab('withdrawal_list'))} >
                 <FaChartLine className="mr-2 h-4 w-4" />
                 View Analytics
               </Button>
-              <Button className="w-full justify-start" variant="outline">
+              <Button className="w-full justify-start" onClick={() => dispatch(setSelectedTab('user_list'))} variant="outline">
                 <FaUsers className="mr-2 h-4 w-4" />
                 User Management
               </Button>
-              <Button className="w-full justify-start" variant="outline">
+              <Button className="w-full justify-start" variant="outline" onClick={() => dispatch(setSelectedTab('staking_list'))}>
                 <FaCoins className="mr-2 h-4 w-4" />
                 Staking Overview
               </Button>
-              <Button className="w-full justify-start" variant="outline">
+              <Button className="w-full justify-start" onClick={() => dispatch(setSelectedTab('settings'))} variant="outline">
                 <FaEdit className="mr-2 h-4 w-4" />
                 System Settings
               </Button>

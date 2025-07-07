@@ -7,10 +7,10 @@ const VerifyEmail = () => {
     const [searchParams] = useSearchParams();
     const [status, setStatus] = useState('loading'); // 'loading' | 'success' | 'error'
     const [message, setMessage] = useState('');
-
+    
     useEffect(() => {
         const token = searchParams.get('token');
-
+        
         if (!token) {
             setStatus('error');
             setMessage('Verification token is missing.');

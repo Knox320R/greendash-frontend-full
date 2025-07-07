@@ -1,10 +1,14 @@
-import { AdminDashboardSummary, StakingList, TransactionList, UserList } from "./admin";
+import { AdminDashboardSummary, StakingList, TransactionList, UserList, WithdrawalList } from "./admin";
 
 export interface UserData {
   id: number;
   email: string;
   name: string;
   referral_code: string;
+  referred_by: number;
+  parent_leg: 'left' | 'right';
+  left_volune: number;
+  right_volume: number;
   phone?: string;
   is_admin: boolean;
   egd_balance: number;
@@ -152,6 +156,7 @@ export interface AdminData {
   total_tokens: TotalToken[];
   users: UserList;
   stakings: StakingList;
+  withdrawals: WithdrawalList;
   transactions: TransactionList;
   enterprise?: AdminDashboardSummary;
   selectedTab: string;

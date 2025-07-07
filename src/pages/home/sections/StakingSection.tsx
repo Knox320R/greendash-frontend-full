@@ -18,6 +18,8 @@ const packageIconMap: Record<string, React.ElementType> = {
 };
 
 const StakingSection: React.FC<StakingSectionProps> = ({ stakingPackages, adminSettings }) => {
+  const token_price = parseFloat((adminSettings?.find(item => item.title === "token_price"))?.value) || 0.01
+
   return (
     <section className="py-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-50 via-white to-green-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,12 +70,21 @@ const StakingSection: React.FC<StakingSectionProps> = ({ stakingPackages, adminS
                 </div>
                 <div className="mb-2 text-gray-500 text-[12px] text-center">{pkg.description}</div>
                 <div className="mb-2">
-                  <span className="block text-gray-500 text-sm">Amount</span>
+                  <span className="block text-gray-500 text-sm">EGD</span>
                   <span className="text-lg font-semibold text-green-700">{parseFloat(pkg.stake_amount).toLocaleString()}</span>
                 </div>
+                <div className="mb-2">
+                  <span className="block text-gray-500 text-sm">USDT</span>
+                  <span className="text-lg font-semibold text-yellow-700">{(parseFloat(pkg.stake_amount) * token_price).toLocaleString()}</span>
+                </div>
                 <div className="mb-4">
-                  <span className="block text-gray-500 text-sm">Daily Return</span>
+                  <span className="block text-gray-500 text-sm">Daily Return in EGD</span>
                   <span className="text-lg font-bold text-green-600">{pkg.daily_yield_percentage}%</span>
+                </div>
+                  <span className="block text-gray-500 text-[12px]">Total Earning</span>
+                <div className="mb-4 text-[14px] flex justify-between w-full">
+                  <span className="font-bold text-green-600">{pkg.daily_yield_percentage * parseFloat(pkg.stake_amount) / 100 * pkg.lock_period_days} EGD</span>
+                  <span className="font-bold text-yellow-600">{pkg.daily_yield_percentage * parseFloat(pkg.stake_amount) / 100 * pkg.lock_period_days * token_price} USDT</span>
                 </div>
               </motion.div>
             ))}

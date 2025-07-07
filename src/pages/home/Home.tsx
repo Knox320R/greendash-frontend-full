@@ -123,7 +123,7 @@ const Home: React.FC = () => {
       {/* Staking Section (move up, right after hero) */}
       <section id="staking" className="py-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-50 via-white to-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <StakingSection stakingPackages={adminData.staking_packages} adminSettings={adminData.admin_settings} />
+          <StakingSection stakingPackages={adminData.staking_packages} adminSettings={adminData.admin_settings}/>
         </div>
       </section>
 
@@ -189,7 +189,7 @@ const Home: React.FC = () => {
       {/* Contact Section */}
       <section id="contact" className="py-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-50 via-white to-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ContactSection isAuthenticated={false} supportEmail={adminData.admin_settings.find(s => s.title === 'support_email')?.value} />
+          {/* <ContactSection isAuthenticated={false} supportEmail={adminData.admin_settings.find(s => s.title === 'support_email')?.value} /> */}
         </div>
       </section>
 

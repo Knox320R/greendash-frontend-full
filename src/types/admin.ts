@@ -103,3 +103,16 @@ export interface TransactionList {
   list: RecentTransaction[];
 }
 
+export interface WithdrawalItem {
+  id: number;
+  amount: number;     // EGD amount
+  status: "pending" | "approved" | "rejected" | "processing" | "completed";
+  created_at: string; // ISO date string
+  updated_at: string; // ISO date string
+  user: RelatedUser;
+}
+
+export interface WithdrawalList {
+  isMore: boolean;
+  list: WithdrawalItem[];
+}

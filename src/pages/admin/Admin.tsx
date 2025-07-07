@@ -25,6 +25,8 @@ import { getAdminData, setSelectedTab } from '@/store/admin';
 import RecentUser from './sections/RecentUser';
 import RecentStaking from './sections/RecentStaking';
 import RecentTransaction from './sections/RecentTransaction';
+import { Menu } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const sections = [
   {
@@ -101,7 +103,36 @@ const Admin: React.FC = () => {
 
   return (
     <div className="min-h-screen mt-[60px] flex bg-gray-50">
-      {/* Sidebar */}
+      {/* Mobile Hamburger & Drawer */}
+      <div className="md:hidden fixed top-2 left-2 z-50">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon">
+              <Menu className="w-6 h-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-64">
+            <div className="px-6 py-6 border-b">
+              <h2 className="text-2xl font-bold text-green-700">Admin Dashboard</h2>
+            </div>
+            <nav className="flex-1 py-8 flex flex-col">
+              {sections.map((section) => (
+                <Button
+                  key={section.key}
+                  variant={selected === section.key ? 'default' : 'ghost'}
+                  className={`w-full flex items-center justify-start gap-3 px-6 py-3 rounded-none text-md font-medium transition-all ${selected === section.key ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-green-50'}`}
+                  onClick={() => handleTabChange(section.key)}
+                >
+                  <section.icon className="w-5 h-5" />
+                  {section.label}
+                  {selected === section.key && <FaChevronRight className="ml-auto w-4 h-4" />}
+                </Button>
+              ))}
+            </nav>
+          </SheetContent>
+        </Sheet>
+      </div>
+      {/* Sidebar for md+ screens */}
       <aside className="w-64 bg-white border-r shadow-lg hidden md:flex flex-col">
         <div className="px-6 py-6 border-b">
           <h2 className="text-2xl font-bold text-green-700">Admin Dashboard</h2>
@@ -121,7 +152,6 @@ const Admin: React.FC = () => {
           ))}
         </nav>
       </aside>
-      
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center p-6">
         <motion.div

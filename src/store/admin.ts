@@ -23,6 +23,10 @@ const initialState: AdminData = {
         isMore: true,
         list: []
     },
+    withdrawals: {
+        isMore: true,
+        list: []
+    },
     enterprise: {},
     selectedTab: 'dashboard'
 };
@@ -44,7 +48,7 @@ const adminSlice = createSlice({
         },
         concatPageDataSlice: (state, action) => {
             const { table_name, list, isMore } = action.payload
-            if (!(['users', 'stakings', 'transactions'].includes(table_name))) return;
+            if (!(['users', 'stakings', 'transactions', 'withdrawals'].includes(table_name))) return;
             state[table_name].list = state[table_name].list.concat(list)
             state[table_name].isMore = isMore
         },

@@ -16,7 +16,8 @@ import {
   FaExclamationTriangle,
   FaUserShield,
   FaSitemap,
-  FaUserFriends
+  FaUserFriends,
+  FaBolt
 } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
@@ -25,6 +26,8 @@ import { useNavigate } from 'react-router-dom';
 import { setLoading } from '@/store/auth';
 import { useDispatch } from 'react-redux';
 import { addDays, format as formatDateFns, differenceInDays, parseISO } from 'date-fns';
+import { format } from 'date-fns';
+import { Mail, Phone, Calendar, Users, ArrowLeftRight, UserPlus } from 'lucide-react';
 
 const packageColorMap: Record<string, string> = {
   'Daily Ride': '#22c55e', // green
@@ -70,6 +73,13 @@ const Dashboard = () => {
   const walletAddress = user?.wallet_address || '';
   const isAdmin = user?.is_admin;
   const name = user?.name || '';
+  const email = user?.email || '';
+  const phone = user?.phone || '';
+  const createdAt = user?.created_at || '';
+  const parentLeg = user?.parent_leg || '';
+  const leftVolume = user?.left_volune ?? 0;
+  const rightVolume = user?.right_volume ?? 0;
+  const referredBy = user?.referred_by;
 
   // Staking summary
   const stakingSummary = user_base_data?.staking;
@@ -115,6 +125,11 @@ const Dashboard = () => {
         return 'bg-gray-100 text-gray-800';
     }
   };
+
+  // Calculate active staking amount
+  const activeStakingAmount = stakings
+    .filter((s) => s.status === 'active')
+    .reduce((sum, s) => sum + parseFloat(s.stake_amount), 0);
 
   if (isLoading) {
     return (
@@ -192,11 +207,24 @@ const Dashboard = () => {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Active Staking Amount</CardTitle>
+              <FaBolt className="h-4 w-4 text-green-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">{activeStakingAmount} EGD</div>
+              <p className="text-xs text-muted-foreground">
+                Currently Staking Amount
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Referral Earnings</CardTitle>
               <FaUsers className="h-4 w-4 text-orange-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{totalEarnFromAffiliation} USDT</div>
+              <div className="text-2xl font-bold">{totalEarnFromAffiliation} EGD</div>
               <p className="text-xs text-muted-foreground">
                 From your network
               </p>
@@ -227,24 +255,64 @@ const Dashboard = () => {
                     <CardTitle>Account Status</CardTitle>
                     <CardDescription>Your account information</CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between">
+                  <CardContent>
+                    <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium">Wallet Connected</span>
                       <Badge variant={walletAddress ? "default" : "secondary"}>
                         {walletAddress ? "Connected" : "Not Connected"}
                       </Badge>
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium">Referral Code</span>
                       <code className="text-sm bg-gray-100 px-2 py-1 rounded">
                         {referralCode}
                       </code>
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-4">
                       <span className="text-sm font-medium">Admin</span>
                       <Badge variant={isAdmin ? "default" : "secondary"}>
                         {isAdmin ? "Yes" : "No"}
                       </Badge>
+                    </div>
+                    {/* Enhanced User Info Block */}
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
+                      <div className="flex items-center gap-2">
+                        <Mail className="w-4 h-4 text-blue-500" />
+                        <span className="font-medium text-gray-600">Email:</span>
+                        <span className="ml-auto text-gray-900">{email}</span>
+                      </div>
+                      {phone && (
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-4 h-4 text-green-500" />
+                          <span className="font-medium text-gray-600">Phone:</span>
+                          <span className="ml-auto text-gray-900">{phone}</span>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-purple-500" />
+                        <span className="font-medium text-gray-600">Registered:</span>
+                        <span className="ml-auto text-gray-900">{createdAt ? format(new Date(createdAt), 'yyyy-MM-dd') : '-'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <ArrowLeftRight className="w-4 h-4 text-orange-500" />
+                        <span className="font-medium text-gray-600">Parent Leg:</span>
+                        <span className="ml-auto text-gray-900 capitalize">{parentLeg}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-blue-600" />
+                        <span className="font-medium text-gray-600">Left Volume:</span>
+                        <span className="ml-auto text-gray-900">{leftVolume}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-pink-600" />
+                        <span className="font-medium text-gray-600">Right Volume:</span>
+                        <span className="ml-auto text-gray-900">{rightVolume}</span>
+                      </div>
+                      <div className="flex items-center gap-2 md:col-span-2">
+                        <UserPlus className="w-4 h-4 text-gray-500" />
+                        <span className="font-medium text-gray-600">Referred By:</span>
+                        <span className="ml-auto text-gray-900">{referredBy ?? '-'}</span>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

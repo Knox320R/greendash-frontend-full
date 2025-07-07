@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { USDT_ABI } from '@/lib/usdt_abi';
+
 import {
   FaLock,
   FaUnlock,
@@ -35,6 +35,7 @@ import { StakingPackage, AdminSetting } from '@/types/landing';
 import { useWallet } from '@/hooks/WalletContext';
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
+import { USDT_ABI, USDT_ADDRESS } from "@/lib/usdt_abi"; // Replace with your actual ABI/address
 
 interface UserStaking {
   id: number;
@@ -62,7 +63,7 @@ const Staking = () => {
   const adminData = useSelector((state: RootState) => state.adminData);
   const stakingPackages = adminData.staking_packages;
   const adminSettings = adminData.admin_settings;
-  const tokenPrice = adminSettings.find(s => s.title === 'token_price')?.value || '1';
+  const tokenPrice = adminSettings.find(s => s.title === 'token_price')?.value || '0.01';
   const platformReceiver = adminSettings.find(s => s.title === 'platform_address')?.value || '';
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('packages');
@@ -85,34 +86,37 @@ const Staking = () => {
     }
     setIsStaking(true);
     try {
-      // Get USDT address from admin settings
-      const usdtAddress = adminSettings.find(s => s.title === 'usdt_token_address')?.value;
-      if (!usdtAddress) throw new Error('USDT token address not set by admin.');
       const web3Provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await web3Provider.getSigner();
-      const usdt = new ethers.Contract(usdtAddress, USDT_ABI, signer);
-      const decimals = await usdt.decimals();
-      // Calculate USDT amount: package.stake_amount * tokenPrice
-      const usdtAmount = ethers.parseUnits((Number(pkg.stake_amount) * Number(tokenPrice)).toString(), decimals);
-      // Send USDT transfer
-      const tx = await usdt.transfer(platformReceiver, usdtAmount);
-      toast.warn('Waiting for USDT transaction confirmation...');
+      const newToken = new ethers.Contract(USDT_ADDRESS, USDT_ABI, signer);
+
+      // Calculate amount (use correct decimals)
+      const decimals = await newToken.decimals();
+      const amount = ethers.parseUnits((parseFloat(pkg.stake_amount) * parseFloat(tokenPrice)).toString(), decimals);
+
+      // Send token to staking contract/platform
+      const tx = await newToken.transfer(platformReceiver, amount);
+      toast.warn('Waiting for transaction confirmation...');
+
+      console.log(tx);
+
       const receipt = await tx.wait();
-      toast.success('USDT payment sent!');
-      // Send staking request to backend with tx hash
-      type StakingCreateResponse = { success: boolean; message?: string };
-      const response = await api.post<StakingCreateResponse>('/staking/create', {
+      toast.success('Token sent!');
+      console.log(receipt);
+      
+      // Notify backend
+      const response = await api.post('/staking/create', {
         package_id: pkg.id,
         payment_tx_hash: receipt.hash
       });
-      if (response.success) {
+      if (response) {
         setIsStaking(false);
         toast.success('Staking started successfully!');
       } else {
-        toast.error(response.message || 'Staking failed.');
+        toast.error('Staking failed.');
       }
     } catch (err: any) {
-      toast.error(err?.message || 'Staking failed.');
+      toast.error('Staking failed.');
     } finally {
       setIsStaking(false);
     }
