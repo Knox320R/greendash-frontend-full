@@ -4,6 +4,7 @@ import { api } from '@/lib/api';
 import { AppDispatch } from './index';
 import { setLoading } from './auth';
 import { toast } from 'sonner';
+import { WithdrawalItem } from '@/types/admin';
 
 const initialState: AdminData = {
     admin_settings: [],
@@ -54,8 +55,8 @@ const adminSlice = createSlice({
         },
         updatePageDataSlice: (state, action) => {
             const { table_name, data } = action.payload
-            if (!(['users', 'stakings', 'transactions'].includes(table_name))) return;
-            state[table_name].list = state[table_name].list.map(item => item.id === data.id? data: item )
+            if (!(['users', 'stakings', 'transactions', 'withdrawals'].includes(table_name))) return;
+            state[table_name].list = state[table_name].list.map(item => item.id === data.id ? data : item)
         },
         setSelectedTab: (state, action) => {
             state.selectedTab = action.payload
@@ -82,11 +83,11 @@ export const {
     setSelectedTab
 } = adminSlice.actions;
 
-export const updateUserActive = (is_active: boolean, data: any ) => async (dispatch: AppDispatch) => {
+export const updateUserActive = (is_active: boolean, data: any) => async (dispatch: AppDispatch) => {
     try {
         dispatch(setLoading(true))
         const res = await api.put<{ success: boolean, message: string }>('/admin/users/' + data.id, { is_active })
-        if(res.success) dispatch(updatePageDataSlice({ table_name: 'users', data}))
+        if (res.success) dispatch(updatePageDataSlice({ table_name: 'users', data }))
         else throw "failed to update user info"
     } catch (e) {
         console.log(e);
@@ -166,6 +167,34 @@ export const updateAdminSettingApi = (data: any) => async (dispatch: AppDispatch
     }
 }
 
+export const approveWithdrawal = (data: WithdrawalItem) => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(setLoading(true))
+        const res = await api.post<{ success: boolean, message: string }>('/admin/approve', { id: data.id })
+        if (res.success) dispatch(updatePageDataSlice({ table_name: "withdrawals", data: { ...data, status: 'approved' }}))
+        else throw { message: "failed to delete admin data" }
+    } catch (e) {
+        console.log(e);
+        toast.error(e.message)
+    } finally {
+        dispatch(setLoading(false))
+    }
+}
+
+export const rejectWithdrawal = (data: WithdrawalItem) => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(setLoading(true))
+        const res = await api.post<{ success: boolean }>('/admin/reject', { id: data.id })
+        if (res.success) dispatch(updatePageDataSlice({ table_name: "withdrawals", data: { ...data, status: 'rejected' }}))
+        else throw { message: "failed to delete admin data" }
+    } catch (e) {
+        console.log(e);
+        toast.error(e.message)
+    } finally {
+        dispatch(setLoading(false))
+    }
+}
+
 export const deleteAdminSettingApi = (data: any) => async (dispatch: AppDispatch) => {
     try {
         dispatch(setLoading(true))
@@ -179,5 +208,7 @@ export const deleteAdminSettingApi = (data: any) => async (dispatch: AppDispatch
         dispatch(setLoading(false))
     }
 }
+
+
 
 export default adminSlice.reducer; 

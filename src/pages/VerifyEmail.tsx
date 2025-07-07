@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { baseURL } from '@/lib/constants';
 
@@ -7,7 +7,8 @@ const VerifyEmail = () => {
     const [searchParams] = useSearchParams();
     const [status, setStatus] = useState('loading'); // 'loading' | 'success' | 'error'
     const [message, setMessage] = useState('');
-    
+    const navigate = useNavigate()
+
     useEffect(() => {
         const token = searchParams.get('token');
         
@@ -24,6 +25,9 @@ const VerifyEmail = () => {
                 if (response.data.success) {
                     setStatus('success');
                     setMessage('✅ Email verified successfully! You can now log in.');
+                    setTimeout(() => {
+                        navigate('/')
+                    }, 2000)
                 } else {
                     setStatus('error');
                     setMessage(response.data.message || '⚠️ Email verification failed. Token may be invalid or expired.');

@@ -4,7 +4,8 @@ import { toast } from 'sonner';
 import { LoginForm, RegisterForm, UpdateProfileForm, ResetPasswordForm, ConnectWalletForm, ChangePasswordForm } from '@/types/auth';
 import { AppDispatch } from './index';
 import { UserProfile } from '@/types/user';
-import { UserBaseData, UserData } from '@/types/landing';
+import { Staking, Transaction, UserBaseData, UserData } from '@/types/landing';
+import { WithdrawalItem } from '@/types/admin';
 
 // Initial state
 interface AppState {
@@ -50,6 +51,22 @@ const authSlice = createSlice({
             state.user = user;
             state.isAuthenticated = true;
         },
+        updateUserBaseData: (state, action) => {
+            const { new_transaction, new_staking } = action.payload
+            state.user_base_data.recent_transactions?.unshift(new_transaction)
+            state.user_base_data.staking?.stakings?.unshift(new_staking)
+            state.user_base_data.staking.total_staked += Number(new_staking?.stake_amount)
+        },
+        updateExchangeBaseData: (state, action) => {
+            const { withd, egd } = action.payload
+            state.user.egd_balance = egd
+            state.user.withdrawals = withd
+        },
+        updateWithdrawalData: (state, action) => {
+            const { newUser, newTransaction } = action.payload
+            state.user = { ...state.user, ...newUser }
+            state.user_base_data.recent_transactions.push(newTransaction)
+        },
         setToken: (state, action) => {
             state.token = action.payload;
         },
@@ -85,11 +102,50 @@ export const {
     setError,
     clearError,
     logout,
-    updateUser
+    updateUser,
+    updateUserBaseData,
+    updateExchangeBaseData,
+    updateWithdrawalData
 } = authSlice.actions;
 
 // API functions
 export const authApi = {
+
+    withdrawRequest: (amount: number) => async (dispatch: AppDispatch) => {
+        try {
+            dispatch(setLoading(true))
+            const res = await api.post<{ success: boolean, message: string, newUser: UserData, transaction: Transaction, withdrawal: WithdrawalItem }>("/users/withdraw", { amount })
+            if (res.success) {
+                toast.success("success to exchange EGD to USDT")
+                dispatch(updateWithdrawalData({ newUser: res.newUser, newTransaction: res.transaction }))
+            } else {
+                throw new console.error();
+            }
+        } catch (e) {
+            console.log(e);
+            toast.error("failed to exchange your EGD")
+        } finally {
+            dispatch(setLoading(false))
+        }
+    },
+
+    exchangeRequest: (egd: number) => async (dispatch: AppDispatch) => {
+        try {
+            dispatch(setLoading(true))
+            const res = await api.post<{ success: boolean, message: string, egd: number, withd: number }>("/users/exchange", { amount: egd })
+            if (res.success) {
+                toast.success("success to exchange EGD to USDT")
+                dispatch(updateExchangeBaseData({ egd: res.egd, withd: res.withd }))
+            } else {
+                throw new console.error();
+            }
+        } catch (e) {
+            console.log(e);
+            toast.error("failed to exchange your EGD")
+        } finally {
+            dispatch(setLoading(false))
+        }
+    },
 
     // Login user
     login: (credentials: LoginForm) => async (dispatch: AppDispatch) => {
@@ -234,7 +290,6 @@ export const authApi = {
             dispatch(setError(errorMessage));
             dispatch(setLoading(false));
             toast.error(errorMessage);
-
         }
     },
 
@@ -351,6 +406,24 @@ export const authApi = {
     updateBalance: (balance: { egd_balance: number; usdt_balance: number; total_invested: number; total_earned: number }) => async (dispatch: AppDispatch) => {
         dispatch(updateUser(balance));
     },
+
+    stakingRequest: (tx_hash: string, package_id: number, user_id: number) => async (dispatch: AppDispatch) => {
+        try {
+            dispatch(setLoading(true))
+            const res = await api.post<{ success: boolean, message: string, newTransaction: Transaction, newStaking: Staking }>('/users/staking', { tx_hash, package_id, user_id })
+            if (res.success) {
+                toast.success(res.message)
+                dispatch(updateUserBaseData({ new_transaction: res.newTransaction, new_staking: res.newStaking }))
+            } else {
+                toast.warning("A problem accured during your staking.")
+            }
+        } catch (e) {
+            console.log(e);
+            toast.error("failed to start staking")
+        } finally {
+            dispatch(setLoading(false))
+        }
+    }
 };
 
 export default authSlice.reducer; 

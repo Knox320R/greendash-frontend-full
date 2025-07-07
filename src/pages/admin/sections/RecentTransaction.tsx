@@ -4,11 +4,14 @@ import { AppDispatch, RootState } from '@/store';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { FaExchangeAlt } from 'react-icons/fa';
 import { fetchPageData } from '@/store/admin';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 const RecentTransaction: React.FC = () => {
   const { list, isMore } = useSelector((state: RootState) => state.adminData?.transactions || { list: [], isMore: true });
   const [limit, setLimit] = useState(5)
   const [search, setSearch] = useState('');
+  const [rejectModalTx, setRejectModalTx] = useState(null);
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -33,6 +36,16 @@ const RecentTransaction: React.FC = () => {
       (val !== null && val !== undefined && val.toString().toLowerCase().includes(search.toLowerCase()))
     )
   );
+
+  function handleAgree(tx) {
+    // TODO: Implement approve logic
+    alert(`Agreed to transaction ${tx.id}`);
+  }
+
+  function handleReject(tx) {
+    // TODO: Implement reject logic
+    alert(`Rejected transaction ${tx.id}`);
+  }
 
   return (
     <Card className="mb-6">
@@ -111,6 +124,28 @@ const RecentTransaction: React.FC = () => {
           View More
         </button>
       </div>
+      {rejectModalTx && (
+        <Dialog open={!!rejectModalTx} onOpenChange={() => setRejectModalTx(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirm Rejection</DialogTitle>
+            </DialogHeader>
+            <div>Are you sure you want to reject transaction #{rejectModalTx.id}?</div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setRejectModalTx(null)}>Cancel</Button>
+              <Button
+                className="bg-red-600 hover:bg-red-700 text-white"
+                onClick={() => {
+                  handleReject(rejectModalTx);
+                  setRejectModalTx(null);
+                }}
+              >
+                Reject
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </Card>
   );
 };

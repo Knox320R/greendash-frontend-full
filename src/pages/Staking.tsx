@@ -29,13 +29,14 @@ import { motion, number } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { api } from '@/lib/api';
 import { formatCurrency, formatNumber, formatDate } from '@/lib/utils';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store';
 import { StakingPackage, AdminSetting } from '@/types/landing';
 import { useWallet } from '@/hooks/WalletContext';
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
 import { USDT_ABI, USDT_ADDRESS } from "@/lib/usdt_abi"; // Replace with your actual ABI/address
+import { authApi } from '@/store/auth';
 
 interface UserStaking {
   id: number;
@@ -64,7 +65,7 @@ const Staking = () => {
   const stakingPackages = adminData.staking_packages;
   const adminSettings = adminData.admin_settings;
   const tokenPrice = adminSettings.find(s => s.title === 'token_price')?.value || '0.01';
-  const platformReceiver = adminSettings.find(s => s.title === 'platform_address')?.value || '';
+  const platformReceiver = adminSettings.find(s => s.title === 'platform_wallet_address')?.value || '';
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('packages');
   const [isStaking, setIsStaking] = useState(false);
@@ -74,6 +75,8 @@ const Staking = () => {
   const filteredStakings = stakingFilter === 'all'
     ? userStakings
     : userStakings.filter(s => s.status === stakingFilter);
+
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     // TODO: Refresh user stakings after staking (integrate getUserStakings if available)
@@ -86,35 +89,33 @@ const Staking = () => {
     }
     setIsStaking(true);
     try {
+
       const web3Provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await web3Provider.getSigner();
       const newToken = new ethers.Contract(USDT_ADDRESS, USDT_ABI, signer);
 
       // Calculate amount (use correct decimals)
       const decimals = await newToken.decimals();
+
       const amount = ethers.parseUnits((parseFloat(pkg.stake_amount) * parseFloat(tokenPrice)).toString(), decimals);
 
       // Send token to staking contract/platform
       const tx = await newToken.transfer(platformReceiver, amount);
       toast.warn('Waiting for transaction confirmation...');
 
-      console.log(tx);
-
       const receipt = await tx.wait();
-      toast.success('Token sent!');
       console.log(receipt);
-      
-      // Notify backend
-      const response = await api.post('/staking/create', {
-        package_id: pkg.id,
-        payment_tx_hash: receipt.hash
-      });
-      if (response) {
-        setIsStaking(false);
-        toast.success('Staking started successfully!');
-      } else {
-        toast.error('Staking failed.');
-      }
+
+      toast.success('Token sent!');
+
+      dispatch(authApi.stakingRequest(receipt.hash, pkg.id, user.id))
+
+      // if (response) {
+      //   setIsStaking(false);
+      //   toast.success('Staking started successfully!');
+      // } else {
+      //   toast.error('Staking failed.');
+      // }
     } catch (err: any) {
       toast.error('Staking failed.');
     } finally {

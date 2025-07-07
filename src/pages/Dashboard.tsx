@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -23,11 +23,15 @@ import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { formatCurrency, formatNumber, formatDate } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
-import { setLoading } from '@/store/auth';
-import { useDispatch } from 'react-redux';
+import { authApi, setLoading } from '@/store/auth';
+import { useDispatch, useSelector } from 'react-redux';
 import { addDays, format as formatDateFns, differenceInDays, parseISO } from 'date-fns';
 import { format } from 'date-fns';
 import { Mail, Phone, Calendar, Users, ArrowLeftRight, UserPlus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { AppDispatch, RootState } from '@/store';
 
 const packageColorMap: Record<string, string> = {
   'Daily Ride': '#22c55e', // green
@@ -60,11 +64,33 @@ const ReferralTree = ({ nodes, level = 0 }) => (
 const Dashboard = () => {
   const { user, user_base_data, isLoading } = useAuth();
   const nav = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const [exchangeModalOpen, setExchangeModalOpen] = useState(false);
+  const [exchangeAmount, setExchangeAmount] = useState('');
+  const [exchangeError, setExchangeError] = useState('');
+  const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
+  const [withdrawAmount, setWithdrawAmount] = useState('');
+  const [withdrawError, setWithdrawError] = useState('');
+  const adminSettings = useSelector((state: RootState) => state.adminData.admin_settings);
+  const minWithdrawalSetting = adminSettings.find(s => s.title === 'min_withdrawal');
+  const maxWithdrawalSetting = adminSettings.find(s => s.title === 'max_withdrawal');
+  const minWithdrawal = minWithdrawalSetting ? Number(minWithdrawalSetting.value) : 0;
+  const maxWithdrawal = maxWithdrawalSetting ? Number(maxWithdrawalSetting.value) : Number.POSITIVE_INFINITY;
 
   useEffect(() => {
     dispatch(setLoading(!user_base_data));
   }, [user_base_data]);
+
+  function sendExchangeRequest(amount: number) {
+    dispatch(authApi.exchangeRequest(amount))
+  }
+  
+  function sendWithdrawRequest(amount: number) {
+    dispatch(authApi.withdrawRequest(amount))
+  }
+  
+  
+
 
   // Compute stats from user_base_data
   const egdBalance = user?.egd_balance || 0;
@@ -176,6 +202,56 @@ const Dashboard = () => {
               <p className="text-xs text-muted-foreground">
                 ≈ {(Number(egdBalance) * 0.01).toLocaleString(undefined, { style: 'currency', currency: 'USD' })}
               </p>
+              <Button className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setExchangeModalOpen(true)}>
+                Convert to USDT
+              </Button>
+              <Dialog open={exchangeModalOpen} onOpenChange={setExchangeModalOpen}>
+                <DialogContent className="max-w-sm">
+                  <DialogHeader>
+                    <DialogTitle>Convert EGD to USDT</DialogTitle>
+                  </DialogHeader>
+                  <div className="mb-2">
+                    <label htmlFor="exchange-amount" className="block text-sm font-medium text-gray-700 mb-1">Amount of EGD</label>
+                    <Input
+                      id="exchange-amount"
+                      type="number"
+                      min="0"
+                      step="any"
+                      value={exchangeAmount}
+                      onChange={e => {
+                        setExchangeAmount(e.target.value);
+                        setExchangeError('');
+                      }}
+                      placeholder="Enter amount"
+                      className="w-full"
+                    />
+                    {exchangeError && <div className="text-red-600 text-xs mt-1">{exchangeError}</div>}
+                  </div>
+                  <DialogFooter className="flex gap-2 justify-end">
+                    <Button variant="outline" onClick={() => setExchangeModalOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={() => {
+                        const amount = Number(exchangeAmount);
+                        if (!exchangeAmount || isNaN(amount) || amount <= 0) {
+                          setExchangeError('Please enter a valid amount.');
+                          return;
+                        }
+                        if (amount > Number(egdBalance)) {
+                          setExchangeError('Amount exceeds available EGD balance.');
+                          return;
+                        }
+                        setExchangeModalOpen(false);
+                        sendExchangeRequest(amount);
+                      }}
+                    >
+                      Exchange
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
 
@@ -189,6 +265,64 @@ const Dashboard = () => {
               <p className="text-xs text-muted-foreground">
                 Total withdrawn
               </p>
+              <Button className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white" onClick={() => setWithdrawModalOpen(true)}>
+                Withdraw now
+              </Button>
+              <Dialog open={withdrawModalOpen} onOpenChange={setWithdrawModalOpen}>
+                <DialogContent className="max-w-sm">
+                  <DialogHeader>
+                    <DialogTitle>Withdraw USDT</DialogTitle>
+                  </DialogHeader>
+                  <div className="mb-2">
+                    <label htmlFor="withdraw-amount" className="block text-sm font-medium text-gray-700 mb-1">Amount of USDT</label>
+                    <Input
+                      id="withdraw-amount"
+                      type="number"
+                      min="0"
+                      step="any"
+                      value={withdrawAmount}
+                      onChange={e => {
+                        setWithdrawAmount(e.target.value);
+                        setWithdrawError('');
+                      }}
+                      placeholder="Enter amount"
+                      className="w-full"
+                    />
+                    {withdrawError && <div className="text-red-600 text-xs mt-1">{withdrawError}</div>}
+                  </div>
+                  <DialogFooter className="flex gap-2 justify-end">
+                    <Button variant="outline" onClick={() => setWithdrawModalOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                      onClick={() => {
+                        const amount = Number(withdrawAmount);
+                        if (!withdrawAmount || isNaN(amount) || amount <= 0) {
+                          setWithdrawError('Please enter a valid amount.');
+                          return;
+                        }
+                        if (amount > Number(withdrawals)) {
+                          setWithdrawError('Amount exceeds available USDT balance.');
+                          return;
+                        }
+                        if (amount < minWithdrawal) {
+                          setWithdrawError(`Amount is below the minimum withdrawal amount (${minWithdrawal}).`);
+                          return;
+                        }
+                        if (amount > maxWithdrawal) {
+                          setWithdrawError(`Amount exceeds the maximum withdrawal amount (${maxWithdrawal}).`);
+                          return;
+                        }
+                        setWithdrawModalOpen(false);
+                        sendWithdrawRequest(amount);
+                      }}
+                    >
+                      Withdraw
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
 

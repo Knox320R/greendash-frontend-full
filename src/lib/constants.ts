@@ -25,6 +25,5 @@ export const PLATFORM_FEE_PERCENTAGE = 10;
 export const REFERRAL_FEE_PERCENTAGE = 5;
 
 // Network Configuration
-export const USDT_CONTRACT_ADDRESS = '0x55d398326f99059fF775485246999027B3197955';
+export const USDT_CONTRACT_ADDRESS = '0x6b4db11f674d3a3e471bea12dcfbe44c6f6a0438';
 export const BSC_RPC_URL = 'https://bsc-dataseed1.binance.org/';
-export const USDT_ADDRESS = "0x0000000000000000000000000000000000000000"; // TODO: Replace with actual USDT contract address

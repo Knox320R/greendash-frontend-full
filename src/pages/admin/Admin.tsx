@@ -13,6 +13,7 @@ import {
   FaChartLine,
   FaUser,
   FaExchangeAlt,
+  FaMoneyBillWave,
 } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import AdminSettings from '@/pages/admin/sections/AdminSettings';
@@ -25,6 +26,7 @@ import { getAdminData, setSelectedTab } from '@/store/admin';
 import RecentUser from './sections/RecentUser';
 import RecentStaking from './sections/RecentStaking';
 import RecentTransaction from './sections/RecentTransaction';
+import RecentWithdrawals from './sections/RecentWithdrawals';
 import { Menu } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
@@ -70,10 +72,15 @@ const sections = [
     icon: FaExchangeAlt,
   },
   {
+    key: 'withdrawal_list',
+    label: 'Withdrawals',
+    icon: FaMoneyBillWave,
+  },
+  {
     key: 'tokens',
     label: 'Total Tokens',
     icon: FaCoins,
-  },
+  }
 ];
 
 const sectionTitles: Record<string, string> = {
@@ -86,6 +93,7 @@ const sectionTitles: Record<string, string> = {
   ranks: 'Rank Plan Management',
   commissions: 'Commission Plan Management',
   tokens: 'Total Token Management',
+  withdrawal_list: 'Withdrawals',
 };
 
 const Admin: React.FC = () => {
@@ -178,6 +186,7 @@ const Admin: React.FC = () => {
               {selected === 'user_list' && <RecentUser/>}
               {selected === 'staking_list' && <RecentStaking/>}
               {selected === 'transaction_list' && <RecentTransaction/>}
+              {selected === 'withdrawal_list' && <RecentWithdrawals/>}
             </CardContent>
           </Card>
         </motion.div>

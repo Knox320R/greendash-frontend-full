@@ -162,7 +162,7 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ data }) => {
                     <FormControl>
                       <Input 
                         {...field} 
-                        required 
+                        disabled
                         onChange={(e) => {
                           field.onChange(e);
                           handleTitleChange(e.target.value);
