@@ -56,7 +56,7 @@ const RecentUser: React.FC = () => {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
+        <div className="overflow-auto">
           <table className="min-w-full text-sm">
             <thead>
               <tr className="bg-gray-100">
@@ -68,7 +68,7 @@ const RecentUser: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.slice(0, 10).map((user) => (
+              {filtered.map((user) => (
                 <tr key={user.id} className="border-b last:border-0">
                   <td className="px-3 py-2 whitespace-nowrap">{user.name}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{user.email}</td>

@@ -78,7 +78,7 @@ const RecentTransaction: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.slice(0, 10).map((tx) => (
+              {filtered.map((tx) => (
                 <tr key={tx.id} className="border-b last:border-0">
                   <td className="px-3 py-2 whitespace-nowrap">{tx.user?.name || '-'}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{tx.type}</td>

@@ -63,7 +63,7 @@ const RecentStaking: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.slice(0, 10).map((staking) => (
+              {filtered.map((staking) => (
                 <tr key={staking.id} className="border-b last:border-0">
                   <td className="px-3 py-2 whitespace-nowrap">{staking.user?.name || '-'}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{staking.package?.name || '-'}</td>

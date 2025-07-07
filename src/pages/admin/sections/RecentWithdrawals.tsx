@@ -92,7 +92,7 @@ const RecentWithdrawals: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.slice(0, limit).map((withdrawal) => (
+              {filtered.map((withdrawal) => (
                 <tr key={withdrawal.id} className="border-b last:border-0">
                   <td className="px-3 py-2 whitespace-nowrap">{withdrawal.user?.name || '-'}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{withdrawal.amount}</td>
