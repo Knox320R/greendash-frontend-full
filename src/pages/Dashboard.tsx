@@ -63,7 +63,6 @@ const ReferralTree = ({ nodes, level = 0 }) => (
 
 const Dashboard = () => {
   const { user, user_base_data, isLoading } = useAuth();
-  const nav = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [exchangeModalOpen, setExchangeModalOpen] = useState(false);
   const [exchangeAmount, setExchangeAmount] = useState('');
@@ -77,14 +76,9 @@ const Dashboard = () => {
   const minWithdrawal = minWithdrawalSetting ? Number(minWithdrawalSetting.value) : 0;
   const maxWithdrawal = maxWithdrawalSetting ? Number(maxWithdrawalSetting.value) : Number.POSITIVE_INFINITY;
 
-  useEffect(() => {
-    dispatch(setLoading(!user_base_data));
-  }, [user_base_data]);
-
   function sendExchangeRequest(amount: number) {
     dispatch(authApi.exchangeRequest(amount))
   }
-  
   function sendWithdrawRequest(amount: number) {
     dispatch(authApi.withdrawRequest(amount))
   }
@@ -156,17 +150,6 @@ const Dashboard = () => {
   const activeStakingAmount = stakings
     .filter((s) => s.status === 'active')
     .reduce((sum, s) => sum + parseFloat(s.stake_amount), 0);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading dashboard...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">

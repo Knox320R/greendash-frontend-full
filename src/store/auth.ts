@@ -390,6 +390,7 @@ export const authApi = {
     // Logout user
     logout: () => async (dispatch: AppDispatch) => {
         try {
+            dispatch(setLoading(true))
             await api.post('/auth/logout', {});
         } catch (err) {
             // Continue with logout even if API call fails
@@ -399,6 +400,7 @@ export const authApi = {
             localStorage.removeItem('token');
             dispatch(logout());
             toast.success('Logged out successfully!');
+            dispatch(setLoading(false))
         }
     },
 

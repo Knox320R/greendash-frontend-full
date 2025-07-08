@@ -129,7 +129,7 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
                 <FormField name="title" control={form.control} render={({ field }) => (
                   <FormItem>
                     <FormLabel>Title</FormLabel>
-                    <FormControl><Input {...field} required /></FormControl>
+                    <FormControl><Input {...field} disabled /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />

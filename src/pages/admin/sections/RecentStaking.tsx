@@ -67,7 +67,7 @@ const RecentStaking: React.FC = () => {
                 <tr key={staking.id} className="border-b last:border-0">
                   <td className="px-3 py-2 whitespace-nowrap">{staking.user?.name || '-'}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{staking.package?.name || '-'}</td>
-                  <td className="px-3 py-2 whitespace-nowrap">{staking.package?.stake_amount || '-'}</td>
+                  <td className="px-3 py-2 whitespace-nowrap">{parseInt(staking.package?.stake_amount) || '-'}</td>
                   <td className="px-3 py-2 whitespace-nowrap">
                     <span className={
                       staking.status === 'active'

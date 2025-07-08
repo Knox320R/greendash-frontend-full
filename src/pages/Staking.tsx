@@ -1,60 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-
-import {
-  FaLock,
-  FaUnlock,
-  FaChartLine,
-  FaCoins,
-  FaCalendarAlt,
-  FaClock,
-  FaCheckCircle,
-  FaExclamationTriangle,
-  FaArrowUp,
-  FaArrowDown,
-  FaPlus,
-  FaWallet,
-  FaCalculator,
-  FaInfoCircle,
-  FaCopy
-} from 'react-icons/fa';
-import { motion, number } from 'framer-motion';
+import { FaLock, FaChartLine, FaCalendarAlt, FaClock, FaCheckCircle, FaArrowUp, FaPlus, FaWallet, FaCalculator } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
-import { api } from '@/lib/api';
-import { formatCurrency, formatNumber, formatDate } from '@/lib/utils';
+import { formatNumber, formatDate } from '@/lib/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
-import { StakingPackage, AdminSetting } from '@/types/landing';
+import { StakingPackage } from '@/types/landing';
 import { useWallet } from '@/hooks/WalletContext';
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
 import { USDT_ABI, USDT_ADDRESS } from "@/lib/usdt_abi"; // Replace with your actual ABI/address
 import { authApi } from '@/store/auth';
-
-interface UserStaking {
-  id: number;
-  user_id: number;
-  package_id: number;
-  package?: StakingPackage;
-  stake_amount: number;
-  daily_reward_amount: number;
-  total_rewards_earned: number;
-  start_date: string;
-  unlock_date: string;
-  status: string;
-  completion_percentage: number;
-  days_remaining: number;
-  created_at: string;
-  transaction_hash?: string;
-  total_rewards_claimed?: number;
-}
 
 const Staking = () => {
   const { user, user_base_data } = useAuth();
@@ -66,10 +27,8 @@ const Staking = () => {
   const adminSettings = adminData.admin_settings;
   const tokenPrice = adminSettings.find(s => s.title === 'token_price')?.value || '0.01';
   const platformReceiver = adminSettings.find(s => s.title === 'platform_wallet_address')?.value || '';
-  const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('packages');
   const [isStaking, setIsStaking] = useState(false);
-  const [showStakeDialog, setShowStakeDialog] = useState(false);
   const { connectWallet, isConnected } = useWallet();
   const [stakingFilter, setStakingFilter] = useState('all');
   const filteredStakings = stakingFilter === 'all'
@@ -77,10 +36,6 @@ const Staking = () => {
     : userStakings.filter(s => s.status === stakingFilter);
 
   const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    // TODO: Refresh user stakings after staking (integrate getUserStakings if available)
-  }, []);
 
   const handleStartStaking = async (pkg: StakingPackage) => {
     if (!isConnected) {
@@ -154,17 +109,6 @@ const Staking = () => {
     toast.info('Claim rewards feature coming soon!');
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading staking data...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-5xl mx-auto">
@@ -172,6 +116,14 @@ const Staking = () => {
           <h1 className="text-3xl font-bold text-gray-900">Staking</h1>
           <p className="text-gray-600 mt-2">Lock your tokens and earn daily rewards</p>
         </motion.div>
+        {!isConnected && (
+          <Button
+            className="mb-4 bg-blue-600 hover:bg-blue-700 text-white"
+            onClick={connectWallet}
+          >
+            Connect Wallet
+          </Button>
+        )}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

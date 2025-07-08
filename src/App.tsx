@@ -21,17 +21,13 @@ function App() {
         <div className="min-h-screen bg-gray-50">
           <Header />
           <main className="flex-1 mt-[70px]">
-            {
-              isLoading ?
-                <Loading content="Data" />
-                :
-                <Routes>
-                  {
-                    routes.map(route => (isAuthenticated || route.public) && <Route key={route.path} {...route} />)
-                  }
-                  {is_admin && <Route path='/admin' element={<Admin />} />}
-                </Routes>
-            }
+            {isLoading && <Loading content="Data" />}
+            <Routes>
+              {
+                routes.map(route => (isAuthenticated || route.public) && <Route key={route.path} {...route} />)
+              }
+              {is_admin && <Route path='/admin' element={<Admin />} />}
+            </Routes>
           </main>
           <Footer />
           <ToastContainer />

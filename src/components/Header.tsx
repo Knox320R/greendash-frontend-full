@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { FaBars, FaUser, FaSignOutAlt, FaTimes, FaLeaf } from 'react-icons/fa';
 import { useAuth } from '@/hooks/useAuth';
+import { useDispatch } from 'react-redux';
 
 interface HeaderProps {
   scrollToSection?: (sectionId: string) => void;
@@ -26,7 +27,6 @@ const Header: React.FC<HeaderProps> = ({ scrollToSection }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isAuthenticated, logout } = useAuth();
-
   // Auth/page links
   const getAuthButtons = () => {
     if (isAuthenticated && user) {
