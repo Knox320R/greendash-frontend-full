@@ -7,7 +7,6 @@ import TokenSection from './sections/TokenSection';
 import AffiliateRanksSection from './sections/AffiliateRanksSection';
 import RoadmapSection from './sections/RoadmapSection';
 import TestimonialsSection from './sections/TestimonialsSection';
-import ContactSection from './sections/ContactSection';
 import ConclusionSection from './sections/ConclusionSection';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMainSettings } from '@/store/admin';

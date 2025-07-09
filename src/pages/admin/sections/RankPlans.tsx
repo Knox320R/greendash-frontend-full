@@ -62,7 +62,7 @@ const RankPlans: React.FC<RankPlansProps> = ({ data }) => {
       if (editPlan) {
         // Update existing plan
         const updateData = {
-          field_name: 'rank_plans' as const,
+          table_name: 'rank_plans' as const,
           data: {
             ...editPlan,
             ...formData,
@@ -73,16 +73,9 @@ const RankPlans: React.FC<RankPlansProps> = ({ data }) => {
         await dispatch(updateAdminSettingApi(updateData));
       } else {
         // Create new plan
-        const newPlan: RankPlan = {
-          id: Date.now(), // Will be replaced by backend
-          ...formData,
-          equivalent: formData.equivalent || null,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
         const createData = {
-          field_name: 'rank_plans' as const,
-          data: newPlan
+          table_name: 'rank_plans' as const,
+          data: formData
         };
         await dispatch(createAdminSettingApi(createData));
       }
@@ -98,11 +91,7 @@ const RankPlans: React.FC<RankPlansProps> = ({ data }) => {
       try {
         const planToDelete = data.find(plan => plan.id === deletePlanId);
         if (planToDelete) {
-          const deleteData = {
-            field_name: 'rank_plans' as const,
-            data: planToDelete
-          };
-          await dispatch(deleteAdminSettingApi(deleteData));
+          await dispatch(deleteAdminSettingApi('rank_plans', deletePlanId));
         }
         setDeletePlanId(null);
       } catch (error) {

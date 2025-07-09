@@ -54,7 +54,7 @@ const CommissionPlans: React.FC<CommissionPlansProps> = ({ data }) => {
       if (editPlan) {
         // Update existing plan
         const updateData = {
-          field_name: 'commission_plans' as const,
+          table_name: 'commission_plans' as const,
           data: {
             ...editPlan,
             ...formData,
@@ -64,15 +64,9 @@ const CommissionPlans: React.FC<CommissionPlansProps> = ({ data }) => {
         await dispatch(updateAdminSettingApi(updateData));
       } else {
         // Create new plan
-        const newPlan: CommissionPlan = {
-          id: Date.now(), // Will be replaced by backend
-          ...formData,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
         const createData = {
-          field_name: 'commission_plans' as const,
-          data: newPlan
+          table_name: 'commission_plans' as const,
+          data: formData
         };
         await dispatch(createAdminSettingApi(createData));
       }
@@ -88,11 +82,7 @@ const CommissionPlans: React.FC<CommissionPlansProps> = ({ data }) => {
       try {
         const planToDelete = data.find(plan => plan.id === deletePlanId);
         if (planToDelete) {
-          const deleteData = {
-            field_name: 'commission_plans' as const,
-            data: planToDelete
-          };
-          await dispatch(deleteAdminSettingApi(deleteData));
+          await dispatch(deleteAdminSettingApi('commission_plans', deletePlanId));
         }
         setDeletePlanId(null);
       } catch (error) {

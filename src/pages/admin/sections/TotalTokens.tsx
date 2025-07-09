@@ -59,7 +59,7 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
       if (editToken) {
         // Update existing token
         const updateData = {
-          field_name: 'total_tokens' as const,
+          table_name: 'total_tokens' as const,
           data: {
             ...editToken,
             ...formData,
@@ -76,7 +76,7 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
           updatedAt: new Date().toISOString(),
         };
         const createData = {
-          field_name: 'total_tokens' as const,
+          table_name: 'total_tokens' as const,
           data: newToken
         };
         await dispatch(createAdminSettingApi(createData));
@@ -94,7 +94,7 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
         const tokenToDelete = data.find(token => token.id === deleteTokenId);
         if (tokenToDelete) {
           const deleteData = {
-            field_name: 'total_tokens' as const,
+            table_name: 'total_tokens' as const,
             data: tokenToDelete
           };
           await dispatch(deleteAdminSettingApi(deleteData));

@@ -67,25 +67,18 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
       if (editPackage) {
         // Update existing package
         const updateData = {
-          field_name: 'staking_packages' as const,
+          table_name: 'staking_packages' as const,
           data: {
             ...editPackage,
             ...formData,
-            updatedAt: new Date().toISOString(),
           }
         };
         await dispatch(updateAdminSettingApi(updateData));
       } else {
         // Create new package
-        const newPackage: StakingPackage = {
-          id: Date.now(), // Will be replaced by backend
-          ...formData,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
         const createData = {
-          field_name: 'staking_packages' as const,
-          data: newPackage
+          table_name: 'staking_packages' as const,
+          data: formData
         };
         await dispatch(createAdminSettingApi(createData));
       }
@@ -101,11 +94,7 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
       try {
         const packageToDelete = data.find(pkg => pkg.id === deletePackageId);
         if (packageToDelete) {
-          const deleteData = {
-            field_name: 'staking_packages' as const,
-            data: packageToDelete
-          };
-          await dispatch(deleteAdminSettingApi(deleteData));
+          dispatch(deleteAdminSettingApi('staking_packages', deletePackageId));
         }
         setDeletePackageId(null);
       } catch (error) {
@@ -120,8 +109,8 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
         <span className="text-lg font-semibold">Staking Packages</span>
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
-            <Button 
-              onClick={() => { setEditPackage(null); setOpenDialog(true); }} 
+            <Button
+              onClick={() => { setEditPackage(null); setOpenDialog(true); }}
               className="bg-green-600 hover:bg-green-700 text-white"
             >
               <FaPlus className="w-4 h-4 mr-2" />
@@ -150,7 +139,7 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
                 )} />
                 <FormField name="stake_amount" control={form.control} render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Stake Amount (USDT)</FormLabel>
+                    <FormLabel>Stake Amount (EGD)</FormLabel>
                     <FormControl><Input {...field} required type="number" min="0" step="0.01" /></FormControl>
                     <FormMessage />
                   </FormItem>
@@ -179,7 +168,7 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
           </DialogContent>
         </Dialog>
       </div>
-      
+
       <div className="overflow-x-auto rounded-lg border">
         <Table>
           <TableHeader>

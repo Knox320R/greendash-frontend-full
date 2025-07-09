@@ -19,7 +19,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ scrollToSection, adminSetting
       {/* Soft Overlay for Depth */}
       {/* <div className="absolute inset-0 z-0 bg-white/40 backdrop-blur-sm" /> */}
       <div className="relative z-10 md:flex-row flex-col flex items-center justify-around w-full">
-        <img src="9.png" alt="hero" className="rounded-[20px] border-[10px] border-white shadow-2xl mb-8 max-w-xs md:max-w-md lg:max-w-xl transition-transform duration-500 hover:scale-105" style={{ boxShadow: '0 0 160px 1px rgba(34,197,94,0.55), 0 8px 32px 0 rgba(0,0,0,0.10)' }} />
+        <img src="10.png" alt="hero" className="rounded-[20px] border-[10px] border-white shadow-2xl mb-8 max-w-xs md:max-w-md lg:max-w-xl transition-transform duration-500 hover:scale-105" style={{ boxShadow: '0 0 160px 1px rgba(34,197,94,0.55), 0 8px 32px 0 rgba(0,0,0,0.10)' }} />
         <motion.div
           className="container mx-auto px-4 sm:px-6 lg:px-8 text-center"
           initial={{ opacity: 0, y: 40 }}

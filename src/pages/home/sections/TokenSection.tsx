@@ -31,12 +31,12 @@ const cashbackTypes = [
   {
     icon: FaMoneyBillWave,
     title: 'Direct Cashback',
-    desc: 'Earn 10% of the amount invested by each direct referral. Example: Refer someone who invests $1,000, you receive $100 USDT instantly.'
+    desc: 'Earn 15% of the amount invested by each direct referral. Example: Refer someone who invests $1,000, you receive $150 USDT instantly.'
   },
   {
     icon: FaNetworkWired,
     title: 'Network Cashback',
-    desc: 'Earn a percentage of the fees generated from investments within your referral network, up to 5 levels deep (5%, 3%, 2%, 1%, 0.5%). Example: Level 1 referrals generate $10,000, you earn $500 USDT.'
+    desc: 'Earn a percentage of the fees generated from investments within your referral network, up to 9 levels deep (7.5, 4%, 3%, 2.5%, 2%, 1%, 0.75%, 0.5%). Example: Level 3 referrals generate $10,000, you earn $400 USDT.'
   },
   {
     icon: FaGlobeAmericas,
@@ -51,7 +51,7 @@ const cashbackTypes = [
   {
     icon: FaUserPlus,
     title: 'Viral Cashback',
-    desc: 'Earn extra cashback when new users join through your network. Level 1: 5 new investors = $50 USDT, 10 = $100 USDT. Level 2: 5 = $25 USDT, 10 = $50 USDT.'
+    desc: 'Earn extra cashback when new users join through your referral network. Their investement will raise your ranking and you can get USDT or vheicle option according to your ranking.'
   },
 ];
 
@@ -235,59 +235,6 @@ const TokenSection = ({ totalTokens }: any) => {
                 </div>
               ))}
             </div>
-            {/* <div className="mt-8 text-center">
-              <Dialog open={openTokenDialog} onOpenChange={setOpenTokenDialog}>
-                <DialogTrigger asChild>
-                  <Button
-                    size="lg"
-                    className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg shadow-lg transition-transform duration-300 hover:scale-105"
-                    onClick={handleBuyGreenClick}
-                  >
-                    Buy GREEN Token
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>
-                      <div className="flex items-center gap-3 text-green-700 text-2xl font-bold mb-2">
-                        <FaLeaf className="w-7 h-7 text-green-500" /> Buy Crypto Tokens
-                      </div>
-                    </DialogTitle>
-                    <DialogDescription>
-                      Select a token to buy and support your journey in the GreenDash ecosystem.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4 mt-2">
-                    {tokenList.map(token => (
-                      <div key={token.symbol} className="flex items-center gap-4 p-4 rounded-md border border-gray-200 bg-gray-50 hover:bg-green-50 transition">
-                        <token.icon className="w-8 h-8 text-green-600 flex-shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold text-lg text-gray-900">{token.symbol}</span>
-                            <span className="text-gray-500 text-sm">{token.name}</span>
-                            <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs font-semibold">{token.price}</span>
-                          </div>
-                          <div className="text-gray-500 text-xs mt-1 truncate">{token.desc}</div>
-                        </div>
-                        <Button
-                          size="sm"
-                          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 text-sm font-semibold"
-                          onClick={() => handleBuyToken(token)}
-                        >
-                          Buy
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-6 text-xs text-gray-500 text-center italic">
-                    You will be guided through the purchase process for your selected token. Make sure you are logged in and have a compatible wallet connected.
-                  </div>
-                  <DialogClose asChild>
-                    <button className="mt-6 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 w-full">Cancel</button>
-                  </DialogClose>
-                </DialogContent>
-              </Dialog>
-            </div> */}
           </motion.div>
         </div>
       </div>

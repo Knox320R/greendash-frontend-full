@@ -73,7 +73,7 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ data }) => {
       if (editSetting) {
         // Update existing setting
         const updateData = {
-          field_name: 'admin_settings' as const,
+          table_name: 'admin_settings' as const,
           data: {
             ...editSetting,
             ...formData,
@@ -83,16 +83,12 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ data }) => {
         await dispatch(updateAdminSettingApi(updateData));
       } else {
         // Create new setting
-        const newSetting: AdminSetting = {
-          id: Date.now(), // Will be replaced by backend
-          ...formData,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
         const createData = {
-          field_name: 'admin_settings' as const,
-          data: newSetting
+          table_name: 'admin_settings' as const,
+          data: formData
         };
+        console.log(createData);
+        
         await dispatch(createAdminSettingApi(createData));
       }
       setOpenDialog(false);
@@ -110,11 +106,7 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ data }) => {
       try {
         const settingToDelete = data.find(setting => setting.id === deleteSettingId);
         if (settingToDelete) {
-          const deleteData = {
-            field_name: 'admin_settings' as const,
-            data: settingToDelete
-          };
-          await dispatch(deleteAdminSettingApi(deleteData));
+          await dispatch(deleteAdminSettingApi("admin_settings", deleteSettingId));
         }
         setDeleteSettingId(null);
       } catch (error) {
