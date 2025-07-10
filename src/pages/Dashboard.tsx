@@ -34,6 +34,7 @@ import { Input } from '@/components/ui/input';
 import { AppDispatch, RootState } from '@/store';
 import { toast } from 'react-toastify';
 import NotificationBanner from '@/components/NotificationBanner';
+import { getStakingStats } from '@/lib/staking';
 
 const packageColorMap: Record<string, string> = {
   'Daily Ride': '#22c55e', // green
@@ -45,15 +46,27 @@ const packageColorMap: Record<string, string> = {
   'Corporate Mobility Hub': '#06b6d4', // cyan
 };
 
-const ReferralTree = ({ nodes, level = 0 }) => (
-  <ul className={`pl-${level * 4} border-l-2 border-gray-300 ml-2`}>
-    {nodes.map(node => (
-      <li key={node.id} className="relative mb-4">
+// Update ReferralNode interface to match backend (id: number)
+interface ReferralNode {
+  referredUser: {
+    id: number;
+    name: string;
+    email: string;
+    created_at?: string;
+    parent_leg?: 'left' | 'right';
+  };
+  sub_referrals: ReferralNode[];
+}
+
+const ReferralTree: React.FC<{ nodes: ReferralNode[]; level?: number }> = ({ nodes, level = 0 }) => (
+  <ul className={`pl-${level * 4} border-l-2 border-gray-200 ml-2`}>
+    {nodes.map((node) => (
+      <li key={node.referredUser.id} className="relative mb-4">
         <div className={`flex items-center gap-2 py-1 px-2 rounded ${level === 0 ? 'bg-blue-50' : 'bg-green-50'}`}>
           <FaUserFriends className="text-blue-500" />
-          <span className="font-semibold">{node.referred_user.name}</span>
-          <span className="text-xs text-gray-500">(Level {node.level})</span>
-          <span className="ml-2 text-green-600">{node.commission_income} EGD</span>
+          <span className="font-semibold">{node.referredUser.name}</span>
+          <span className="text-xs text-gray-500">(Level {level + 1})</span>
+          <span className="ml-2 text-gray-400">{node.referredUser.email}</span>
         </div>
         {node.sub_referrals && node.sub_referrals.length > 0 && (
           <ReferralTree nodes={node.sub_referrals} level={level + 1} />
@@ -64,7 +77,7 @@ const ReferralTree = ({ nodes, level = 0 }) => (
 );
 
 const Dashboard = () => {
-  const { user, user_base_data, isLoading, confirmUpdateWithdrawal } = useAuth();
+  const { user, user_base_data, isLoading, confirmUpdateWithdrawal, isAuthenticated } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
   const [exchangeModalOpen, setExchangeModalOpen] = useState(false);
   const [exchangeAmount, setExchangeAmount] = useState('');
@@ -77,7 +90,6 @@ const Dashboard = () => {
   const maxWithdrawalSetting = adminSettings.find(s => s.title === 'max_withdrawal');
   const minWithdrawal = minWithdrawalSetting ? Number(minWithdrawalSetting.value) : 0;
   const maxWithdrawal = maxWithdrawalSetting ? Number(maxWithdrawalSetting.value) : Number.POSITIVE_INFINITY;
-  const [notification, setNotification] = useState<string | null>(null);
 
   function sendExchangeRequest(amount: number) {
     dispatch(authApi.exchangeRequest(amount))
@@ -85,37 +97,30 @@ const Dashboard = () => {
   function sendWithdrawRequest(amount: number) {
     dispatch(authApi.withdrawRequest(amount))
   }
-  
-  // Compute stats from user_base_data
-  const egdBalance = user?.egd_balance || 0;
-  const withdrawals = user?.withdrawals || 0;
-  const referralCode = user?.referral_code || '';
-  const walletAddress = user?.wallet_address || '';
-  const isAdmin = user?.is_admin;
-  const name = user?.name || '';
-  const email = user?.email || '';
-  const phone = user?.phone || '';
-  const createdAt = user?.created_at || '';
-  const parentLeg = user?.parent_leg || '';
-  const leftVolume = user?.left_volune ?? 0;
-  const rightVolume = user?.right_volume ?? 0;
-  const referredBy = user?.referred_by;
+
+  const { id, name, email, referral_code, is_admin, phone, wallet_address, egd_balance, withdrawals, referred_by, parent_leg, left_volume, right_volume, rank_goal, created_at } = user
 
   // Staking summary
-  const stakingSummary = user_base_data?.staking;
-  const totalStakingCount = stakingSummary?.entire_stakings || 0;
-  const totalStaked = stakingSummary?.total_staked || 0;
-  const totalRewardsEarned = stakingSummary?.total_rewards_earned || 0;
-  const totalRewardsClaimed = stakingSummary?.total_rewards_claimed || 0;
-  const entireStakings = stakingSummary?.entire_stakings || 0;
-  const stakings = stakingSummary?.stakings || [];
+  const stakingSummary = user_base_data?.recent_Stakings || [];
+  const stakingStats = getStakingStats(stakingSummary);
+  const referralNetwork = user_base_data?.referral_network || [];
 
-  // Referral summary
-  const referralSummary = user_base_data?.referrals;
-  const totalEarnFromAffiliation = referralSummary?.total_earn_from_affiliation || 0;
-  const eachLevelIncome = referralSummary?.each_level_income || [];
-  const eachLevelAffiliaterNumber = referralSummary?.each_level_affiliater_number || [];
-  const referralNetwork = referralSummary?.network || [];
+  function flattenReferralNetwork(nodes: ReferralNode[], level = 1, result: any[] = []) {
+    nodes.forEach(node => {
+      result.push({ ...node.referredUser, level });
+      if (Array.isArray(node.sub_referrals) && node.sub_referrals.length > 0) {
+        flattenReferralNetwork(node.sub_referrals, level + 1, result);
+      }
+    });
+    return result;
+  }
+  const allReferrals = flattenReferralNetwork(referralNetwork);
+  const totalReferralCount = allReferrals.length;
+  const referralsByLevel = allReferrals.reduce((acc: Record<number, any[]>, user) => {
+    acc[user.level] = acc[user.level] || [];
+    acc[user.level].push(user);
+    return acc;
+  }, {});
 
   // Transactions
   const recentTransactions = user_base_data?.recent_transactions || [];
@@ -146,12 +151,7 @@ const Dashboard = () => {
     }
   };
 
-  // Calculate active staking amount
-  const activeStakingAmount = stakings
-    .filter((s) => s.status === 'active')
-    .reduce((sum, s) => sum + parseFloat(s.stake_amount), 0);
-
-  return (
+  return (isAuthenticated &&
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Welcome Header */}
@@ -181,9 +181,9 @@ const Dashboard = () => {
               <FaCoins className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{egdBalance} EGD</div>
+              <div className="text-2xl font-bold">{(egd_balance).toFixed(2)} EGD</div>
               <p className="text-xs text-muted-foreground">
-                ≈ {(Number(egdBalance) * 0.01).toLocaleString(undefined, { style: 'currency', currency: 'USD' })}
+                ≈ {(Number(egd_balance) * 0.01).toLocaleString(undefined, { style: 'currency', currency: 'USD' })}
               </p>
               <Button className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setExchangeModalOpen(true)}>
                 Convert to USDT
@@ -222,7 +222,7 @@ const Dashboard = () => {
                           setExchangeError('Please enter a valid amount.');
                           return;
                         }
-                        if (amount > Number(egdBalance)) {
+                        if (amount > Number(egd_balance)) {
                           setExchangeError('Amount exceeds available EGD balance.');
                           return;
                         }
@@ -315,10 +315,20 @@ const Dashboard = () => {
               <FaLock className="h-4 w-4 text-purple-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{totalStaked} EGD</div>
+              <div className="text-2xl font-bold">{stakingStats.total_staking_amount} EGD</div>
               <p className="text-xs text-muted-foreground">
-                Across {entireStakings} stakings
+                Across {stakingSummary?.length || 0} stakings
               </p>
+              <div className="flex gap-3 mt-2 bg-gray-50 border border-gray-200 rounded px-3 py-2 items-center">
+                <span className="flex items-center gap-1 text-green-700 font-semibold text-xs">
+                  <FaBolt className="w-4 h-4 text-green-500" />
+                  <span className="bg-green-100 text-green-700 rounded-full px-2 py-0.5 font-bold ml-1">Active: {stakingStats.active_staking_number}</span>
+                </span>
+                <span className="flex items-center gap-1 text-blue-700 font-semibold text-xs">
+                  <FaCheckCircle className="w-4 h-4 text-blue-500" />
+                  <span className="bg-blue-100 text-blue-700 rounded-full px-2 py-0.5 font-bold ml-1">Completed: {stakingStats.completed_staking_number}</span>
+                </span>
+              </div>
             </CardContent>
           </Card>
 
@@ -328,22 +338,9 @@ const Dashboard = () => {
               <FaBolt className="h-4 w-4 text-green-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">{activeStakingAmount} EGD</div>
+              <div className="text-2xl font-bold text-green-600">{stakingStats.active_staking_amount} EGD</div>
               <p className="text-xs text-muted-foreground">
                 Currently Staking Amount
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Referral Earnings</CardTitle>
-              <FaUsers className="h-4 w-4 text-orange-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalEarnFromAffiliation} EGD</div>
-              <p className="text-xs text-muted-foreground">
-                From your network
               </p>
             </CardContent>
           </Card>
@@ -375,20 +372,20 @@ const Dashboard = () => {
                   <CardContent>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium">Wallet Connected</span>
-                      <Badge variant={walletAddress ? "default" : "secondary"}>
-                        {walletAddress ? "Connected" : "Not Connected"}
+                      <Badge variant={wallet_address ? "default" : "secondary"}>
+                        {wallet_address ? "Connected" : "Not Connected"}
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium">Referral Code</span>
                       <code className="text-sm bg-gray-100 px-2 py-1 rounded">
-                        {referralCode}
+                        {referral_code}
                       </code>
                     </div>
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-sm font-medium">Admin</span>
-                      <Badge variant={isAdmin ? "default" : "secondary"}>
-                        {isAdmin ? "Yes" : "No"}
+                      <Badge variant={is_admin ? "default" : "secondary"}>
+                        {is_admin ? "Yes" : "No"}
                       </Badge>
                     </div>
                     {/* Enhanced User Info Block */}
@@ -408,27 +405,27 @@ const Dashboard = () => {
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-purple-500" />
                         <span className="font-medium text-gray-600">Registered:</span>
-                        <span className="ml-auto text-gray-900">{createdAt ? format(new Date(createdAt), 'yyyy-MM-dd') : '-'}</span>
+                        <span className="ml-auto text-gray-900">{created_at ? format(new Date(created_at), 'yyyy-MM-dd') : '-'}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <ArrowLeftRight className="w-4 h-4 text-orange-500" />
                         <span className="font-medium text-gray-600">Parent Leg:</span>
-                        <span className="ml-auto text-gray-900 capitalize">{parentLeg}</span>
+                        <span className="ml-auto text-gray-900 capitalize">{parent_leg}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Users className="w-4 h-4 text-blue-600" />
                         <span className="font-medium text-gray-600">Left Volume:</span>
-                        <span className="ml-auto text-gray-900">{leftVolume}</span>
+                        <span className="ml-auto text-gray-900">{left_volume}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Users className="w-4 h-4 text-pink-600" />
                         <span className="font-medium text-gray-600">Right Volume:</span>
-                        <span className="ml-auto text-gray-900">{rightVolume}</span>
+                        <span className="ml-auto text-gray-900">{right_volume}</span>
                       </div>
                       <div className="flex items-center gap-2 md:col-span-2">
                         <UserPlus className="w-4 h-4 text-gray-500" />
                         <span className="font-medium text-gray-600">Referred By:</span>
-                        <span className="ml-auto text-gray-900">{referredBy ?? '-'}</span>
+                        <span className="ml-auto text-gray-900">{referred_by ?? '-'}</span>
                       </div>
                     </div>
                   </CardContent>
@@ -442,19 +439,17 @@ const Dashboard = () => {
                   <CardContent className="space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">Total Count of Staking</span>
-                      <span className="font-semibold">{totalStakingCount} times</span>
+                      <span className="font-semibold">{stakingSummary?.length || 0} times</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">Total Staked</span>
-                      <span className="font-semibold">{totalStaked} EGD</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Total Rewards Earned</span>
-                      <span className="font-semibold">{totalRewardsEarned} EGD</span>
+                      <span className="font-semibold">{stakingStats.total_staking_amount} EGD</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">Total Rewards Claimed</span>
-                      <span className="font-semibold">{totalRewardsClaimed} EGD</span>
+                      <span className="font-semibold text-yellow-700 bg-yellow-100 rounded px-2 py-1 mr-2" title="Total rewards you have claimed from active staking packages.">
+                        {stakingStats.earned_from_active.toLocaleString()} EGD
+                      </span>
                     </div>
                   </CardContent>
                 </Card>
@@ -463,11 +458,12 @@ const Dashboard = () => {
 
             {/* Staking Tab */}
             <TabsContent value="staking" className="space-y-6">
-              {stakings.length > 0 ? (
+              {stakingSummary?.length > 0 ? (
                 <div className="space-y-4">
-                  {stakings.map((staking) => {
-                    const startDate = parseISO(staking.start_date);
-                    const nowDate = parseISO(staking.now);
+                  {stakingSummary.map((staking) => {
+                    const stakingProgress = stakingStats.staking_progress.find(p => p.id === staking.id);
+                    const startDate = parseISO(staking.createdAt);
+                    const nowDate = Date.now();
                     const lockDays = staking.package?.lock_period_days || 0;
                     const endDate = addDays(startDate, lockDays);
                     const totalPeriod = differenceInDays(endDate, startDate);
@@ -481,7 +477,7 @@ const Dashboard = () => {
                             <div>
                               <h3 className="font-semibold">{staking.package?.name || 'Staking Package'}</h3>
                               <p className="text-sm text-muted-foreground">
-                                Started {formatDate(staking.start_date)}
+                                Started {formatDate(staking.createdAt)}
                               </p>
                             </div>
                             <Badge variant={staking.status === 'active' ? 'default' : 'secondary'}>
@@ -491,7 +487,7 @@ const Dashboard = () => {
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                             <div>
                               <p className="text-sm text-muted-foreground">Staked Amount</p>
-                              <p className="font-semibold">{parseFloat(staking.stake_amount)} EGD</p>
+                              <p className="font-semibold">{parseFloat(staking.package.stake_amount)} EGD</p>
                             </div>
                             <div>
                               <p className="text-sm text-muted-foreground">Daily Yield</p>
@@ -553,34 +549,26 @@ const Dashboard = () => {
                 </CardHeader>
                 <CardContent className='w-full'>
                   <div className="mb-4">
-                    <span className="font-semibold">Total Referral Earnings: </span>
-                    <span className='text-[30px] m-3 text-green-600 font-bold'> {totalEarnFromAffiliation} </span>
-                    EGD
+                    <span className="font-semibold">Total Referral Count: </span>
+                    <span className='text-[30px] m-3 text-green-600 font-bold'> {totalReferralCount} </span>
+                    users
                   </div>
-                  <div className="mb-4 w-full">
-                    <span className="font-semibold">Each Level Income: </span>
-                    <div className="flex flex-wrap gap-3 mt-2 w-full justify-between">
-                      {eachLevelIncome.map((income, idx) => (
-                        <div key={idx} className="bg-white shadow rounded-lg px-4 py-2 flex-1 flex flex-col items-center min-w-[120px] border border-gray-200">
-                          <span className="text-xs font-bold text-gray-500 mb-1">Level {idx + 1}</span>
-                          <span className="text-lg font-bold text-green-600">{income} EGD</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="flex flex-wrap gap-4 mb-4">
+                    {Object.entries(referralsByLevel).map(([level, users]) => (
+                      <div
+                        key={level}
+                        className="flex items-center gap-2 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg px-4 py-2 shadow-sm border border-green-200"
+                      >
+                        <span className="font-semibold text-green-700 text-sm">
+                          Level {level}:
+                        </span>
+                        <span className="inline-block bg-green-100 text-green-700 rounded-full px-3 py-1 text-xs font-bold">
+                          {(users as any[]).length} users
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                  <div className="mb-4">
-                    <span className="font-semibold">Each Level Affiliater Number: </span>
-                    <div className="flex flex-wrap gap-3 mt-2 mt-2 w-full justify-between">
-                      {eachLevelAffiliaterNumber.map((num, idx) => (
-                        <div key={idx} className="bg-white shadow rounded-lg px-4 py-2 flex-1 flex flex-col items-center min-w-[120px] border border-gray-200">
-                          <span className="text-xs font-bold text-gray-500 mb-1">Level {idx + 1}</span>
-                          <span className="text-lg font-bold text-blue-600">{num}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <span className="font-semibold">Network:</span>
+                  <div className="overflow-x-auto mt-6">
                     <ReferralTree nodes={referralNetwork} />
                   </div>
                 </CardContent>
@@ -596,9 +584,9 @@ const Dashboard = () => {
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            {getStatusIcon(activity.status)}
+                            {getStatusIcon(activity.type)}
                             <div>
-                              <p className="font-medium">{activity.type.charAt(0).toUpperCase() + activity.type.slice(1)} - {activity.notes}</p>
+                              <p className="font-medium">{activity.type.charAt(0).toUpperCase() + activity.type.slice(1)}</p>
                               <p className="text-sm text-muted-foreground">
                                 {formatDate(activity.created_at)}
                               </p>
@@ -606,10 +594,10 @@ const Dashboard = () => {
                           </div>
                           <div className="text-right">
                             <p className="font-semibold">
-                              {activity.direction === 'in' ? '-' : '+'}{formatNumber(activity.amount)} {activity.currency}
+                              +{formatNumber(activity.amount)} {['withdrawal', 'weak_leg_bonus', 'unilevel_commission'].includes(activity.type) ? 'USDT' : 'EGD'}
                             </p>
-                            <Badge className={getStatusColor(activity.status)}>
-                              {activity.status}
+                            <Badge className={getStatusColor(activity.type)}>
+                              {activity.type}
                             </Badge>
                           </div>
                         </div>
@@ -632,10 +620,10 @@ const Dashboard = () => {
           </Tabs>
         </motion.div>
       </div>
-      {user_base_data?.updated_withdrawals?.length > 0 && (
+      {user_base_data?.recent_withdrawals?.length > 0 && (
         <NotificationBanner
-          notes={user_base_data.updated_withdrawals}
-          onClose={() => { confirmUpdateWithdrawal(user.id);  setNotification(null) }}
+          notes={user_base_data.recent_withdrawals}
+          onClose={() => confirmUpdateWithdrawal(user.id)}
         />
       )}
     </div>

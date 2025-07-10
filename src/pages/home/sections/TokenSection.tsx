@@ -109,7 +109,7 @@ const TokenSection = ({ totalTokens }: any) => {
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-6 text-gray-700 text-sm">
             <span className="bg-green-100 text-green-700 px-4 py-2 rounded-md font-semibold">Symbol: GREEN</span>
-            <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-md font-semibold">Total Supply: 100,000,000</span>
+            <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-md font-semibold">Total Supply: 1,000,000,000</span>
             <span className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-md font-semibold">Decimals: 18</span>
           </div>
         </motion.div>

@@ -16,11 +16,12 @@ import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
 import USDT_ABI from "@/lib/usdt_abi"; // Replace with your actual ABI/address
 import { authApi } from '@/store/auth';
+import { getStakingStats } from '@/lib/staking';
 
 const Staking = () => {
   const { user, user_base_data } = useAuth();
-  const stakingSummary = user_base_data?.staking;
-  const userStakings = stakingSummary?.stakings || [];
+  const staking_list = user_base_data?.recent_Stakings || [];
+  const stakingStats = getStakingStats(staking_list);
   const stakingLoading = false;
   const adminData = useSelector((state: RootState) => state.adminData);
   const stakingPackages = adminData.staking_packages;
@@ -33,8 +34,8 @@ const Staking = () => {
   const [stakingFilter, setStakingFilter] = useState('all');
   const usdt_address = useSelector((store: RootState) => store.adminData.admin_settings)?.find(item => item.title === "usdt_token_address")?.value || "0x681c3E2561fE74EAF34Be3bb9620b977010D6d41"
   const filteredStakings = stakingFilter === 'all'
-    ? userStakings
-    : userStakings.filter(s => s.status === stakingFilter);
+    ? staking_list
+    : staking_list.filter(s => s.status === stakingFilter);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -107,11 +108,11 @@ const Staking = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Available EGD</CardTitle>
+              <CardTitle className="text-sm font-medium">Your EGD Balance</CardTitle>
               <FaWallet className="h-4 w-4 text-blue-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{user?.egd_balance || 0}</div>
+              <div className="text-2xl font-bold">{(user?.egd_balance).toFixed(2) || 0}</div>
               <p className="text-xs text-muted-foreground">Available for staking</p>
             </CardContent>
           </Card>
@@ -122,7 +123,7 @@ const Staking = () => {
               <FaLock className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{userStakings.filter(item => item.status === "active").length}</div>
+              <div className="text-2xl font-bold">{stakingStats.active_staking_number}</div>
               <p className="text-xs text-muted-foreground">
                 Currently locked
               </p>
@@ -131,12 +132,12 @@ const Staking = () => {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Earned</CardTitle>
+              <CardTitle className="text-sm font-medium">Total Staked</CardTitle>
               <FaArrowUp className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {formatNumber(userStakings.reduce((sum, staking) => sum + parseFloat(staking.stake_amount), 0))} EGD
+                {formatNumber(stakingStats.total_staking_amount)} EGD
               </div>
               <p className="text-xs text-muted-foreground">
                 From all stakings
@@ -231,11 +232,10 @@ const Staking = () => {
               ) : filteredStakings.length > 0 ? (
                 <div className="space-y-6">
                   {filteredStakings.map((staking) => {
-                    const unlockDate = new Date(new Date(staking.start_date).getTime() + staking.package.lock_period_days * 24 * 60 * 60 * 1000);
-                    const nowDate = new Date(staking.now);
-                    const totalPeriod = staking.package.lock_period_days * 24 * 60 * 60 * 1000;
-                    const elapsed = Math.max(0, Math.min(totalPeriod, nowDate.getTime() - new Date(staking.start_date).getTime()));
-                    const progress = (elapsed / totalPeriod) * 100;
+                    const progressInfo = stakingStats.staking_progress.find(p => p.id === staking.id);
+                    const unlockDate = progressInfo?.unlock_date ? new Date(progressInfo.unlock_date) : new Date(new Date(staking.createdAt).getTime() + staking.package.lock_period_days * 24 * 60 * 60 * 1000);
+                    const nowDate = new Date();
+                    const progress = progressInfo?.progress_percentage ?? 0;
                     const daysRemaining = Math.max(0, Math.ceil((unlockDate.getTime() - nowDate.getTime()) / (24 * 60 * 60 * 1000)));
 
                     return (
@@ -252,11 +252,11 @@ const Staking = () => {
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                             <div>
                               <p className="text-sm text-muted-foreground">Staked Amount</p>
-                              <p className="font-semibold">{parseFloat(staking.stake_amount)} EGD</p>
+                              <p className="font-semibold">{parseFloat(staking.package.stake_amount)} EGD</p>
                             </div>
                             <div>
                               <p className="text-sm text-muted-foreground">Start Date</p>
-                              <p className="font-semibold">{formatDate(staking.start_date)}</p>
+                              <p className="font-semibold">{new Date(staking.createdAt).toDateString()}</p>
                             </div>
                             <div>
                               <p className="text-sm text-muted-foreground">Lock Period</p>
@@ -271,7 +271,7 @@ const Staking = () => {
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mb-2">
                             <div className="flex items-center gap-2">
                               <FaCalendarAlt className="h-4 w-4 text-gray-500" />
-                              <span>Unlock Date: {formatDate(unlockDate.toISOString())}</span>
+                              <span>Unlock Date: {new Date(unlockDate).toDateString()}</span>
                             </div>
                             <div className="flex items-center gap-2">
                               <FaClock className="h-4 w-4 text-gray-500" />

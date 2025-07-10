@@ -1,8 +1,8 @@
-import { UpdatedWithdrawal } from '@/types/landing';
+import { Withdrawal } from '@/types/auth-1';
 import React from 'react';
 
 interface NotificationBannerProps {
-    notes: UpdatedWithdrawal[];
+    notes: Withdrawal[];
     onClose: () => void;
 }
 

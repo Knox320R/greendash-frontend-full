@@ -25,14 +25,17 @@ import { api } from '@/lib/api';
 import { formatDate, truncateAddress } from '@/lib/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { UserBaseData, UserData } from '@/types/landing';
+import { UserData } from '@/types/landing';
 import { updateUser } from '@/store/auth';
 import { toast } from 'react-toastify';
+import { User, UserBaseData } from '@/types/auth-1';
+import { getStakingStats } from '@/lib/staking';
 
 const Profile = () => {
 
-  const user = useSelector((store: RootState) => store.auth.user) as UserData | null;
+  const user = useSelector((store: RootState) => store.auth.user) as User | null;
   const user_base_data = useSelector((store: RootState) => store.auth.user_base_data) as UserBaseData | null;
+  const stakingStats = getStakingStats(user_base_data?.recent_Stakings || []);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -302,15 +305,15 @@ const Profile = () => {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">Total Invested</span>
-                        <span className="text-sm font-medium text-pink-600">{user_base_data.staking.total_staked} EGD</span>
+                        <span className="text-sm font-medium text-pink-600">{stakingStats.total_staking_amount} <span className='ml-1 text-[#888] text-[12px]'>EGD</span></span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">Total Earned</span>
-                        <span className="text-sm font-medium text-blue-600">{user_base_data.staking.total_rewards_earned}<span className='ml-1 text-[#888] text-[12px]'>EGD</span></span>
+                        <span className="text-sm font-medium text-blue-600">{stakingStats.earned_from_active + stakingStats.earned_from_completed}<span className='ml-1 text-[#888] text-[12px]'>EGD</span></span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">EGD Balance</span>
-                        <span className="text-sm font-medium text-green-600">{user.egd_balance}<span className='ml-1 text-[#888] text-[12px]'>EGD</span></span>
+                        <span className="text-sm font-medium text-green-600">{(user.egd_balance).toFixed(2)}<span className='ml-1 text-[#888] text-[12px]'>EGD</span></span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">Available withdrawals</span>

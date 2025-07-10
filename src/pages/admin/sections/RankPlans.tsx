@@ -108,6 +108,7 @@ const RankPlans: React.FC<RankPlansProps> = ({ data }) => {
           <DialogTrigger asChild>
             <Button 
               onClick={() => { setEditPlan(null); setOpenDialog(true); }} 
+              disabled
               className="bg-green-600 hover:bg-green-700 text-white"
             >
               <FaPlus className="w-4 h-4 mr-2" />
@@ -195,6 +196,7 @@ const RankPlans: React.FC<RankPlansProps> = ({ data }) => {
                         <Button
                           variant="outline"
                           size="sm"
+                          disabled
                           onClick={() => setDeletePlanId(plan.id)}
                         >
                           <FaTrash className="w-4 h-4 text-red-500" />
