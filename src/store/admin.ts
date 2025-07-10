@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AdminData } from '@/types/landing';
+import { AdminData, UserData } from '@/types/landing';
 import { api } from '@/lib/api';
 import { AppDispatch } from './index';
 import { setLoading } from './auth';
@@ -83,10 +83,10 @@ export const {
     setSelectedTab
 } = adminSlice.actions;
 
-export const updateUserActive = (is_active: boolean, data: any) => async (dispatch: AppDispatch) => {
+export const updateUserActive = (is_email_verified: boolean, is_active: boolean, data: UserData) => async (dispatch: AppDispatch) => {
     try {
         dispatch(setLoading(true))
-        const res = await api.put<{ success: boolean, message: string }>('/admin/users/' + data.id, { is_active })
+        const res = await api.put<{ success: boolean, message: string }>('/admin/users/' + data.id, { is_active, is_email_verified })
         if (res.success) dispatch(updatePageDataSlice({ table_name: 'users', data }))
         else throw "failed to update user info"
     } catch (e) {

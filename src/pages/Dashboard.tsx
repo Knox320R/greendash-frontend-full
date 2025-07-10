@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -19,7 +19,7 @@ import {
   FaUserFriends,
   FaBolt
 } from 'react-icons/fa';
-import { motion } from 'framer-motion';
+import { delay, motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { formatCurrency, formatNumber, formatDate } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
@@ -32,6 +32,8 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { AppDispatch, RootState } from '@/store';
+import { toast } from 'react-toastify';
+import NotificationBanner from '@/components/NotificationBanner';
 
 const packageColorMap: Record<string, string> = {
   'Daily Ride': '#22c55e', // green
@@ -62,7 +64,7 @@ const ReferralTree = ({ nodes, level = 0 }) => (
 );
 
 const Dashboard = () => {
-  const { user, user_base_data, isLoading } = useAuth();
+  const { user, user_base_data, isLoading, confirmUpdateWithdrawal } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
   const [exchangeModalOpen, setExchangeModalOpen] = useState(false);
   const [exchangeAmount, setExchangeAmount] = useState('');
@@ -75,6 +77,7 @@ const Dashboard = () => {
   const maxWithdrawalSetting = adminSettings.find(s => s.title === 'max_withdrawal');
   const minWithdrawal = minWithdrawalSetting ? Number(minWithdrawalSetting.value) : 0;
   const maxWithdrawal = maxWithdrawalSetting ? Number(maxWithdrawalSetting.value) : Number.POSITIVE_INFINITY;
+  const [notification, setNotification] = useState<string | null>(null);
 
   function sendExchangeRequest(amount: number) {
     dispatch(authApi.exchangeRequest(amount))
@@ -83,9 +86,6 @@ const Dashboard = () => {
     dispatch(authApi.withdrawRequest(amount))
   }
   
-  
-
-
   // Compute stats from user_base_data
   const egdBalance = user?.egd_balance || 0;
   const withdrawals = user?.withdrawals || 0;
@@ -632,6 +632,12 @@ const Dashboard = () => {
           </Tabs>
         </motion.div>
       </div>
+      {user_base_data?.updated_withdrawals?.length > 0 && (
+        <NotificationBanner
+          notes={user_base_data.updated_withdrawals}
+          onClose={() => { confirmUpdateWithdrawal(user.id);  setNotification(null) }}
+        />
+      )}
     </div>
   );
 };

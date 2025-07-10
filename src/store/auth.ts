@@ -15,6 +15,7 @@ interface AppState {
     isAuthenticated: boolean;
     isLoading: boolean;
     error: boolean;
+    wallet_connected: boolean
 }
 
 const initialState: AppState = {
@@ -37,13 +38,21 @@ const initialState: AppState = {
     token: "",
     isAuthenticated: false,
     isLoading: false,
-    error: false
+    error: false,
+    wallet_connected: false
 };
 // Auth slice
 const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
+        setWalletConnecting: (state, action) => {
+            state.wallet_connected = action.payload
+        },
+        deleteOneUpdatedWithdrawls: (state, action) => {
+            if (action.payload)
+                state.user_base_data.updated_withdrawals = []
+        },
         setUser: (state, action) => {
             const { token, user, user_base_data } = action.payload
             state.token = token;
@@ -105,11 +114,30 @@ export const {
     updateUser,
     updateUserBaseData,
     updateExchangeBaseData,
-    updateWithdrawalData
+    updateWithdrawalData,
+    deleteOneUpdatedWithdrawls
 } = authSlice.actions;
 
 // API functions
 export const authApi = {
+
+    confirmUpdatedWithdrawal: (user_id: number) => async (dispatch: AppDispatch) => {
+        try {
+            dispatch(setLoading(true))
+            const res = await api.post<{ success: boolean, message: string }>('/users/confirm-withdrawal', {user_id})
+            if (res.success) {
+                dispatch(deleteOneUpdatedWithdrawls(res.success))
+                toast.success(res.message)
+            } else {
+                toast.warning(res.message)
+            }
+        } catch (e) {
+            console.log(e);
+            toast.error("failed your withdrawal request confirmation")
+        } finally {
+            dispatch(setLoading(false))
+        }
+    },
 
     withdrawRequest: (amount: number) => async (dispatch: AppDispatch) => {
         try {
@@ -159,7 +187,6 @@ export const authApi = {
             if (response.success) {
                 // Store token in localStorage
                 localStorage.setItem('token', response.data.token);
-
                 // Update state
                 dispatch(setUser(response.data));
 

@@ -1,4 +1,4 @@
-export const USDT_ABI = [
+export default [
 	{
 		"inputs": [
 			{
@@ -313,5 +313,3 @@ export const USDT_ABI = [
 		"type": "function"
 	}
 ]
- 
-export const USDT_ADDRESS = "0x6b4db11f674d3a3e471bea12dcfbe44c6f6a0438"; // TODO: Replace with actual USDT contract address

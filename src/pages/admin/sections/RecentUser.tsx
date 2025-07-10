@@ -4,6 +4,7 @@ import { AppDispatch, RootState } from '@/store';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { FaUser } from 'react-icons/fa';
 import { fetchPageData, updateUserActive } from '@/store/admin';
+import { UserData } from '@/types/landing';
 
 const RecentUser: React.FC = () => {
   const { list, isMore } = useSelector((state: RootState) => state.adminData?.users || { list: [], isMore: true });
@@ -33,9 +34,12 @@ const RecentUser: React.FC = () => {
     )
   );
 
-  const handleToggleActive = (user: any) => {
+  const handleToggleActive = (user: UserData) => {
     const newActiveState = !user.is_active;
-    dispatch(updateUserActive(newActiveState, { ...user, is_active: newActiveState }));
+    dispatch(updateUserActive(user.is_email_verified, !user.is_active, { ...user, is_active: newActiveState }));
+  };
+  const handleVerifyEmail = (user: UserData) => {
+    dispatch(updateUserActive(true, user.is_active, { ...user, is_email_verified: true }));
   };
 
   return (
@@ -68,26 +72,31 @@ const RecentUser: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((user) => (
+              {filtered.map((user: UserData) => (
                 <tr key={user.id} className="border-b last:border-0">
                   <td className="px-3 py-2 whitespace-nowrap">{user.name}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{user.email}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{new Date(user.created_at).toLocaleString()}</td>
                   <td className="px-3 py-2 whitespace-nowrap">
-                    {user.is_email_verified ? (
-                      <span className="text-green-600 font-bold">Yes</span>
-                    ) : (
-                      <span className="text-gray-400">No</span>
-                    )}
+                    {
+                      user.is_email_verified ?
+                        <span> Yes </span>
+                        :
+                        <button
+                          onClick={() => handleVerifyEmail(user)}
+                          className={`px-3 py-1 rounded text-xs font-medium transition-colors bg-blue-100 text-blue-800 hover:bg-blue-200`}
+                        >
+                          Verify
+                        </button>
+                    }
                   </td>
                   <td className="px-3 py-2 whitespace-nowrap">
                     <button
                       onClick={() => handleToggleActive(user)}
-                      className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                        user.is_active
-                          ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                          : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                      }`}
+                      className={`px-3 py-1 rounded text-xs font-medium transition-colors ${user.is_active
+                        ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                        : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                        }`}
                     >
                       {user.is_active ? 'Active' : 'Inactive'}
                     </button>
@@ -114,7 +123,7 @@ const RecentUser: React.FC = () => {
         </select>
         <button
           className="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:bg-gray-400 transition"
-          disabled = {!isMore}
+          disabled={!isMore}
           onClick={() => dispatch(fetchPageData(limit, list.length, "users"))}
         >
           View More

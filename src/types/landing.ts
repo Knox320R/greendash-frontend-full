@@ -13,6 +13,8 @@ export interface UserData {
   is_admin: boolean;
   egd_balance: number;
   withdrawals: number;
+  is_active: boolean;
+  is_email_verified: boolean;
   created_at: string;
   wallet_address: string | null;
 }
@@ -22,8 +24,17 @@ export interface UserBaseData {
   referrals: ReferralSummary;
   recent_transactions: Transaction[];
   upline_users: Upline[];
+  updated_withdrawals: UpdatedWithdrawal[];
 }
 
+export interface UpdatedWithdrawal {
+  id: number;
+  user_id: number;
+  amount: number;
+  status: "pending" | "approved" | "rejected" | "completed"
+  createdAt: string; // ISO date
+  updatedAt: string; // ISO date
+}
 
 export interface UplineUser {
   id: number;

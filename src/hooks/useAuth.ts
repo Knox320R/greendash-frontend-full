@@ -28,6 +28,7 @@ export const useAuth = () => {
     resetPassword: (data: { token: string; password: string }) => dispatch(authApi.resetPassword(data)),
     verifyEmail: (token: string) => dispatch(authApi.verifyEmail(token)),
     resendVerification: (email: string) => dispatch(authApi.resendVerification(email)),
+    confirmUpdateWithdrawal: (user_id) => dispatch(authApi.confirmUpdatedWithdrawal(user_id)),
     updateBalance: (balance: { egd_balance: number; usdt_balance: number; total_invested: number; total_earned: number }) =>
       dispatch(authApi.updateBalance(balance)),
   };

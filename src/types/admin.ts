@@ -27,8 +27,8 @@ export interface FinancialStats {
 // Transaction summary stats
 export interface TransactionStats {
   total: number;
-  pending: number;
-  completed: number;
+  withdrawals: number;
+  staking: number;
 }
 
 // Withdrawals summary stats
@@ -41,6 +41,7 @@ export interface WithdrawalsStats {
 export interface RelatedUser {
   email: string;
   name: string;
+  wallet_address: string;
 }
 
 // Related staking package for recent staking activity
@@ -93,7 +94,7 @@ interface RecentTransaction {
   type: 'staking' | 'withdrawal' | 'referral' | string;
   direction: 'in' | 'out' | string;
   amount: number;
-  status: 'pending' | 'completed' | string;
+  currency: "USDT" | "EGD";
   created_at: string; // ISO date string
   user: RelatedUser;
 }

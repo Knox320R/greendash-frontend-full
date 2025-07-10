@@ -50,7 +50,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ scrollToSection, adminSetting
           {/* CTA Button */}
           <motion.div
             onClick={() => isAuthenticated? navigate('/dashboard'): navigate('/login')}
-            className="inline-block px-8 py-4 rounded-full bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white text-lg md:text-xl font-bold shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-300"
+            className="inline-block px-8 py-4 rounded-full bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white text-lg md:text-xl font-bold shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-300 cursor-pointer"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.7 }}

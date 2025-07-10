@@ -14,7 +14,7 @@ import { StakingPackage } from '@/types/landing';
 import { useWallet } from '@/hooks/WalletContext';
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
-import { USDT_ABI, USDT_ADDRESS } from "@/lib/usdt_abi"; // Replace with your actual ABI/address
+import USDT_ABI from "@/lib/usdt_abi"; // Replace with your actual ABI/address
 import { authApi } from '@/store/auth';
 
 const Staking = () => {
@@ -31,6 +31,7 @@ const Staking = () => {
   const [isStaking, setIsStaking] = useState(false);
   const { connectWallet, isConnected } = useWallet();
   const [stakingFilter, setStakingFilter] = useState('all');
+  const usdt_address = useSelector((store: RootState) => store.adminData.admin_settings)?.find(item => item.title === "usdt_token_address")?.value || "0x681c3E2561fE74EAF34Be3bb9620b977010D6d41"
   const filteredStakings = stakingFilter === 'all'
     ? userStakings
     : userStakings.filter(s => s.status === stakingFilter);
@@ -38,39 +39,24 @@ const Staking = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleStartStaking = async (pkg: StakingPackage) => {
-    if (!isConnected) {
-      await connectWallet();
-      return;
-    }
-    setIsStaking(true);
     try {
-
-      const web3Provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await web3Provider.getSigner();
-      const newToken = new ethers.Contract(USDT_ADDRESS, USDT_ABI, signer);
-
-      // Calculate amount (use correct decimals)
-      const decimals = await newToken.decimals();
-
-      const amount = ethers.parseUnits((parseFloat(pkg.stake_amount) * parseFloat(tokenPrice)).toString(), decimals);
-
-      // Send token to staking contract/platform
-      const tx = await newToken.transfer(platformReceiver, amount);
-      toast.warn('Waiting for transaction confirmation...');
-
-      const receipt = await tx.wait();
-      console.log(receipt);
-
-      toast.success('Token sent!');
-
-      dispatch(authApi.stakingRequest(receipt.hash, pkg.id, user.id))
-
-      // if (response) {
-      //   setIsStaking(false);
-      //   toast.success('Staking started successfully!');
-      // } else {
-      //   toast.error('Staking failed.');
-      // }
+      setIsStaking(true);
+      if (isConnected) {
+        const web3Provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await web3Provider.getSigner();
+        const newToken = new ethers.Contract(usdt_address, USDT_ABI, signer);
+        // Calculate amount (use correct decimals)
+        const decimals = await newToken.decimals();
+        const amount = ethers.parseUnits((parseFloat(pkg.stake_amount) * parseFloat(tokenPrice)).toString(), decimals);
+        // Send token to staking contract/platform
+        const tx = await newToken.transfer(platformReceiver, amount);
+        toast.warn('Waiting for transaction confirmation...');
+        const receipt = await tx.wait();
+        toast.success('Token sent!');
+        dispatch(authApi.stakingRequest(receipt.hash, pkg.id, user.id))
+      } else {
+        connectWallet()
+      }
     } catch (err: any) {
       toast.error('Staking failed.');
     } finally {
@@ -114,16 +100,10 @@ const Staking = () => {
       <div className="max-w-5xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Staking</h1>
-          <p className="text-gray-600 mt-2">Lock your tokens and earn daily rewards</p>
+          <div className="text-gray-600 mt-2 w-full gap-8 flex-wrap  justify-between flex">
+            <span>  Lock your tokens and earn daily rewards </span>
+          </div>
         </motion.div>
-        {!isConnected && (
-          <Button
-            className="mb-4 bg-blue-600 hover:bg-blue-700 text-white"
-            onClick={connectWallet}
-          >
-            Connect Wallet
-          </Button>
-        )}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

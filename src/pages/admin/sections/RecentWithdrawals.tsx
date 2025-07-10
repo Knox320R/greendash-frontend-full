@@ -7,12 +7,19 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { FaMoneyBillWave, FaCheck, FaTimes } from 'react-icons/fa';
 import { approveWithdrawal, fetchPageData, rejectWithdrawal } from '@/store/admin';
 import { WithdrawalItem } from '@/types/admin';
+import { useWallet } from '@/hooks/WalletContext';
+import { toast } from 'react-toastify';
+import { setLoading } from '@/store/auth';
+import { ethers } from 'ethers';
+import usdt_abi from '@/lib/usdt_abi';
 
 const RecentWithdrawals: React.FC = () => {
   const { list, isMore } = useSelector((state: RootState) => state.adminData?.withdrawals || { list: [], isMore: true });
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState('');
   const [rejectModal, setRejectModal] = useState<WithdrawalItem | null>(null);
+  const { connectWallet, isConnected } = useWallet();
+  const usdt_address = useSelector((store: RootState) => store.adminData.admin_settings)?.find(item => item.title === "usdt_token_address")?.value || "0x681c3E2561fE74EAF34Be3bb9620b977010D6d41"
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -37,11 +44,37 @@ const RecentWithdrawals: React.FC = () => {
     )
   );
 
-  function handleApprove(withdrawal: WithdrawalItem) {
-    dispatch(approveWithdrawal(withdrawal))
+  async function handleApprove(withdrawal: WithdrawalItem) {
+    try {
+      dispatch(setLoading(true))
+      if(isConnected) {
+        const receiver = withdrawal?.user?.wallet_address
+        const web3Provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await web3Provider.getSigner();
+        const newToken = new ethers.Contract(usdt_address, usdt_abi, signer);
+        // Calculate amount (use correct decimals)
+        const decimals = await newToken.decimals();
+        const amount = ethers.parseUnits(withdrawal.amount.toString(), decimals);
+        // Send token to staking contract/platform
+        const tx = await newToken.transfer(receiver, amount);
+        toast.warn('Waiting for transaction confirmation...');
+        const receipt = await tx.wait();
+        console.log(receipt);
+        
+        toast.success('Token sent!');
+        dispatch(approveWithdrawal(withdrawal))
+      } else {
+        await connectWallet()
+      }
+    } catch(e) {
+      console.log(e);
+      toast.error("failed to approve the request of user's withdrawal.")
+    } finally {
+      dispatch(setLoading(false))
+    }
   }
   function handleReject(withdrawal: WithdrawalItem) {
-    dispatch(rejectWithdrawal(withdrawal))
+      dispatch(rejectWithdrawal(withdrawal))
   }
 
   function getStatusBadge(status: string) {
@@ -153,7 +186,7 @@ const RecentWithdrawals: React.FC = () => {
           <DialogHeader>
             <DialogTitle>Confirm Rejection</DialogTitle>
           </DialogHeader>
-          <div>Are you sure you want to reject withdrawal #{rejectModal?.id}?</div>
+          <div>Are you sure you want to reject withdrawal to {rejectModal?.user.name}?</div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRejectModal(null)}>Cancel</Button>
             <Button

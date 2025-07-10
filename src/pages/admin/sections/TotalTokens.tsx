@@ -69,15 +69,9 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
         await dispatch(updateAdminSettingApi(updateData));
       } else {
         // Create new token
-        const newToken: TotalToken = {
-          id: Date.now(), // Will be replaced by backend
-          ...formData,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
         const createData = {
           table_name: 'total_tokens' as const,
-          data: newToken
+          data: formData
         };
         await dispatch(createAdminSettingApi(createData));
       }
@@ -97,7 +91,7 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
             table_name: 'total_tokens' as const,
             data: tokenToDelete
           };
-          await dispatch(deleteAdminSettingApi(deleteData));
+          await dispatch(deleteAdminSettingApi('total_tokens',  deleteTokenId));
         }
         setDeleteTokenId(null);
       } catch (error) {
@@ -114,6 +108,7 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
           <DialogTrigger asChild>
             <Button 
               onClick={() => { setEditToken(null); setOpenDialog(true); }} 
+              disabled
               className="bg-green-600 hover:bg-green-700 text-white"
             >
               <FaPlus className="w-4 h-4 mr-2" />
@@ -192,6 +187,7 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
                         <Button
                           variant="outline"
                           size="sm"
+                          disabled
                           onClick={() => setDeleteTokenId(token.id)}
                         >
                           <FaTrash className="w-4 h-4 text-red-500" />

@@ -73,7 +73,7 @@ const RecentTransaction: React.FC = () => {
                 <th className="px-3 py-2 text-left font-semibold">Type</th>
                 <th className="px-3 py-2 text-left font-semibold">Direction</th>
                 <th className="px-3 py-2 text-left font-semibold">Amount</th>
-                <th className="px-3 py-2 text-left font-semibold">Status</th>
+                <th className="px-3 py-2 text-left font-semibold">Currency</th>
                 <th className="px-3 py-2 text-left font-semibold">Date</th>
               </tr>
             </thead>
@@ -84,17 +84,7 @@ const RecentTransaction: React.FC = () => {
                   <td className="px-3 py-2 whitespace-nowrap">{tx.type}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{tx.direction}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{tx.amount}</td>
-                  <td className="px-3 py-2 whitespace-nowrap">
-                    <span className={
-                      tx.status === 'completed'
-                        ? 'text-green-600 font-bold'
-                        : tx.status === 'pending'
-                        ? 'text-yellow-600 font-bold'
-                        : 'text-gray-400'
-                    }>
-                      {tx.status}
-                    </span>
-                  </td>
+                  <td className="px-3 py-2 whitespace-nowrap">{tx.currency}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{new Date(tx.created_at).toLocaleString()}</td>
                 </tr>
               ))}

@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '../components/ui/button';
-import { FaBars, FaUser, FaSignOutAlt, FaTimes, FaLeaf } from 'react-icons/fa';
+import { FaBars, FaUser, FaSignOutAlt, FaTimes, FaLeaf, FaCheckCircle, FaWallet } from 'react-icons/fa';
 import { useAuth } from '@/hooks/useAuth';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import { CardContent } from './ui/card';
+import { useWallet } from '@/hooks/WalletContext';
 
 interface HeaderProps {
   scrollToSection?: (sectionId: string) => void;
@@ -27,6 +30,7 @@ const Header: React.FC<HeaderProps> = ({ scrollToSection }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isAuthenticated, logout } = useAuth();
+  const { connectWallet, disconnectWallet, isConnected } = useWallet()
   // Auth/page links
   const getAuthButtons = () => {
     if (isAuthenticated && user) {
@@ -113,6 +117,14 @@ const Header: React.FC<HeaderProps> = ({ scrollToSection }) => {
     <nav className="fixed top-0 w-full bg-gradient-to-r from-green-600 via-green-500 to-green-400 shadow-xl z-50 border-b-4 border-green-700">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-16 relative justify-between">
+          <div className="absolute cursor-pointer hover:shadow-xl top-[80px] right-0 z-10">
+            {
+              isConnected ?
+                <FaWallet className="h-6 w-6 text-green-400 hover:text-green-600" onClick={() => disconnectWallet()} />
+                :
+                <FaWallet className="h-6 w-6 text-gray-400 hover:text-gray-600" onClick={() => connectWallet()} />
+            }
+          </div>
           {/* Logo */}
           <div
             className="text-2xl font-extrabold text-white tracking-wide drop-shadow-lg cursor-pointer flex items-center gap-2"
