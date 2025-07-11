@@ -6,12 +6,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { FaSignInAlt, FaEnvelope, FaLock } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
+import { api } from '@/lib/api';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '@/store/auth';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, isLoading, error, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
 
   // Get the return URL from location state or default to dashboard
@@ -26,7 +31,7 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email.trim() || !password.trim()) {
       return;
     }
@@ -37,8 +42,29 @@ const Login = () => {
     } catch (err) {
       // Error is already handled by the auth slice
       console.log('Login error:', err);
+      alert
     }
   };
+
+  const handleForgotPassword = async () => {
+    try {
+      dispatch(setLoading(true))
+      const res = await api.post<{ success: boolean, message: string }>('/auth/forgot-password', { email })
+      console.log(res);
+      if (res.success) {
+        toast.success(res.message)
+        alert('please check your email box now!')
+      } else {
+        throw ""
+      }
+    } catch (e) {
+      toast.error("failed to send our message to your email box")
+      alert('check your email is correct again.')
+      console.log(e);
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center p-4">
@@ -84,7 +110,7 @@ const Login = () => {
                   {error}
                 </motion.div>
               )}
-              
+
               <motion.div
                 className="space-y-2"
                 initial={{ opacity: 0, x: -30 }}
@@ -136,8 +162,8 @@ const Login = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
               >
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-green-600 hover:bg-green-700"
                   disabled={isLoading}
                 >
@@ -165,9 +191,9 @@ const Login = () => {
                 </Link>
               </p>
               <p className="text-gray-600 mt-2">
-                <Link to="/forgot-password" className="text-green-600 hover:text-green-700 font-medium">
+                <button onClick={handleForgotPassword} className="text-green-600 hover:text-green-700 font-medium">
                   Forgot your password?
-                </Link>
+                </button>
               </p>
             </motion.div>
           </CardContent>

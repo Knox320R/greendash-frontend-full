@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Staking from "./pages/Staking";
 import Affiliates from "./pages/Affiliates";
 import Profile from "./pages/Profile";
+import ResetPassword from "./pages/ResetPassword";
 
 export default [
     {
@@ -27,6 +28,11 @@ export default [
         path: '/verify-email',
         public: true,
         element: <VerifyEmail/>
+    },
+    {
+        path: '/reset-password',
+        public: true,
+        element: <ResetPassword/>
     },
     {
         path: '/dashboard',
