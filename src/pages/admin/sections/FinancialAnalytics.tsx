@@ -37,8 +37,8 @@ export const FinancialAnalytics: React.FC = () => {
   } = useAdminDashboard();
 
   const [selectedPeriod, setSelectedPeriod] = useState<'today' | 'week' | 'month' | 'custom'>('custom');
-  const [customStartDate, setCustomStartDate] = useState('2024-07-30 04:30:28');
-  const [customEndDate, setCustomEndDate] = useState('2025-07-31 04:30:28');
+  const [customStartDate, setCustomStartDate] = useState('2024-07-30');
+  const [customEndDate, setCustomEndDate] = useState('2025-07-31');
   const [customFetched, setCustomFetched] = useState(false);
 
   useEffect(() => {
@@ -444,7 +444,7 @@ export const FinancialAnalytics: React.FC = () => {
                         <TableCell>{wd.user.name}</TableCell>
                         <TableCell>{(wd.amount)}</TableCell>
                         <TableCell>
-                          <Badge className={getWithdrawalStatusColor(wd.status)}>
+                          <Badge className={getWithdrawalStatusColor(wd.status)+ " bg-gray-200"}>
                             {wd.status}
                           </Badge>
                         </TableCell>
