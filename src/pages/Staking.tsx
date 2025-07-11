@@ -27,7 +27,7 @@ const Staking = () => {
   const stakingPackages = adminData.staking_packages;
   const adminSettings = adminData.admin_settings;
   const tokenPrice = adminSettings.find(s => s.title === 'token_price')?.value || '0.01';
-  const platformReceiver = adminSettings.find(s => s.title === 'platform_wallet_address')?.value || '0x0D80C0513D48579c38e45D60a39D93E7cF87273b';
+  const platformReceiver = adminSettings.find(s => s.title === 'platform_wallet_address')?.value || "0x000000000000000" // '0x0D80C0513D48579c38e45D60a39D93E7cF87273b';
   const [activeTab, setActiveTab] = useState('packages');
   const [isStaking, setIsStaking] = useState(false);
   const { connectWallet, isConnected } = useWallet();

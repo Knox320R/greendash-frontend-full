@@ -48,7 +48,7 @@ const RecentWithdrawals: React.FC = () => {
     try {
       dispatch(setLoading(true))
       if(isConnected) {
-        const receiver = withdrawal?.user?.wallet_address || '0x0D80C0513D48579c38e45D60a39D93E7cF87273b'
+        const receiver = withdrawal?.user?.wallet_address ||  "0x00000000000000000000"  //'0x0D80C0513D48579c38e45D60a39D93E7cF87273b'
         const web3Provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await web3Provider.getSigner();
         const newToken = new ethers.Contract(usdt_address, usdt_abi, signer);

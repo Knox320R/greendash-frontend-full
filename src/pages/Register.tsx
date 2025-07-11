@@ -153,7 +153,7 @@ const Register = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <label htmlFor="name" className="text-sm font-medium text-gray-700">
-                  Name
+                  Name <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <FaUser className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
@@ -178,7 +178,7 @@ const Register = () => {
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
                 <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                  Email
+                  Email <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <FaEnvelope className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
@@ -227,7 +227,7 @@ const Register = () => {
                 transition={{ duration: 0.6, delay: 0.5 }}
               >
                 <label htmlFor="password" className="text-sm font-medium text-gray-700">
-                  Password
+                  Password <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <FaLock className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
@@ -252,7 +252,7 @@ const Register = () => {
                 transition={{ duration: 0.6, delay: 0.55 }}
               >
                 <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
-                  Confirm Password
+                  Confirm Password <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <FaLock className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
@@ -277,7 +277,7 @@ const Register = () => {
                 transition={{ duration: 0.6, delay: 0.6 }}
               >
                 <label htmlFor="referral_code" className="text-sm font-medium text-gray-700">
-                  Referral Code
+                  Referral Code <span className="text-red-500">*</span> 
                 </label>
                 <div className="relative">
                   <FaUser className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
