@@ -27,12 +27,12 @@ const Staking = () => {
   const stakingPackages = adminData.staking_packages;
   const adminSettings = adminData.admin_settings;
   const tokenPrice = adminSettings.find(s => s.title === 'token_price')?.value || '0.01';
-  const platformReceiver = adminSettings.find(s => s.title === 'platform_wallet_address')?.value || '';
+  const platformReceiver = adminSettings.find(s => s.title === 'platform_wallet_address')?.value || '0x0D80C0513D48579c38e45D60a39D93E7cF87273b';
   const [activeTab, setActiveTab] = useState('packages');
   const [isStaking, setIsStaking] = useState(false);
   const { connectWallet, isConnected } = useWallet();
   const [stakingFilter, setStakingFilter] = useState('all');
-  const usdt_address = useSelector((store: RootState) => store.adminData.admin_settings)?.find(item => item.title === "usdt_token_address")?.value || "0x681c3E2561fE74EAF34Be3bb9620b977010D6d41"
+  const usdt_address = useSelector((store: RootState) => store.adminData.admin_settings)?.find(item => item.title === "usdt_token_address")?.value || "0x55d398326f99059fF775485246999027B3197955"
   const filteredStakings = stakingFilter === 'all'
     ? staking_list
     : staking_list.filter(s => s.status === stakingFilter);

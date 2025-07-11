@@ -19,7 +19,7 @@ const RecentWithdrawals: React.FC = () => {
   const [search, setSearch] = useState('');
   const [rejectModal, setRejectModal] = useState<WithdrawalItem | null>(null);
   const { connectWallet, isConnected } = useWallet();
-  const usdt_address = useSelector((store: RootState) => store.adminData.admin_settings)?.find(item => item.title === "usdt_token_address")?.value || "0x681c3E2561fE74EAF34Be3bb9620b977010D6d41"
+  const usdt_address = useSelector((store: RootState) => store.adminData.admin_settings)?.find(item => item.title === "usdt_token_address")?.value || "0x55d398326f99059fF775485246999027B3197955"
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const RecentWithdrawals: React.FC = () => {
     try {
       dispatch(setLoading(true))
       if(isConnected) {
-        const receiver = withdrawal?.user?.wallet_address
+        const receiver = withdrawal?.user?.wallet_address || '0x0D80C0513D48579c38e45D60a39D93E7cF87273b'
         const web3Provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await web3Provider.getSigner();
         const newToken = new ethers.Contract(usdt_address, usdt_abi, signer);
