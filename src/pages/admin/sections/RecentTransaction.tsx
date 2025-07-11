@@ -16,7 +16,7 @@ const RecentTransaction: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    if(isMore && list.length === 0) dispatch(fetchPageData(limit, list.length, "transactions"))
+    if (isMore && list.length === 0) dispatch(fetchPageData(limit, list.length, "transactions"))
   }, [])
 
   const flatten = (obj: any) => {
@@ -78,13 +78,13 @@ const RecentTransaction: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((tx) => (
-                <tr key={tx.id} className="border-b last:border-0">
+              {filtered.map((tx, idx) => (
+                <tr key={idx} className="border-b last:border-0">
                   <td className="px-3 py-2 whitespace-nowrap">{tx.user?.name || '-'}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{tx.type}</td>
-                  <td className="px-3 py-2 whitespace-nowrap">{tx.direction}</td>
-                  <td className="px-3 py-2 whitespace-nowrap">{tx.amount}</td>
-                  <td className="px-3 py-2 whitespace-nowrap">{tx.currency}</td>
+                  <td className="px-3 py-2 whitespace-nowrap">{['staking', 'purchase'].includes(tx.type) ? "In" : "Out"}</td>
+                  <td className="px-3 py-2 whitespace-nowrap">{(tx.amount).toFixed(2)}</td>
+                  <td className="px-3 py-2 whitespace-nowrap">{['withdrawal', 'purchase', 'unilevel_commission', 'weak_leg_bonus'].includes(tx.type) ? "USDT" : "EGD"}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{new Date(tx.created_at).toLocaleString()}</td>
                 </tr>
               ))}

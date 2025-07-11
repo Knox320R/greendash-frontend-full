@@ -27,6 +27,7 @@ import RecentUser from './sections/RecentUser';
 import RecentStaking from './sections/RecentStaking';
 import RecentTransaction from './sections/RecentTransaction';
 import RecentWithdrawals from './sections/RecentWithdrawals';
+import { FinancialAnalytics } from '@/pages/admin/sections/FinancialAnalytics';
 import { Menu } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
@@ -34,6 +35,11 @@ const sections = [
   {
     key: 'dashboard',
     label: 'Dashboard',
+    icon: FaChartLine,
+  },
+  {
+    key: 'financial_analytics',
+    label: 'Financial Analytics',
     icon: FaChartLine,
   },
   {
@@ -85,6 +91,7 @@ const sections = [
 
 const sectionTitles: Record<string, string> = {
   dashboard: 'Enterprise Dashboard',
+  financial_analytics: 'Financial Analytics Dashboard',
   user_list: 'Users',
   staking_list: 'Stakings',
   transaction_list: 'Transactions',
@@ -178,6 +185,7 @@ const Admin: React.FC = () => {
             </CardHeader>
             <CardContent>
               {selected === 'dashboard' && <Dashboard />}
+              {selected === 'financial_analytics' && <FinancialAnalytics />}
               {selected === 'settings' && <AdminSettings data={adminData.admin_settings} />}
               {selected === 'staking' && <StakingPackages data={adminData.staking_packages} />}
               {selected === 'ranks' && <RankPlans data={adminData.rank_plans} />}

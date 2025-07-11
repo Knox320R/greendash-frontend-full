@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AdminData, UserData } from '@/types/landing';
+import { DashboardResponse } from '@/types/adminDashboard';
 import { api } from '@/lib/api';
 import { AppDispatch } from './index';
 import { setLoading } from './auth';
@@ -29,7 +30,9 @@ const initialState: AdminData = {
         list: []
     },
     enterprise: {},
-    selectedTab: 'dashboard'
+    selectedTab: 'dashboard',
+    dashboardData: null,
+    dashboardLoading: false
 };
 
 // Auth slice
@@ -69,6 +72,16 @@ const adminSlice = createSlice({
             const { table_name, id } = action.payload
             state[table_name] = state[table_name].filter(item => item.id !== id)
         },
+        setDashboardData: (state, action) => {
+            state.dashboardData = action.payload
+            state.dashboardLoading = false
+        },
+        setDashboardLoading: (state, action) => {
+            state.dashboardLoading = action.payload
+        },
+        clearDashboardData: (state) => {
+            state.dashboardData = null
+        },
     },
 });
 
@@ -80,7 +93,10 @@ export const {
     concatPageDataSlice,
     setEnterprise,
     updatePageDataSlice,
-    setSelectedTab
+    setSelectedTab,
+    setDashboardData,
+    setDashboardLoading,
+    clearDashboardData
 } = adminSlice.actions;
 
 export const updateUserActive = (is_email_verified: boolean, is_active: boolean, data: UserData) => async (dispatch: AppDispatch) => {
@@ -209,6 +225,25 @@ export const deleteAdminSettingApi = (table_name: string, id: number) => async (
     }
 }
 
+export const fetchDailyFinancialData = (start_date: string, end_date: string) => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(setDashboardLoading(true))
+        const res = await api.post<DashboardResponse>('/admin/daily-financial', { start_date, end_date })
+        if (res.success) {
+            dispatch(setDashboardData(res.data))
+        } else {
+            throw { message: "Failed to fetch daily financial data" }
+        }
+    } catch (e) {
+        console.log(e);
+        toast.error(e.message || "Failed to fetch daily financial data")
+        dispatch(setDashboardLoading(false))
+    }
+}
+
+export const clearDashboardDataAction = () => async (dispatch: AppDispatch) => {
+    dispatch(clearDashboardData())
+}
 
 
 export default adminSlice.reducer; 

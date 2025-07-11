@@ -1,4 +1,5 @@
 import { AdminDashboardSummary, StakingList, TransactionList, UserList, WithdrawalList } from "./admin";
+import { DashboardData } from "./adminDashboard";
 
 export interface UserData {
   id: number;
@@ -171,5 +172,7 @@ export interface AdminData {
   transactions: TransactionList;
   enterprise?: AdminDashboardSummary;
   selectedTab: string;
+  dashboardData?: DashboardData | null;
+  dashboardLoading?: boolean;
 }
 

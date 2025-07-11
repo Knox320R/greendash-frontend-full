@@ -10,7 +10,7 @@ import { User, UserBaseData, ReferralNode, UplineUserEntry } from '@/types/auth-
 // ReferralTree component for visual tree structure
 const ReferralTree: React.FC<{ nodes: ReferralNode[]; level?: number }> = ({ nodes, level = 0 }) => (
   <div className="flex flex-col items-center">
-    <div className="flex flex-row gap-6 items-start w-full justify-center">
+    <div className="flex flex-row gap-6 items-start w-full">
       {nodes.map((node, idx) => (
         <div key={node.referredUser.id} className="flex flex-col items-center relative">
           {/* Parent node card */}
