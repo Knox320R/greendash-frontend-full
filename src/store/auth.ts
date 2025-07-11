@@ -174,6 +174,25 @@ export const authApi = {
         }
     },
 
+    // Get current user
+    getCurrentUser: () => async (dispatch: AppDispatch) => {
+        try {
+            dispatch(setLoading(true));
+            const response = await api.get<LoginResponse>('/auth/me');
+            if (response.success) {
+                localStorage.setItem('token', response.token);
+                dispatch(setUser(response));
+                return true
+            } else {
+                throw ""
+            }
+        } catch (err: any) {
+            localStorage.removeItem('token');
+            dispatch(logout());
+        } finally {
+            dispatch(setLoading(false));
+        }
+    },
     // Login user
     login: (credentials: LoginForm) => async (dispatch: AppDispatch) => {
         try {
@@ -181,24 +200,21 @@ export const authApi = {
             dispatch(clearError());
 
             const response = await api.post<LoginResponse>('/auth/login', credentials);
-            dispatch(setLoading(false));
-
             if (response.success) {
                 // Store token in localStorage
                 localStorage.setItem('token', response.token);
                 // Update state
                 dispatch(setUser(response));
-
                 toast.success(response.message || 'Login successful!');
-                return { sucess: true }
             } else {
-                return { success: false, msg: response['response']?.data?.message || "You should pass email verification!" };
+                dispatch(setError("Invalid password or email!"))
             }
         } catch (err: any) {
             const errorMessage = err.response?.data?.message || err.message || 'Login failed';
             dispatch(setError(errorMessage));
-            dispatch(setLoading(false));
             toast.error(errorMessage);
+        } finally {
+            dispatch(setLoading(false));
         }
     },
 
@@ -217,34 +233,6 @@ export const authApi = {
             dispatch(setError(errorMessage));
             dispatch(setLoading(false));
             toast.error(errorMessage);
-
-        }
-    },
-
-    // Get current user
-    getCurrentUser: () => async (dispatch: AppDispatch) => {
-        try {
-            dispatch(setLoading(true));
-
-            // const response = await api.get<{ success: boolean; data: { user: UserProfile } }>('/auth/me');
-            const response = await api.get<{ message: string, success: boolean, data: { token: string, user: User, user_base_data: UserBaseData } }>('/auth/me');
-            dispatch(setLoading(false));
-
-            if (response.success) {
-                // Store token in localStorage
-                localStorage.setItem('token', response.data.token);
-                // Update state
-                dispatch(setUser(response.data));
-                toast.success(response.message || 'Login successful!');
-                return { sucess: true }
-            } else {
-                return { success: false, msg: response['response']?.data?.message || "You should pass email verification!" };
-            }
-        } catch (err: any) {
-            // If token is invalid, clear auth state
-            localStorage.removeItem('token');
-            dispatch(logout());
-            dispatch(setLoading(false));
 
         }
     },

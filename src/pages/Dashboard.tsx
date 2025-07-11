@@ -389,7 +389,7 @@ const Dashboard = () => {
                       </Badge>
                     </div>
                     {/* Enhanced User Info Block */}
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
+                    <div className="bg-gray-50 border text-sm border-gray-200 rounded-lg p-4 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
                       <div className="flex items-center gap-2">
                         <Mail className="w-4 h-4 text-blue-500" />
                         <span className="font-medium text-gray-600">Email:</span>

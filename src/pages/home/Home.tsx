@@ -12,13 +12,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getMainSettings } from '@/store/admin';
 import type { RootState } from '@/store';
 import type { AppDispatch } from '@/store';
+import { authApi } from '@/store/auth';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 // TODO: Import and wire up Redux, hooks, and props as needed for each section
 
 const Home: React.FC = () => {
   // State for carousel and other interactive elements
   const dispatch = useDispatch<AppDispatch>();
-
+  const navigate = useNavigate()
   const [openTokenDialog, setOpenTokenDialog] = useState(false);
 
   // Testimonials carousel state
@@ -84,7 +87,7 @@ const Home: React.FC = () => {
   const goToSlide = (slide: number) => {
     setCurrentSlide(slide);
   };
-
+  
   useEffect(() => {
     if(!adminData.admin_settings.length) dispatch(getMainSettings());
   }, [])

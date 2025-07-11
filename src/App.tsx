@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,12 +9,18 @@ import Loading from './components/Loading';
 import { useAuth } from '@/hooks/useAuth';
 import Dashboard from './pages/Dashboard';
 import { ToastContainer } from 'react-toastify';
-
-// Example: Lazy load a component
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { authApi } from './store/auth';
+import { AppDispatch } from './store';
 
 function App() {
+  const dispatch = useDispatch<AppDispatch>()
 
-  const { user, user_base_data, isLoading, isAuthenticated, confirmUpdateWithdrawal } = useAuth()
+  const { user, isLoading, isAuthenticated } = useAuth()
+  useEffect(() => {
+    dispatch(authApi.getCurrentUser())
+  }, [])
 
   return (
     <WalletProvider>

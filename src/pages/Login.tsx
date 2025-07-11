@@ -37,12 +37,13 @@ const Login = () => {
     }
 
     try {
-      const res = await login({ email: email.trim(), password });
+      await login({ email: email.trim(), password });
       // Navigation will be handled by the useEffect above
     } catch (err) {
       // Error is already handled by the auth slice
       console.log('Login error:', err);
-      alert
+      toast.error(err)
+      alert(err)
     }
   };
 
