@@ -20,7 +20,6 @@ const Register = () => {
     parent_leg: 'left'
   });
   const [passwordError, setPasswordError] = useState('');
-  const [ref, setRef] = useState('')
   const { register, isLoading, error, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,7 +39,6 @@ const Register = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const refCode = urlParams.get('ref');
     if (refCode) {
-      setRef(refCode)
       setFormData(prev => ({ ...prev, referral_code: refCode }));
     }
   }, []);
@@ -70,7 +68,7 @@ const Register = () => {
     try {
       const { confirmPassword, ...registerData } = formData;
       const res = await register(registerData);
-      if (confirm(res)) navigate('/')
+      if (confirm(res.message)) navigate('/')
       // Navigation will be handled by the useEffect above
     } catch (err) {
       // Error is already handled by the auth slice
@@ -285,9 +283,8 @@ const Register = () => {
                     id="referral_code"
                     name="referral_code"
                     type="text"
-                    defaultValue={ref}
+                    defaultValue={formData.referral_code}
                     placeholder="Enter referral code"
-                    value={formData.referral_code}
                     onChange={handleChange}
                     className="pl-10"
                     disabled={isLoading}

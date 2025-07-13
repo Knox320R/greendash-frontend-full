@@ -184,7 +184,7 @@ const Dashboard: React.FC = () => {
                       <div className="space-y-1 text-sm">
                         <div className="flex justify-between">
                           <span>Total Staked:</span>
-                          <span>{enterprise.staking.total_staked} USDT</span>
+                          <span>{enterprise.staking.total_staked} EGD</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Active:</span>
@@ -204,11 +204,11 @@ const Dashboard: React.FC = () => {
                       <div className="space-y-1 text-sm">
                         <div className="flex justify-between">
                           <span>Total Invested:</span>
-                          <span>{enterprise.financial.total_invested} USDT</span>
+                          <span>{enterprise.financial.total_invested} EGD</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Total Earned:</span>
-                          <span>{enterprise.financial.total_earned} USDT</span>
+                          <span>{enterprise.financial.total_earned} EGD</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Total Withdrawn:</span>

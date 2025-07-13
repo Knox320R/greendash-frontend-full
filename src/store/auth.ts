@@ -222,7 +222,7 @@ export const authApi = {
         try {
             dispatch(setLoading(true));
             dispatch(clearError());
-            const response = await api.post<string>('/auth/register', userData);
+            const response = await api.post<{ success: boolean, message: string}>('/auth/register', userData);
             dispatch(setLoading(false));
             return response
         } catch (err: any) {

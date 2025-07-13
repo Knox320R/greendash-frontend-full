@@ -43,7 +43,6 @@ const Login = () => {
       // Error is already handled by the auth slice
       console.log('Login error:', err);
       toast.error(err)
-      alert(err)
     }
   };
 

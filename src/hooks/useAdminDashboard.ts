@@ -27,8 +27,8 @@ export const useAdminDashboard = () => {
     const { summary, transactions, withdrawals, stakings } = dashboardData;
     
     // Calculate financial totals
-    const totalTransactionAmount = transactions.reduce((sum, tx) => sum + tx.amount, 0);
-    const totalWithdrawalAmount = withdrawals.reduce((sum, wd) => sum + wd.amount, 0);
+    const totalTransactionAmount = transactions.filter(item => item.type === "staking").reduce((sum, tx) => sum + tx.amount*0.01, 0);
+    const totalWithdrawalAmount = withdrawals.filter(item => item.status === "completed").reduce((sum, wd) => sum + wd.amount, 0);
     const totalStakingAmount = stakings.reduce((sum, staking) => {
       const stakeAmount = parseFloat(staking.package.stake_amount);
       return sum + stakeAmount;
