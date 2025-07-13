@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FaLock, FaChartLine, FaCalendarAlt, FaClock, FaCheckCircle, FaArrowUp, FaPlus, FaWallet, FaCalculator } from 'react-icons/fa';
+import { FaLock, FaChartLine, FaCalendarAlt, FaClock, FaCheckCircle, FaArrowUp, FaPlus, FaWallet, FaCalculator, FaCheck } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { formatNumber, formatDate } from '@/lib/utils';
@@ -18,6 +18,16 @@ import USDT_ABI from "@/lib/usdt_abi"; // Replace with your actual ABI/address
 import { authApi } from '@/store/auth';
 import { getStakingStats } from '@/lib/staking';
 
+// Interface for pending staking transaction
+interface PendingStaking {
+  txHash: string;
+  packageId: number;
+  userId: number;
+  packageName: string;
+  amount: string;
+  timestamp: number;
+}
+
 const Staking = () => {
   const { user, user_base_data } = useAuth();
   const staking_list = user_base_data?.recent_Stakings || [];
@@ -30,7 +40,8 @@ const Staking = () => {
   const platformReceiver = adminSettings.find(s => s.title === 'platform_wallet_address')?.value || "0x000000000000000" // '0x0D80C0513D48579c38e45D60a39D93E7cF87273b';
   const [activeTab, setActiveTab] = useState('packages');
   const [isStaking, setIsStaking] = useState(false);
-  const { connectWallet, isConnected } = useWallet();
+  const [pendingStaking, setPendingStaking] = useState<PendingStaking | null>(null);
+  const { connectWallet, isConnected, isCorrectWallet } = useWallet();
   const [stakingFilter, setStakingFilter] = useState('all');
   const usdt_address = useSelector((store: RootState) => store.adminData.admin_settings)?.find(item => item.title === "usdt_token_address")?.value || "0x55d398326f99059fF775485246999027B3197955"
   const filteredStakings = stakingFilter === 'all'
@@ -39,30 +50,99 @@ const Staking = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
+  // Load pending staking from localStorage on component mount
+  useEffect(() => {
+    const savedPendingStaking = localStorage.getItem(`pendingStaking_${user.id}`);
+    if (savedPendingStaking) {
+      try {
+        const parsed = JSON.parse(savedPendingStaking);
+        // Check if the pending staking is not too old (24 hours)
+        const isNotExpired = Date.now() - parsed.timestamp < 24 * 60 * 60 * 1000;
+        if (isNotExpired) {
+          setPendingStaking(parsed);
+        } else {
+          localStorage.removeItem(`pendingStaking_${user.id}`);
+        }
+      } catch (error) {
+        localStorage.removeItem(`pendingStaking_${user.id}`);
+      }
+    }
+  }, [user.id]);
+
+  // Save pending staking to localStorage whenever it changes
+  useEffect(() => {
+    if (pendingStaking) {
+      localStorage.setItem(`pendingStaking_${user.id}`, JSON.stringify(pendingStaking));
+    } else {
+      localStorage.removeItem(`pendingStaking_${user.id}`);
+    }
+  }, [pendingStaking, user.id]);
+
   const handleStartStaking = async (pkg: StakingPackage) => {
     try {
       setIsStaking(true);
-      if (isConnected) {
-        const web3Provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await web3Provider.getSigner();
-        const newToken = new ethers.Contract(usdt_address, USDT_ABI, signer);
-        // Calculate amount (use correct decimals)
-        const decimals = await newToken.decimals();
-        const amount = ethers.parseUnits((parseFloat(pkg.stake_amount) * parseFloat(tokenPrice)).toString(), decimals);
-        // Send token to staking contract/platform
-        const tx = await newToken.transfer(platformReceiver, amount);
-        toast.warn('Waiting for transaction confirmation...');
-        const receipt = await tx.wait();
-        toast.success('Token sent!');
-        dispatch(authApi.stakingRequest(receipt.hash, pkg.id, user.id))
-      } else {
-        connectWallet()
+      
+      // Check if wallet is connected
+      if (!isConnected) {
+        toast.info('Please connect your wallet first');
+        await connectWallet(user.wallet_address);
+        return;
       }
+
+      // Validate that the connected wallet matches the user's wallet address
+      if (!isCorrectWallet(user.wallet_address)) {
+        toast.error(`Please connect the correct wallet address: ${user.wallet_address.slice(0, 6)}...${user.wallet_address.slice(-4)}`);
+        return;
+      }
+
+      const web3Provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await web3Provider.getSigner();
+      const newToken = new ethers.Contract(usdt_address, USDT_ABI, signer);
+      // Calculate amount (use correct decimals)
+      const decimals = await newToken.decimals();
+      const usdt_amount = parseFloat(pkg.stake_amount) * parseFloat(tokenPrice);
+      const amount = ethers.parseUnits(usdt_amount.toString(), decimals);
+      // Send token to staking contract/platform
+      const tx = await newToken.transfer(platformReceiver, amount);
+      toast.warn('Waiting for transaction confirmation...');
+      const receipt = await tx.wait();
+      toast.success(usdt_amount + ' USDT sent to platform successfully!');
+      
+      // Store pending staking data instead of immediately calling API
+      const pendingStakingData: PendingStaking = {
+        txHash: receipt.hash,
+        packageId: pkg.id,
+        userId: user.id,
+        packageName: pkg.name,
+        amount: pkg.stake_amount,
+        timestamp: Date.now()
+      };
+      
+      setPendingStaking(pendingStakingData);
+      toast.info('Transaction confirmed! Please click "Confirm Staking" to complete the process.');
+      
     } catch (err: any) {
       toast.error('Staking failed.');
     } finally {
       setIsStaking(false);
     }
+  };
+
+  const handleConfirmStaking = async () => {
+    if (!pendingStaking) return;
+    
+    try {
+      dispatch(authApi.stakingRequest(pendingStaking.txHash, pendingStaking.packageId, pendingStaking.userId));
+      setPendingStaking(null);
+      toast.success('Staking confirmed successfully!');
+    } catch (error) {
+      toast.error('Failed to confirm staking. Please try again.');
+    }
+  };
+
+  const clearPendingStaking = () => {
+    setPendingStaking(null);
+    toast.info('Pending staking cleared.');
   };
 
   const calculateDailyReward = (amount: string, rate: number) => {
@@ -104,6 +184,37 @@ const Staking = () => {
           <div className="text-gray-600 mt-2 w-full gap-8 flex-wrap  justify-between flex">
             <span>  Lock your tokens and earn daily rewards </span>
           </div>
+          {pendingStaking && (
+            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <FaClock className="h-4 w-4 text-yellow-600" />
+                <span className="text-sm font-medium text-yellow-800">Pending Confirmation</span>
+              </div>
+              <div className="text-xs text-yellow-700 mb-3">
+                <div>Package: {pendingStaking.packageName}</div>
+                <div>Amount: {pendingStaking.amount} EGD</div>
+                <div>TX: {pendingStaking.txHash.slice(0, 8)}...{pendingStaking.txHash.slice(-6)}</div>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  className="bg-green-600 hover:bg-green-700 text-white text-xs"
+                  onClick={handleConfirmStaking}
+                >
+                  <FaCheck className="w-3 h-3 mr-1" />
+                  Confirm Staking
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="text-xs"
+                  onClick={clearPendingStaking}
+                >
+                  Clear
+                </Button>
+              </div>
+            </div>
+          )}
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>

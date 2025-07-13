@@ -122,7 +122,7 @@ const Header: React.FC<HeaderProps> = ({ scrollToSection }) => {
               isConnected ?
                 <FaWallet className="h-6 w-6 text-green-400 hover:text-green-600" onClick={() => disconnectWallet()} />
                 :
-                <FaWallet className="h-6 w-6 text-gray-400 hover:text-gray-600" onClick={() => connectWallet()} />
+                <FaWallet className="h-6 w-6 text-gray-400 hover:text-gray-600" onClick={() => connectWallet(user.wallet_address)} />
             }
           </div>
           {/* Logo */}

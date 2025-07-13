@@ -22,8 +22,15 @@ export function getStakingStats(stakings: Staking[]) {
         if (s.status === 'active') {
             active_staking_amount += amount;
             active_staking_number++;
-            earned_from_active += (amount * dailyYield * 365) / 100;
-            earning_claimed_from_active += (amount * dailyYield * 365) / 100;
+            const startDate = s.createdAt ? new Date(s.createdAt) : null;
+            const nowDate = new Date();
+            let daysActive = 0;
+            if (startDate && !isNaN(startDate.getTime())) {
+                daysActive = Math.max(0, Math.floor((nowDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
+            }
+            
+            earned_from_active += (amount * dailyYield * daysActive) / 100;
+            earning_claimed_from_active += (amount * dailyYield * 365) / 100; // if 365 is the full period
         }
         if (s.status === 'completed') {
             completed_staking_amount += amount;

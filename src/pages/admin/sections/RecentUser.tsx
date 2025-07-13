@@ -8,7 +8,7 @@ import { UserData } from '@/types/landing';
 
 const RecentUser: React.FC = () => {
   const { list, isMore } = useSelector((state: RootState) => state.adminData?.users || { list: [], isMore: true });
-  const [limit, setLimit] = useState(5)
+  const [limit, setLimit] = useState(10)
   const [search, setSearch] = useState('');
 
   const dispatch = useDispatch<AppDispatch>()
@@ -117,7 +117,7 @@ const RecentUser: React.FC = () => {
             if (isMore) dispatch(fetchPageData(newLimit, list.length, "users"));
           }}
         >
-          {[5, 10, 20, 50, 100].map(opt => (
+          {[10, 20, 50, 100].map(opt => (
             <option key={opt} value={opt}>{opt}</option>
           ))}
         </select>

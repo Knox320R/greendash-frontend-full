@@ -89,8 +89,8 @@ const Home: React.FC = () => {
   };
   
   useEffect(() => {
-    if(!adminData.admin_settings.length) dispatch(getMainSettings());
-  }, [])
+    if(!adminData?.admin_settings?.length) dispatch(getMainSettings());
+  }, [adminData?.admin_settings?.length, dispatch])
 
   // Auto-play effect
   useEffect(() => {
@@ -118,14 +118,14 @@ const Home: React.FC = () => {
       {/* Hero Section (staking-focused headline/CTA) */}
       <section id="home" className="py-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-50 via-white to-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <HeroSection adminSettings={adminData.admin_settings} />
+          <HeroSection adminSettings={adminData?.admin_settings || []} />
         </div>
       </section>
 
       {/* Staking Section (move up, right after hero) */}
       <section id="staking" className="py-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-50 via-white to-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <StakingSection stakingPackages={adminData.staking_packages} adminSettings={adminData.admin_settings}/>
+          <StakingSection stakingPackages={adminData?.staking_packages || []} adminSettings={adminData?.admin_settings || []}/>
         </div>
       </section>
 
@@ -151,8 +151,8 @@ const Home: React.FC = () => {
             setOpenTokenDialog={setOpenTokenDialog}
             handleBuyGreenClick={handleBuyGreenClick}
             handleBuyToken={handleBuyToken}
-            totalTokens={adminData.total_tokens}
-            adminSettings={adminData.admin_settings}
+            totalTokens={adminData?.total_tokens || []}
+            adminSettings={adminData?.admin_settings || []}
           />
         </div>
       </section>
@@ -160,7 +160,7 @@ const Home: React.FC = () => {
       {/* Affiliate Ranks Section */}
       <section id="ranks" className="py-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-50 via-white to-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AffiliateRanksSection rankPlans={adminData.rank_plans} />
+          <AffiliateRanksSection rankPlans={adminData?.rank_plans || []} />
         </div>
       </section>
 

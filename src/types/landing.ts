@@ -154,7 +154,17 @@ export interface TotalToken {
   id: number;
   title: string;
   description: string;
-  percent: number;
+  amount: string;
+  price: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TokenPool {
+  id: number;
+  title: string;
+  description: string;
+  amount: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -166,6 +176,7 @@ export interface AdminData {
   rank_plans: RankPlan[];
   commission_plans: CommissionPlan[];
   total_tokens: TotalToken[];
+  token_pools: TokenPool[];
   users: UserList;
   stakings: StakingList;
   withdrawals: WithdrawalList;

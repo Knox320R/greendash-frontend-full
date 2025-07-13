@@ -188,7 +188,7 @@ const StakingPackages: React.FC<StakingPackagesProps> = ({ data }) => {
               <TableRow key={pkg.id}>
                 <TableCell className="font-medium">{pkg.name}</TableCell>
                 <TableCell className="max-w-xs truncate">{pkg.description}</TableCell>
-                <TableCell>{parseInt(pkg.stake_amount)} USDT</TableCell>
+                <TableCell>{parseInt(pkg.stake_amount)} EGD</TableCell>
                 <TableCell>{pkg.daily_yield_percentage}%</TableCell>
                 <TableCell>{pkg.lock_period_days} days</TableCell>
                 <TableCell>{formatDate(pkg.createdAt)}</TableCell>

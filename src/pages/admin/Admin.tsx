@@ -21,6 +21,7 @@ import StakingPackages from '@/pages/admin/sections/StakingPackages';
 import RankPlans from '@/pages/admin/sections/RankPlans';
 import CommissionPlans from '@/pages/admin/sections/CommissionPlans';
 import TotalTokens from '@/pages/admin/sections/TotalTokens';
+import TokenPools from './sections/TokenPools';
 import Dashboard from '@/pages/admin/sections/Dashboard';
 import { getAdminData, setSelectedTab } from '@/store/admin';
 import RecentUser from './sections/RecentUser';
@@ -86,6 +87,11 @@ const sections = [
     key: 'tokens',
     label: 'Total Tokens',
     icon: FaCoins,
+  },
+  {
+    key: 'token_pools',
+    label: 'Token Pools',
+    icon: FaCoins,
   }
 ];
 
@@ -100,21 +106,34 @@ const sectionTitles: Record<string, string> = {
   ranks: 'Rank Plan Management',
   commissions: 'Commission Plan Management',
   tokens: 'Total Token Management',
+  token_pools: 'Token Pool Management',
   withdrawal_list: 'Withdrawals',
 };
 
 const Admin: React.FC = () => {
   const adminData = useSelector((state: RootState) => state.adminData);
-  const selected = useSelector((state: RootState) => state.adminData.selectedTab);
+  const selected = useSelector((state: RootState) => state.adminData?.selectedTab || 'dashboard');
   const dispatch = useDispatch<AppDispatch>();
   
   useEffect(() => {
     if(!adminData?.enterprise?.users?.total) dispatch(getAdminData());
-  }, [dispatch]);
+  }, [adminData?.enterprise?.users?.total, dispatch]);
 
   const handleTabChange = (tabKey: string) => {
     dispatch(setSelectedTab(tabKey));
   };
+
+  // Show loading state if admin data is not yet loaded
+  if (!adminData?.enterprise?.users?.total) {
+    return (
+      <div className="min-h-screen mt-[60px] flex bg-gray-50 items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading admin dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen mt-[60px] flex bg-gray-50">
@@ -180,17 +199,18 @@ const Admin: React.FC = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 {React.createElement(sections.find(s => s.key === selected)?.icon || FaCog, { className: 'w-6 h-6 text-green-600' })}
-                {sectionTitles[selected]}
+                {sectionTitles[selected] || 'Dashboard'}
               </CardTitle>
             </CardHeader>
             <CardContent>
               {selected === 'dashboard' && <Dashboard />}
               {selected === 'financial_analytics' && <FinancialAnalytics />}
-              {selected === 'settings' && <AdminSettings data={adminData.admin_settings} />}
-              {selected === 'staking' && <StakingPackages data={adminData.staking_packages} />}
-              {selected === 'ranks' && <RankPlans data={adminData.rank_plans} />}
-              {selected === 'commissions' && <CommissionPlans data={adminData.commission_plans} />}
-              {selected === 'tokens' && <TotalTokens data={adminData.total_tokens} />}
+              {selected === 'settings' && <AdminSettings data={adminData?.admin_settings || []} />}
+              {selected === 'staking' && <StakingPackages data={adminData?.staking_packages || []} />}
+              {selected === 'ranks' && <RankPlans data={adminData?.rank_plans || []} />}
+              {selected === 'commissions' && <CommissionPlans data={adminData?.commission_plans || []} />}
+              {selected === 'tokens' && <TotalTokens data={adminData?.total_tokens || []} />}
+              {selected === 'token_pools' && <TokenPools data={adminData?.token_pools || []} />}
               {selected === 'user_list' && <RecentUser/>}
               {selected === 'staking_list' && <RecentStaking/>}
               {selected === 'transaction_list' && <RecentTransaction/>}

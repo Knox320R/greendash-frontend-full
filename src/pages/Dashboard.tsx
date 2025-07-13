@@ -17,7 +17,10 @@ import {
   FaUserShield,
   FaSitemap,
   FaUserFriends,
-  FaBolt
+  FaBolt,
+  FaMoneyBillWave,
+  FaTimes,
+  FaDownload
 } from 'react-icons/fa';
 import { delay, motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
@@ -33,8 +36,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Input } from '@/components/ui/input';
 import { AppDispatch, RootState } from '@/store';
 import { toast } from 'react-toastify';
-import NotificationBanner from '@/components/NotificationBanner';
 import { getStakingStats } from '@/lib/staking';
+import { ethers } from 'ethers';
+import usdt_abi from '@/lib/usdt_abi';
+import { useWallet } from '@/hooks/WalletContext';
 
 const packageColorMap: Record<string, string> = {
   'Daily Ride': '#22c55e', // green
@@ -79,8 +84,9 @@ const ReferralTree: React.FC<{ nodes: ReferralNode[]; level?: number }> = ({ nod
 const Dashboard = () => {
   const { user, user_base_data, isLoading, confirmUpdateWithdrawal, isAuthenticated } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
+  const { connectWallet, isConnected, isCorrectWallet } = useWallet();
   const [exchangeModalOpen, setExchangeModalOpen] = useState(false);
-  const [exchangeAmount, setExchangeAmount] = useState('');
+  const [exchangeAmount, setExchangeAmount] = useState(1000);
   const [exchangeError, setExchangeError] = useState('');
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState('');
@@ -90,8 +96,31 @@ const Dashboard = () => {
   const maxWithdrawalSetting = adminSettings.find(s => s.title === 'max_withdrawal');
   const minWithdrawal = minWithdrawalSetting ? Number(minWithdrawalSetting.value) : 0;
   const maxWithdrawal = maxWithdrawalSetting ? Number(maxWithdrawalSetting.value) : Number.POSITIVE_INFINITY;
+  const minExchangeSetting = adminSettings.find(s => s.title === 'min_exchange');
+  const maxExchangeSetting = adminSettings.find(s => s.title === 'max_exchange');
+  const minExchange = minExchangeSetting ? Number(minExchangeSetting.value) : 1000;
+  const maxExchange = maxExchangeSetting ? Number(maxExchangeSetting.value) : 100000;
+  const usdt_address = adminSettings.find(item => item.title === "usdt_token_address")?.value || "0x55d398326f99059fF775485246999027B3197955";
 
-  function sendExchangeRequest(amount: number) {
+  function sendExchangeRequest() {
+    const amount = Number(exchangeAmount);
+    if (!exchangeAmount || isNaN(amount) || amount <= 0) {
+      setExchangeError('Please enter a valid amount.');
+      return;
+    }
+    if (amount > Number(egd_balance)) {
+      setExchangeError('Amount exceeds available EGD balance.');
+      return;
+    }
+    if (amount < minExchange) {
+      setExchangeError(`Amount is below the minimum exchange amount (${minExchange}).`);
+      return;
+    }
+    if (amount > maxExchange) {
+      setExchangeError(`Amount exceeds the maximum exchange amount (${maxExchange}).`);
+      return;
+    }
+    setExchangeModalOpen(false);
     dispatch(authApi.exchangeRequest(amount))
   }
   function sendWithdrawRequest(amount: number) {
@@ -151,6 +180,96 @@ const Dashboard = () => {
     }
   };
 
+  const handleWithdrawal = async (index: number) => {
+    try {
+      dispatch(setLoading(true));
+
+      // Check if wallet is connected
+      if (!isConnected) {
+        toast.info('Please connect your wallet first');
+        await connectWallet(wallet_address);
+        return;
+      }
+
+      // Validate that the connected wallet matches the user's wallet address
+      if (!isCorrectWallet(wallet_address)) {
+        toast.error(`Please connect the correct wallet address: ${wallet_address.slice(0, 6)}...${wallet_address.slice(-4)}`);
+        return;
+      }
+
+      // Get the specific withdrawal by ID
+      const approvedWithdrawal = user_base_data.recent_withdrawals[index]
+
+      // Validate withdrawal data
+      if (!approvedWithdrawal.amount || approvedWithdrawal.amount <= 0) {
+        toast.error('Invalid withdrawal amount');
+        return;
+      }
+
+      // Get platform wallet address and withdrawal fee percentage from admin settings
+      const platform_wallet_address = adminSettings.find(item => item.title === "platform_wallet_address")?.value;
+      const withdrawal_fee_percentage = adminSettings.find(item => item.title === "platform_fee")?.value || "10";
+
+      if (!platform_wallet_address) {
+        toast.error('Platform wallet address not configured');
+        return;
+      }
+
+      // Calculate the net amount (after platform fee deduction)
+      const feePercentage = parseFloat(withdrawal_fee_percentage);
+      const originalAmount = approvedWithdrawal.amount;
+      const feeAmount = (originalAmount * feePercentage) / 100;
+      const netAmount = originalAmount - feeAmount;
+
+      // Setup Web3 provider and contract
+      const web3Provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await web3Provider.getSigner();
+      const usdtContract = new ethers.Contract(usdt_address, usdt_abi, signer);
+
+      // Get token decimals and calculate net amount with proper decimals
+      const decimals = await usdtContract.decimals();
+      const netAmountWei = ethers.parseUnits(netAmount.toFixed(8), decimals);
+
+      // Show transaction pending message with fee breakdown
+      toast.info(`Processing withdrawal of ${netAmount.toFixed(2)} USDT (${originalAmount} - ${feeAmount.toFixed(2)} platform fee) from platform wallet...`);
+
+      // Execute the transfer from platform wallet to user's wallet
+      // The platform wallet has already approved the user to spend the net amount (after fee)
+
+      const tx = await usdtContract.transferFrom(platform_wallet_address, wallet_address, netAmountWei);
+
+      // Wait for transaction confirmation
+      toast.warn('Waiting for transaction confirmation...');
+      const receipt = await tx.wait();
+
+      // Check if transaction was successful
+      if (receipt.status === 1) {
+        toast.success(`Successfully received ${netAmount.toFixed(2)} USDT in your wallet! (${feeAmount.toFixed(2)} platform fee deducted)`);
+        // Close the notification after successful withdrawal
+        confirmUpdateWithdrawal(approvedWithdrawal.id, index);
+      } else {
+        throw new Error('Transaction failed');
+      }
+
+    } catch (error: any) {
+      console.error('Withdrawal error:', error);
+
+      // Provide specific error messages
+      if (error.code === 'INSUFFICIENT_FUNDS') {
+        toast.error('Platform has insufficient USDT balance for withdrawal');
+      } else if (error.code === 'USER_REJECTED') {
+        toast.error('Transaction was rejected by user');
+      } else if (error.message?.includes('allowance')) {
+        toast.error('Withdrawal not approved yet. Please wait for admin approval.');
+      } else if (error.message?.includes('network')) {
+        toast.error('Network error. Please check your connection');
+      } else {
+        toast.error(`Failed to process withdrawal: ${'Unknown error'}`);
+      }
+    } finally {
+      dispatch(setLoading(false));
+    }
+  }
   return (isAuthenticated &&
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -202,7 +321,7 @@ const Dashboard = () => {
                       step="any"
                       value={exchangeAmount}
                       onChange={e => {
-                        setExchangeAmount(e.target.value);
+                        setExchangeAmount(Number(e.target.value));
                         setExchangeError('');
                       }}
                       placeholder="Enter amount"
@@ -216,19 +335,7 @@ const Dashboard = () => {
                     </Button>
                     <Button
                       className="bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => {
-                        const amount = Number(exchangeAmount);
-                        if (!exchangeAmount || isNaN(amount) || amount <= 0) {
-                          setExchangeError('Please enter a valid amount.');
-                          return;
-                        }
-                        if (amount > Number(egd_balance)) {
-                          setExchangeError('Amount exceeds available EGD balance.');
-                          return;
-                        }
-                        setExchangeModalOpen(false);
-                        sendExchangeRequest(amount);
-                      }}
+                      onClick={sendExchangeRequest}
                     >
                       Exchange
                     </Button>
@@ -240,21 +347,21 @@ const Dashboard = () => {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Withdrawals</CardTitle>
+              <CardTitle className="text-sm font-medium">USDT balance</CardTitle>
               <FaArrowDown className="h-4 w-4 text-blue-600" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{withdrawals} USDT</div>
               <p className="text-xs text-muted-foreground">
-                Total withdrawn
+                Total withdrawable amount
               </p>
               <Button className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white" onClick={() => setWithdrawModalOpen(true)}>
-                Withdraw now
+                Send Withdrawal Request
               </Button>
               <Dialog open={withdrawModalOpen} onOpenChange={setWithdrawModalOpen}>
                 <DialogContent className="max-w-sm">
                   <DialogHeader>
-                    <DialogTitle>Withdraw USDT</DialogTitle>
+                    <DialogTitle>Send Withdrawal Request</DialogTitle>
                   </DialogHeader>
                   <div className="mb-2">
                     <label htmlFor="withdraw-amount" className="block text-sm font-medium text-gray-700 mb-1">Amount of USDT</label>
@@ -272,6 +379,39 @@ const Dashboard = () => {
                       className="w-full"
                     />
                     {withdrawError && <div className="text-red-600 text-xs mt-1">{withdrawError}</div>}
+
+                    {/* Show fee breakdown when amount is entered */}
+                    {withdrawAmount && !isNaN(Number(withdrawAmount)) && Number(withdrawAmount) > 0 && (
+                      <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div className="text-sm font-medium text-blue-900 mb-2">Fee Breakdown:</div>
+                        <div className="space-y-1 text-xs">
+                          {(() => {
+                            const withdrawal_fee_percentage = adminSettings.find(item => item.title === "withdrawal_fee_percentage")?.value || "10";
+                            const feePercentage = parseFloat(withdrawal_fee_percentage);
+                            const requestedAmount = Number(withdrawAmount);
+                            const feeAmount = (requestedAmount * feePercentage) / 100;
+                            const netAmount = requestedAmount - feeAmount;
+
+                            return (
+                              <>
+                                <div className="flex justify-between">
+                                  <span>Requested Amount:</span>
+                                  <span className="font-medium">{requestedAmount.toFixed(2)} USDT</span>
+                                </div>
+                                <div className="flex justify-between text-red-600">
+                                  <span>Platform Fee ({feePercentage}%):</span>
+                                  <span>-{feeAmount.toFixed(2)} USDT</span>
+                                </div>
+                                <div className="border-t border-blue-200 pt-1 flex justify-between font-semibold text-green-600">
+                                  <span>You'll Receive:</span>
+                                  <span>{netAmount.toFixed(2)} USDT</span>
+                                </div>
+                              </>
+                            );
+                          })()}
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <DialogFooter className="flex gap-2 justify-end">
                     <Button variant="outline" onClick={() => setWithdrawModalOpen(false)}>
@@ -353,11 +493,12 @@ const Dashboard = () => {
           transition={{ delay: 0.3 }}
         >
           <Tabs defaultValue="overview" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="staking">Staking</TabsTrigger>
               <TabsTrigger value="referrals">Referrals</TabsTrigger>
-              <TabsTrigger value="activity">Recent Activity</TabsTrigger>
+              <TabsTrigger value="activity">Activity</TabsTrigger>
+              <TabsTrigger value="withdrawals">Withdrawals</TabsTrigger>
             </TabsList>
 
             {/* Overview Tab */}
@@ -372,8 +513,8 @@ const Dashboard = () => {
                   <CardContent>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium">Wallet Connected</span>
-                      <Badge variant={wallet_address ? "default" : "secondary"}>
-                        {wallet_address ? "Connected" : "Not Connected"}
+                      <Badge variant={isConnected ? "default" : "secondary"}>
+                        {isConnected ? "Connected" : "Not Connected"}
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between mb-2">
@@ -617,15 +758,146 @@ const Dashboard = () => {
                 </Card>
               )}
             </TabsContent>
+
+            {/* Withdrawals Tab */}
+            <TabsContent value="withdrawals" className="space-y-6">
+              {user_base_data?.recent_withdrawals?.length > 0 ? (
+                <div className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <FaMoneyBillWave className="text-blue-600" />
+                        Withdrawal Requests
+                      </CardTitle>
+                      <CardDescription>
+                        You have {user_base_data.recent_withdrawals.length} withdrawal request(s)
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {user_base_data.recent_withdrawals.map((withdrawal, idx) => {
+                        // Calculate fee information for display
+                        const withdrawal_fee_percentage = adminSettings.find(item => item.title === "withdrawal_fee_percentage")?.value || "10";
+                        const feePercentage = parseFloat(withdrawal_fee_percentage);
+                        const originalAmount = withdrawal.amount;
+                        const feeAmount = (originalAmount * feePercentage) / 100;
+                        const netAmount = originalAmount - feeAmount;
+
+                        const getStatusInfo = (status: string) => {
+                          switch (status) {
+                            case 'pending':
+                              return {
+                                icon: <FaClock className="text-yellow-500" />,
+                                color: 'bg-yellow-100 text-yellow-800',
+                                description: 'Your withdrawal request is being reviewed by our team.',
+                                button: null
+                              };
+                            case 'approved':
+                              return {
+                                icon: <FaCheckCircle className="text-green-500" />,
+                                color: 'bg-green-100 text-green-800',
+                                description: `Your withdrawal has been approved! You will receive ${netAmount.toFixed(2)} USDT (${feeAmount.toFixed(2)} platform fee deducted). Click below to receive your USDT.`,
+                                button: (
+                                  <Button
+                                    size="sm"
+                                    className="bg-green-600 hover:bg-green-700 text-white"
+                                    onClick={() => handleWithdrawal(idx)}
+                                  >
+                                    <FaDownload className="w-3 h-3 mr-1" />
+                                    Receive {netAmount.toFixed(2)} USDT
+                                  </Button>
+                                )
+                              };
+                            case 'completed':
+                              return {
+                                icon: <FaCheckCircle className="text-blue-500" />,
+                                color: 'bg-blue-100 text-blue-800',
+                                description: 'Withdrawal completed successfully. Funds have been transferred to your wallet.',
+                                button: null
+                              };
+                            case 'rejected':
+                              return {
+                                icon: <FaTimes className="text-red-500" />,
+                                color: 'bg-red-100 text-red-800',
+                                description: 'Your withdrawal request was rejected. Please contact support for more information.',
+                                button: null
+                              };
+                            default:
+                              return {
+                                icon: <FaClock className="text-gray-500" />,
+                                color: 'bg-gray-100 text-gray-800',
+                                description: 'Processing your withdrawal request.',
+                                button: null
+                              };
+                          }
+                        };
+
+                        const statusInfo = getStatusInfo(withdrawal.status);
+
+                        return (
+                          <div
+                            key={withdrawal.id}
+                            className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+                          >
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="flex items-center gap-3">
+                                {statusInfo.icon}
+                                <div>
+                                  <p className="text-xl font-bold text-gray-900">
+                                    {withdrawal.amount} USDT
+                                  </p>
+                                  <p className="text-sm text-gray-500">
+                                    Requested {formatDate(withdrawal.createdAt)}
+                                  </p>
+                                  {/* Show fee breakdown for approved withdrawals */}
+                                  {withdrawal.status === 'approved' && (
+                                    <div className="mt-2 text-xs text-gray-600">
+                                      <div className="flex items-center gap-2">
+                                        <span>Platform Fee ({feePercentage}%):</span>
+                                        <span className="text-red-600">-{feeAmount.toFixed(2)} USDT</span>
+                                      </div>
+                                      <div className="flex items-center gap-2 font-semibold text-green-600">
+                                        <span>You'll Receive:</span>
+                                        <span>{netAmount.toFixed(2)} USDT</span>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                              <Badge className={statusInfo.color}>
+                                {withdrawal.status.charAt(0).toUpperCase() + withdrawal.status.slice(1)}
+                              </Badge>
+                            </div>
+
+                            <p className="text-sm text-gray-600 mb-4">
+                              {statusInfo.description}
+                            </p>
+
+                            {statusInfo.button && (
+                              <div className="flex justify-end">
+                                {statusInfo.button}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </CardContent>
+                  </Card>
+                </div>
+              ) : (
+                <Card>
+                  <CardContent className="p-8 text-center">
+                    <FaMoneyBillWave className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">No Withdrawal Requests</h3>
+                    <p className="text-muted-foreground">
+                      You don't have any withdrawal requests at the moment
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
           </Tabs>
         </motion.div>
       </div>
-      {user_base_data?.recent_withdrawals?.length > 0 && (
-        <NotificationBanner
-          notes={user_base_data.recent_withdrawals}
-          onClose={() => confirmUpdateWithdrawal(user.id)}
-        />
-      )}
     </div>
   );
 };

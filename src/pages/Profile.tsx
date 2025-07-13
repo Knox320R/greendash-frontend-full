@@ -312,6 +312,10 @@ const Profile = () => {
                         <span className="text-sm font-medium text-blue-600">{stakingStats.earned_from_active + stakingStats.earned_from_completed}<span className='ml-1 text-[#888] text-[12px]'>EGD</span></span>
                       </div>
                       <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Potential from Active</span>
+                        <span className="text-sm font-medium text-green-600">{stakingStats.earning_claimed_from_active}<span className='ml-1 text-[#888] text-[12px]'>EGD</span></span>
+                      </div>
+                      <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">EGD Balance</span>
                         <span className="text-sm font-medium text-green-600">{(user.egd_balance).toFixed(2)}<span className='ml-1 text-[#888] text-[12px]'>EGD</span></span>
                       </div>

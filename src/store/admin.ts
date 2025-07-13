@@ -13,6 +13,7 @@ const initialState: AdminData = {
     rank_plans: [],
     staking_packages: [],
     total_tokens: [],
+    token_pools: [],
     users: {
         isMore: true,
         list: []
@@ -243,6 +244,17 @@ export const fetchDailyFinancialData = (start_date: string, end_date: string) =>
 
 export const clearDashboardDataAction = () => async (dispatch: AppDispatch) => {
     dispatch(clearDashboardData())
+}
+
+export const universalCashback = () => async (dispatch: AppDispatch) => {
+    try {
+        const res = await api.post('/users/universal-cashback', {})
+        console.log(res);
+        
+    } catch (e) {
+        console.log(e);
+        
+    }
 }
 
 

@@ -21,7 +21,8 @@ interface TotalTokensProps {
 interface TotalTokenForm {
   title: string;
   description: string;
-  percent: number;
+  amount: string;
+  price: number | null;
 }
 
 const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
@@ -30,11 +31,29 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
   const [editToken, setEditToken] = useState<TotalToken | null>(null);
   const [deleteTokenId, setDeleteTokenId] = useState<number | null>(null);
 
+  // Calculate total supply for percentage calculation
+  const totalSupply = data.reduce((sum, token) => sum + parseFloat(token.amount), 0);
+
+  // Helper function to calculate percentage
+  const calculatePercentage = (amount: string) => {
+    const numAmount = parseFloat(amount);
+    return totalSupply > 0 ? (numAmount / totalSupply) * 100 : 0;
+  };
+
+  // Helper function to get color based on percentage
+  const getPercentageColor = (percentage: number, opacity: number = 1) => {
+    if (percentage >= 50) return `rgba(34, 197, 94, ${opacity})`; // Green for high percentage
+    if (percentage >= 25) return `rgba(59, 130, 246, ${opacity})`; // Blue for medium percentage
+    if (percentage >= 10) return `rgba(245, 158, 11, ${opacity})`; // Yellow for low-medium percentage
+    return `rgba(239, 68, 68, ${opacity})`; // Red for very low percentage
+  };
+
   const form = useForm<TotalTokenForm>({
     defaultValues: {
       title: '',
       description: '',
-      percent: 0,
+      amount: '',
+      price: null,
     },
   });
 
@@ -43,13 +62,15 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
       form.reset({
         title: editToken.title,
         description: editToken.description,
-        percent: editToken.percent,
+        amount: editToken.amount,
+        price: editToken.price,
       });
     } else {
       form.reset({
         title: '',
         description: '',
-        percent: 0,
+        amount: '',
+        price: null,
       });
     }
   }, [editToken, form]);
@@ -91,7 +112,7 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
             table_name: 'total_tokens' as const,
             data: tokenToDelete
           };
-          await dispatch(deleteAdminSettingApi('total_tokens',  deleteTokenId));
+          await dispatch(deleteAdminSettingApi('total_tokens', deleteTokenId));
         }
         setDeleteTokenId(null);
       } catch (error) {
@@ -103,12 +124,18 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <span className="text-lg font-semibold">Total Token Allocations</span>
+        <div>
+          <span className="text-lg font-semibold">Total Token Allocations</span>
+          <div className="flex gap-4 mt-2 text-sm text-gray-600">
+            <span>Total Supply: {totalSupply.toLocaleString()}</span>
+            <span>Total Percentage: {data.reduce((sum, token) => sum + calculatePercentage(token.amount), 0).toFixed(2)}%</span>
+          </div>
+        </div>
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
-            <Button 
-              onClick={() => { setEditToken(null); setOpenDialog(true); }} 
+            <Button
               disabled
+              onClick={() => { setEditToken(null); setOpenDialog(true); }}
               className="bg-green-600 hover:bg-green-700 text-white"
             >
               <FaPlus className="w-4 h-4 mr-2" />
@@ -135,10 +162,43 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
                     <FormMessage />
                   </FormItem>
                 )} />
-                <FormField name="percent" control={form.control} render={({ field }) => (
+                <FormField name="amount" control={form.control} render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Percentage (%)</FormLabel>
-                    <FormControl><Input {...field} required type="number" min="0" max="100" step="0.01" /></FormControl>
+                    <FormLabel>Amount</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        required
+                        placeholder="Enter token amount"
+                        value={field.value ? parseFloat(field.value).toFixed(2) : ''}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/[^0-9.]/g, '');
+                          field.onChange(value);
+                        }}
+                        onBlur={(e) => {
+                          if (e.target.value) {
+                            field.onChange(parseFloat(e.target.value).toFixed(2));
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField name="price" control={form.control} render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Price (USD)</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="Enter token price"
+                        value={field.value || ''}
+                        onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -152,14 +212,15 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
           </DialogContent>
         </Dialog>
       </div>
-      
+
       <div className="overflow-x-auto rounded-lg border">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Title</TableHead>
               <TableHead>Description</TableHead>
-              <TableHead>Percentage</TableHead>
+              <TableHead>Amount</TableHead>
+              <TableHead>Price</TableHead>
               <TableHead>Created</TableHead>
               <TableHead>Updated</TableHead>
               <TableHead>Actions</TableHead>
@@ -170,7 +231,23 @@ const TotalTokens: React.FC<TotalTokensProps> = ({ data }) => {
               <TableRow key={token.id}>
                 <TableCell className="font-medium">{token.title}</TableCell>
                 <TableCell className="max-w-xs truncate">{token.description}</TableCell>
-                <TableCell>{token.percent}%</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-3">
+                    <span className="font-semibold">
+                      {parseFloat(token.amount).toFixed(2)}
+                    </span>
+                    <div className="w-16 bg-gray-200 rounded-full h-2">
+                      <div
+                        className="h-2 rounded-full transition-all duration-300"
+                        style={{
+                          width: `${Math.min(calculatePercentage(token.amount), 100)}%`,
+                          background: `linear-gradient(90deg, ${getPercentageColor(calculatePercentage(token.amount))} 0%, ${getPercentageColor(calculatePercentage(token.amount), 0.8)} 100%)`
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>{token.price ? `$${token.price.toFixed(2)}` : 'N/A'}</TableCell>
                 <TableCell>{formatDate(token.createdAt)}</TableCell>
                 <TableCell>{formatDate(token.updatedAt)}</TableCell>
                 <TableCell>

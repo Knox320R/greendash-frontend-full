@@ -2,6 +2,7 @@ import React from 'react';
 import { FaCoins, FaChartLine, FaGift, FaSeedling, FaUsers, FaExchangeAlt, FaVoteYea, FaTrophy, FaMoneyBillWave, FaNetworkWired, FaGlobeAmericas, FaBolt, FaUserPlus } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { TotalToken, AdminSetting } from '@/types/landing';
 
 const tokenUtilities = [
   {
@@ -55,7 +56,41 @@ const cashbackTypes = [
   },
 ];
 
-const TokenSection = ({ totalTokens }: any) => {
+interface TokenSectionProps {
+  totalTokens?: TotalToken[];
+  adminSettings?: AdminSetting[];
+  openTokenDialog: boolean;
+  setOpenTokenDialog: (open: boolean) => void;
+  handleBuyGreenClick: () => void;
+  handleBuyToken: (tokenType: string) => void;
+}
+
+const TokenSection = ({ 
+  totalTokens, 
+  adminSettings, 
+  openTokenDialog, 
+  setOpenTokenDialog, 
+  handleBuyGreenClick, 
+  handleBuyToken 
+}: TokenSectionProps) => {
+  // Helper function to format token amounts
+  const formatTokenAmount = (amount: string) => {
+    const num = parseFloat(amount);
+    if (num >= 1000000) {
+      return `${(num / 1000000).toFixed(1)}M`;
+    } else if (num >= 1000) {
+      return `${(num / 1000).toFixed(1)}K`;
+    }
+    return num.toLocaleString();
+  };
+
+  // Handle undefined or empty arrays
+  const safeTotalTokens = totalTokens || [];
+  const safeAdminSettings = adminSettings || [];
+
+  // Calculate total supply for percentage calculation
+  const totalSupply = safeTotalTokens.reduce((sum: number, token: TotalToken) => sum + parseFloat(token.amount), 0);
+
   const tokenIconMap: Record<string, React.ElementType> = {
     'seed_sale': FaSeedling,
     'private_sale': FaGift,
@@ -63,9 +98,9 @@ const TokenSection = ({ totalTokens }: any) => {
     'airdrop': FaVoteYea,
     'liquidity': FaExchangeAlt,
     'development': FaChartLine,
-    'marketing & expansion': FaChartLine,
-    'team & audits': FaUsers,
-    'staking & reserves': FaTrophy,
+    'marketing_expansion': FaChartLine,
+    'team_audits': FaUsers,
+    'staking_reserves': FaTrophy,
     'others': FaUsers,
   };
 
@@ -82,12 +117,35 @@ const TokenSection = ({ totalTokens }: any) => {
     '#64748b', // slate
   ];
 
-  const tokenomicsData = totalTokens.map((token, idx) => ({
-    name: token.title.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-    value: token.percent,
-    color: colorPalette[idx % colorPalette.length],
-    icon: tokenIconMap[token.title] ? tokenIconMap[token.title] : FaCoins,
-  }));
+  const tokenomicsData = safeTotalTokens.map((token, idx) => {
+    const amount = parseFloat(token.amount);
+    const percentage = totalSupply > 0 ? (amount / totalSupply) * 100 : 0;
+    
+    return {
+      name: token.title.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      value: percentage, // Use percentage for pie chart
+      color: colorPalette[idx % colorPalette.length],
+      icon: tokenIconMap[token.title] ? tokenIconMap[token.title] : FaCoins,
+      amount: token.amount, // Keep original string for display
+      formattedAmount: formatTokenAmount(token.amount), // Formatted for display
+      price: token.price, // Include price information
+      percentage: percentage.toFixed(1), // Percentage for display
+    };
+  });
+
+  // Show loading state if no data is available
+  if (safeTotalTokens.length === 0) {
+    return (
+      <section className="py-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-50 via-white to-green-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading token information...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-50 via-white to-green-50">
@@ -109,8 +167,13 @@ const TokenSection = ({ totalTokens }: any) => {
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-6 text-gray-700 text-sm">
             <span className="bg-green-100 text-green-700 px-4 py-2 rounded-md font-semibold">Symbol: GREEN</span>
-            <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-md font-semibold">Total Supply: 1,000,000,000</span>
+            <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-md font-semibold">Total Supply: {formatTokenAmount(totalSupply.toString())}</span>
             <span className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-md font-semibold">Decimals: 18</span>
+            {safeAdminSettings.length > 0 && (
+              <span className="bg-purple-100 text-purple-700 px-4 py-2 rounded-md font-semibold">
+                {safeAdminSettings.find(setting => setting.title === 'token_price')?.value || 'Price: TBD'}
+              </span>
+            )}
           </div>
         </motion.div>
         {/* Cashback Types Section */}
@@ -211,7 +274,13 @@ const TokenSection = ({ totalTokens }: any) => {
                   <div key={idx} className="flex items-center gap-2 text-sm">
                     <span>{item.icon && <item.icon className="inline-block mr-2" style={{ color: item.color }} />}</span>
                     <span className="font-semibold" style={{ color: item.color }}>{item.name}</span>
-                    <span className="ml-auto font-bold text-gray-700">{item.value}%</span>
+                    <div className="ml-auto text-right">
+                      <div className="font-bold text-gray-700">{item.formattedAmount}</div>
+                      <div className="text-xs text-gray-500">{item.percentage}%</div>
+                      {item.price && (
+                        <div className="text-xs text-gray-400">${item.price.toFixed(2)}</div>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -237,6 +306,36 @@ const TokenSection = ({ totalTokens }: any) => {
             </div>
           </motion.div>
         </div>
+        
+        {/* Call to Action Section */}
+        {/* <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="mt-16 text-center"
+        >
+          <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-8 shadow-xl">
+            <h3 className="text-2xl font-bold text-white mb-4">Ready to Join the Green Revolution?</h3>
+            <p className="text-green-100 mb-6 max-w-2xl mx-auto">
+              Start earning with GREEN tokens today. Stake, earn rewards, and contribute to a sustainable future.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={handleBuyGreenClick}
+                className="bg-white text-green-600 font-bold py-3 px-8 rounded-lg hover:bg-green-50 transition-colors duration-300 shadow-lg"
+              >
+                Buy GREEN Tokens
+              </button>
+              <button
+                onClick={() => handleBuyToken('green')}
+                className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-green-600 transition-colors duration-300"
+              >
+                Learn More
+              </button>
+            </div>
+          </div>
+        </motion.div> */}
       </div>
     </section>
   );

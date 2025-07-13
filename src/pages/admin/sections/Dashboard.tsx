@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,12 +11,69 @@ import {
   FaCog,
   FaEye,
   FaEdit,
+  FaGift,
+  FaPiggyBank,
 } from 'react-icons/fa';
 import { setSelectedTab } from '@/store/admin';
+import { universalCashback } from '@/store/admin';
+import { toast } from 'react-toastify';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 
 const Dashboard: React.FC = () => {
   const enterprise = useSelector((state: RootState) => state.adminData.enterprise);
+  // Get transactions from both sources
+  const adminTransactions = useSelector((state: RootState) => state.adminData.transactions.list);
+  const userTransactions = useSelector((state: RootState) => state.auth.user_base_data?.recent_transactions);
+
+  const transactions =
+    (adminTransactions && adminTransactions.length > 0)
+      ? adminTransactions
+      : (userTransactions && userTransactions.length > 0)
+        ? userTransactions
+        : [];
+
+  const tokenPools = useSelector((state: RootState) => state.adminData.token_pools);
   const dispatch = useDispatch()
+  const [isDistributing, setIsDistributing] = useState(false);
+
+  // Memoize lastCashback as before
+  const lastCashback = useMemo(() => {
+    if (!transactions.length) return null;
+    return transactions
+      .filter((tx: any) => tx.type === 'universal_cashback')
+      .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0] || null;
+  }, [transactions]);
+
+  let lastCashbackText = 'Never distributed';
+  if (lastCashback) {
+    try {
+      lastCashbackText = `Last distributed: ${formatDistanceToNow(new Date(lastCashback.created_at), { addSuffix: true })}`;
+    } catch {
+      lastCashbackText = `Last distributed: ${lastCashback.created_at}`;
+    }
+  }
+
+  // Find the fee pool (by title or description containing 'fee')
+  const feePool = tokenPools.find(
+    (pool) => pool.title.toLowerCase().includes('fee') || pool.description.toLowerCase().includes('fee')
+  );
+
+  // Find the staking pool (by title or description containing 'staking')
+  const stakingPool = tokenPools.find(
+    (pool) => pool.title.toLowerCase().includes('staking') || pool.description.toLowerCase().includes('staking')
+  );
+
+  const handleUniversalCashback = async () => {
+    setIsDistributing(true);
+    try {
+      await dispatch(universalCashback() as any);
+      toast.success('Universal cashback distributed successfully!');
+    } catch (e) {
+      toast.error('Failed to distribute universal cashback.');
+    } finally {
+      setIsDistributing(false);
+    }
+  };
 
   return (
     <div>
@@ -42,20 +99,22 @@ const Dashboard: React.FC = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Staked</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Staked Amount</CardTitle>
             <FaCoins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{enterprise?.staking?.total_staked || 0} USDT</div>
+            <div className="text-xl font-bold">
+              {stakingPool ? `${parseFloat(stakingPool.amount).toFixed(2)} EGD` : 'N/A'}
+            </div>
             <p className="text-xs text-muted-foreground">
-              Total amount staked across all users
+              Total amount staked across the staking pool
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Stakings</CardTitle>
+            <CardTitle className="text-sm font-medium">Active Stakers</CardTitle>
             <FaDatabase className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -66,16 +125,22 @@ const Dashboard: React.FC = () => {
           </CardContent>
         </Card>
 
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">System Status</CardTitle>
-            <FaCog className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Fee Pool & Stats</CardTitle>
+            <FaPiggyBank className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">Online</div>
-            <p className="text-xs text-muted-foreground">
-              All systems operational
-            </p>
+            <div className="text-lg font-bold mb-1">
+              Fee Pool: {feePool ? `${parseFloat(feePool.amount).toFixed(2)} EGD` : 'N/A'}
+            </div>
+            <div className="text-xs text-muted-foreground mb-1">
+              Active Staking: {enterprise?.staking?.total_staked?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || 0} USDT
+            </div>
+            <div className="text-xs text-muted-foreground">
+              Active Users: {enterprise?.users?.active || 0}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -112,7 +177,7 @@ const Dashboard: React.FC = () => {
                       </div>
                     </div>
                   )}
-                  
+
                   {enterprise.staking && (
                     <div className="p-3 bg-green-50 rounded-lg">
                       <h4 className="font-semibold text-green-800 mb-2">Staking</h4>
@@ -173,6 +238,20 @@ const Dashboard: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
+              <Button
+                className="w-full justify-start bg-pink-600 hover:bg-pink-700 text-white shadow-lg mt-6 py-6 text-lg font-bold rounded-xl border-2 border-pink-300"
+                style={{ minHeight: 72 }}
+                onClick={handleUniversalCashback}
+                disabled={isDistributing}
+              >
+                <div className="flex flex-col items-start w-full">
+                  <span className="flex items-center">
+                    <FaGift className="mr-3 h-10 w-10" />
+                    {isDistributing ? 'Distributing Cashback...' : 'Distribute Universal Cashback'}
+                  </span>
+                  <span className="text-xs text-pink-100 mt-2">{lastCashbackText}</span>
+                </div>
+              </Button>
               <Button className="w-full justify-start" variant="outline" onClick={() => dispatch(setSelectedTab('withdrawal_list'))} >
                 <FaChartLine className="mr-2 h-4 w-4" />
                 View Analytics

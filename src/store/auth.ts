@@ -52,8 +52,7 @@ const authSlice = createSlice({
             state.wallet_connected = action.payload
         },
         deleteOneUpdatedWithdrawls: (state, action) => {
-            if (action.payload)
-                state.user_base_data.recent_withdrawals = []
+            state.user_base_data.recent_withdrawals[action.payload].status = 'completed'
         },
         setUser: (state, action) => {
             const { token, user, user_base_data } = action.payload
@@ -120,12 +119,12 @@ export const {
 // API functions
 export const authApi = {
 
-    confirmUpdatedWithdrawal: (user_id: number) => async (dispatch: AppDispatch) => {
+    confirmUpdatedWithdrawal: (withdrawal_id: number, idx: number) => async (dispatch: AppDispatch) => {
         try {
             dispatch(setLoading(true))
-            const res = await api.post<{ success: boolean, message: string }>('/users/confirm-withdrawal', {user_id})
+            const res = await api.post<{ success: boolean, message: string }>('/users/confirm-withdrawal', { withdrawal_id })
             if (res.success) {
-                dispatch(deleteOneUpdatedWithdrawls(res.success))
+                dispatch(deleteOneUpdatedWithdrawls(idx))
                 toast.success(res.message)
             } else {
                 toast.warning(res.message)
@@ -426,7 +425,7 @@ export const authApi = {
     stakingRequest: (tx_hash: string, package_id: number, user_id: number) => async (dispatch: AppDispatch) => {
         try {
             dispatch(setLoading(true))
-            
+
             const res = await api.post<{ success: boolean, message: string, newTransaction: Transaction, newStaking: Staking }>('/users/staking', { tx_hash, package_id, user_id })
             if (res.success) {
                 toast.success(res.message)
