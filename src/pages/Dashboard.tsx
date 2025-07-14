@@ -351,7 +351,7 @@ const Dashboard = () => {
               <FaArrowDown className="h-4 w-4 text-blue-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{withdrawals} USDT</div>
+              <div className="text-2xl font-bold">{withdrawals.toFixed(2)} USDT</div>
               <p className="text-xs text-muted-foreground">
                 Total withdrawable amount
               </p>
