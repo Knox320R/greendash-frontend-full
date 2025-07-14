@@ -38,8 +38,9 @@ import { AppDispatch, RootState } from '@/store';
 import { toast } from 'react-toastify';
 import { getStakingStats } from '@/lib/staking';
 import { ethers } from 'ethers';
-import usdt_abi from '@/lib/usdt_abi';
+import USDT_ABI from '@/lib/usdt_abi.json';
 import { useWallet } from '@/hooks/WalletContext';
+import { USDT_ADDRESS } from '@/lib/constants';
 
 const packageColorMap: Record<string, string> = {
   'Daily Ride': '#22c55e', // green
@@ -100,7 +101,6 @@ const Dashboard = () => {
   const maxExchangeSetting = adminSettings.find(s => s.title === 'max_exchange');
   const minExchange = minExchangeSetting ? Number(minExchangeSetting.value) : 1000;
   const maxExchange = maxExchangeSetting ? Number(maxExchangeSetting.value) : 100000;
-  const usdt_address = adminSettings.find(item => item.title === "usdt_token_address")?.value || "0x55d398326f99059fF775485246999027B3197955";
 
   function sendExchangeRequest() {
     const amount = Number(exchangeAmount);
@@ -224,7 +224,7 @@ const Dashboard = () => {
       // Setup Web3 provider and contract
       const web3Provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await web3Provider.getSigner();
-      const usdtContract = new ethers.Contract(usdt_address, usdt_abi, signer);
+      const usdtContract = new ethers.Contract(USDT_ADDRESS, USDT_ABI, signer);
 
       // Get token decimals and calculate net amount with proper decimals
       const decimals = await usdtContract.decimals();

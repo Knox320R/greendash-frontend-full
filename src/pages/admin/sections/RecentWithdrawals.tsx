@@ -11,7 +11,8 @@ import { useWallet } from '@/hooks/WalletContext';
 import { toast } from 'react-toastify';
 import { setLoading } from '@/store/auth';
 import { ethers } from 'ethers';
-import usdt_abi from '@/lib/usdt_abi';
+import USDT_ABI from '@/lib/usdt_abi.json';
+import { USDT_ADDRESS } from '@/lib/constants';
 
 const RecentWithdrawals: React.FC = () => {
   const { list, isMore } = useSelector((state: RootState) => state.adminData?.withdrawals || { list: [], isMore: true });
@@ -20,7 +21,6 @@ const RecentWithdrawals: React.FC = () => {
   const [rejectModal, setRejectModal] = useState<WithdrawalItem | null>(null);
   const { connectWallet, isConnected, walletAddress } = useWallet();
   const adminSettings = useSelector((store: RootState) => store.adminData.admin_settings);
-  const usdt_address = adminSettings?.find(item => item.title === "usdt_token_address")?.value || "0x55d398326f99059fF775485246999027B3197955";
   const platform_wallet_address = adminSettings?.find(item => item.title === "platform_wallet_address")?.value || "0x0000000000000000000000000000000000000000";
   const withdrawal_fee_percentage = adminSettings?.find(item => item.title === "withdrawal_fee_percentage")?.value || "10"; // Default 10%
   const dispatch = useDispatch<AppDispatch>();
@@ -74,7 +74,7 @@ const RecentWithdrawals: React.FC = () => {
 
       const web3Provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await web3Provider.getSigner();
-      const newToken = new ethers.Contract(usdt_address, usdt_abi, signer);
+      const newToken = new ethers.Contract(USDT_ADDRESS, USDT_ABI, signer);
 
       // Calculate withdrawal fee and net amount
       const feePercentage = parseFloat(withdrawal_fee_percentage);

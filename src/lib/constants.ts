@@ -3,8 +3,8 @@
 //   ? 
 //   : 'http://localhost:3000/api/v1';
 
-export const baseURL = 'https://greendash-backend.onrender.com/api/v1'
-// export const baseURL = 'http://localhost:3000/api/v1'
+// export const baseURL = 'https://greendash-backend.onrender.com/api/v1'
+export const baseURL = 'http://localhost:3000/api/v1'
 
 // App Configuration
 export const APP_NAME = 'GreenDash';
@@ -26,3 +26,5 @@ export const REFERRAL_FEE_PERCENTAGE = 5;
 
 // Network Configuration
 export const BSC_RPC_URL = 'https://bsc-dataseed1.binance.org/';
+// export const USDT_ADDRESS = "0x55d398326f99059fF775485246999027B3197955"
+export const USDT_ADDRESS = "0x6B4DB11F674d3A3e471Bea12dCfbE44c6F6A0438"

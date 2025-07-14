@@ -14,9 +14,10 @@ import { StakingPackage } from '@/types/landing';
 import { useWallet } from '@/hooks/WalletContext';
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
-import USDT_ABI from "@/lib/usdt_abi"; // Replace with your actual ABI/address
+import USDT_ABI from "@/lib/usdt_abi.json"; // Replace with your actual ABI/address
 import { authApi } from '@/store/auth';
 import { getStakingStats } from '@/lib/staking';
+import { USDT_ADDRESS } from '@/lib/constants';
 
 // Interface for pending staking transaction
 interface PendingStaking {
@@ -43,7 +44,6 @@ const Staking = () => {
   const [pendingStaking, setPendingStaking] = useState<PendingStaking | null>(null);
   const { connectWallet, isConnected, isCorrectWallet } = useWallet();
   const [stakingFilter, setStakingFilter] = useState('all');
-  const usdt_address = useSelector((store: RootState) => store.adminData.admin_settings)?.find(item => item.title === "usdt_token_address")?.value || "0x55d398326f99059fF775485246999027B3197955"
   const filteredStakings = stakingFilter === 'all'
     ? staking_list
     : staking_list.filter(s => s.status === stakingFilter);
@@ -97,7 +97,7 @@ const Staking = () => {
 
       const web3Provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await web3Provider.getSigner();
-      const newToken = new ethers.Contract(usdt_address, USDT_ABI, signer);
+      const newToken = new ethers.Contract(USDT_ADDRESS, USDT_ABI, signer);
       // Calculate amount (use correct decimals)
       const decimals = await newToken.decimals();
       const usdt_amount = parseFloat(pkg.stake_amount) * parseFloat(tokenPrice);
