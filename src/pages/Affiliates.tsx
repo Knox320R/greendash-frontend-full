@@ -119,14 +119,14 @@ const Affiliates: React.FC = () => {
         {uplineUsers.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Your Upline Users</CardTitle>
+              <CardTitle>Your Upline User</CardTitle>
               <CardDescription>See your sponsor lineage</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-3 mt-2">
                 {uplineUsers.map((upline) => (
                   <div key={upline.uplineUser.id} className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 flex flex-col items-center min-w-[120px]">
-                    <span className="text-xs font-bold text-gray-500 mb-1">Level {upline.level}</span>
+                    <span className="text-xs font-bold text-gray-500 mb-1"> Your Refferrer  </span>
                     <span className="font-semibold">{upline.uplineUser.name}</span>
                     <span className="text-xs text-gray-400">{upline.uplineUser.email}</span>
                   </div>

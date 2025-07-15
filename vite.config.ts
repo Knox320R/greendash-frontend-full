@@ -8,6 +8,12 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    allowedHosts: ['greendash.io', 'localhost'],
+  },
+  preview: {
+    host: "::",
+    port: 8080,
+    allowedHosts: ['greendash.io'],
   },
   plugins: [
     react(),

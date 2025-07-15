@@ -131,7 +131,7 @@ export const fetchPageData = (limit: number, offset: number, table_name: string)
 export const getMainSettings = () => async (dispatch: AppDispatch) => {
     try {
         dispatch(setLoading(true))
-        const res = await api.get<{ success: boolean, data: AdminData }>('/auth/landing')
+        const res = await api.get<{ success: boolean, data: AdminData }>('/auth/landing', { withCredentials: true })
         if (res.success) dispatch(setAdminSettings(res.data))
         else throw { message: "failed to get admin data" }
     } catch (e) {

@@ -136,7 +136,7 @@ const Dashboard: React.FC = () => {
               Fee Pool: {feePool ? `${parseFloat(feePool.amount).toFixed(2)} EGD` : 'N/A'}
             </div>
             <div className="text-xs text-muted-foreground mb-1">
-              Active Staking: {enterprise?.staking?.total_staked?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || 0} USDT
+              Active Staking: {enterprise?.staking?.total_staked?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || 0} EGD
             </div>
             <div className="text-xs text-muted-foreground">
               Active Users: {enterprise?.users?.active || 0}
