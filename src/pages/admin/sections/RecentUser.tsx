@@ -3,13 +3,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { FaUser } from 'react-icons/fa';
-import { fetchPageData, updateUserActive } from '@/store/admin';
+import { fetchPageData, updateUserActive, adminForceStake } from '@/store/admin';
 import { UserData } from '@/types/landing';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 const RecentUser: React.FC = () => {
   const { list, isMore } = useSelector((state: RootState) => state.adminData?.users || { list: [], isMore: true });
   const [limit, setLimit] = useState(10)
   const [search, setSearch] = useState('');
+  const stakingPackages = useSelector((state: RootState) => state.adminData?.staking_packages || []);
+  const [stakeModalUser, setStakeModalUser] = useState<UserData | null>(null);
+  const [selectedPackageId, setSelectedPackageId] = useState<number | null>(null);
+  const [isStaking, setIsStaking] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
@@ -42,6 +48,25 @@ const RecentUser: React.FC = () => {
     dispatch(updateUserActive(true, user.is_active, { ...user, is_email_verified: true }));
   };
 
+  const handleForceStake = async (user_id: number) => {
+
+    if(!window.confirm('Are you sure to offer tokens for free ?')) return
+    console.log(user_id, selectedPackageId);
+    
+    if (!stakeModalUser || !selectedPackageId) return;
+    setIsStaking(true);
+    try {
+      // Dispatch the new adminForceStake action (to be implemented)
+      await dispatch<any>(adminForceStake(user_id, selectedPackageId));
+      setStakeModalUser(null);
+      setSelectedPackageId(null);
+    } catch (e) {
+      // error feedback handled in action
+    } finally {
+      setIsStaking(false);
+    }
+  };
+
   return (
     <Card className="mb-6">
       <CardHeader>
@@ -69,6 +94,7 @@ const RecentUser: React.FC = () => {
                 <th className="px-3 py-2 text-left font-semibold">Joined</th>
                 <th className="px-3 py-2 text-left font-semibold">Email Verified</th>
                 <th className="px-3 py-2 text-left font-semibold">Active</th>
+                <th className="px-3 py-2 text-left font-semibold">Stake</th>
               </tr>
             </thead>
             <tbody>
@@ -100,6 +126,42 @@ const RecentUser: React.FC = () => {
                     >
                       {user.is_active ? 'Active' : 'Inactive'}
                     </button>
+                  </td>
+                  <td className="px-3 py-2 whitespace-nowrap">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button size="sm" variant="outline" onClick={() => { setStakeModalUser(user); setSelectedPackageId(null); }}>Stake</Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Stake for {user.name}</DialogTitle>
+                        </DialogHeader>
+                        <div className="my-4">
+                          <div className="mb-4 p-2 bg-gray-50 rounded border text-sm">
+                            <div><span className="font-semibold">User:</span> {user.name}</div>
+                            <div><span className="font-semibold">Email:</span> {user.email}</div>
+                          </div>
+                          <label className="block mb-2 text-sm font-medium">Select Staking Package</label>
+                          <select
+                            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-green-400 text-sm"
+                            value={selectedPackageId ?? ''}
+                            onChange={e => setSelectedPackageId(Number(e.target.value))}
+                          >
+                            <option value="" disabled>Select a package</option>
+                            {stakingPackages.map(pkg => (
+                              <option key={pkg.id} value={pkg.id}>
+                                {pkg.name} - {parseInt(pkg.stake_amount)} EGD, {pkg.daily_yield_percentage}% for {pkg.lock_period_days}d
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <DialogFooter>
+                          <Button onClick={() => handleForceStake(user.id)} disabled={!selectedPackageId || isStaking} className="bg-green-600 hover:bg-green-700 text-white">
+                            {isStaking ? 'Staking...' : 'Confirm Stake'}
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </td>
                 </tr>
               ))}

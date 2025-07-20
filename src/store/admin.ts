@@ -257,5 +257,22 @@ export const universalCashback = () => async (dispatch: AppDispatch) => {
     }
 }
 
+export const adminForceStake = (user_id: number, package_id: number) => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(setLoading(true));
+        const res = await api.post<{ success: boolean, message: string }>('/admin/force-staking', { user_id, package_id });
+        if (res.success) {
+            toast.success(res.message || 'Staking successful!');
+        } else {
+            throw new Error(res.message || 'Failed to force stake');
+        }
+    } catch (e: any) {
+        toast.error(e.message || 'Failed to force stake');
+        throw e;
+    } finally {
+        dispatch(setLoading(false));
+    }
+}
+
 
 export default adminSlice.reducer; 
