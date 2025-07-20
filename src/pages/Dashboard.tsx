@@ -112,14 +112,14 @@ const Dashboard = () => {
       setExchangeError('Amount exceeds available EGD balance.');
       return;
     }
-    if (amount < minExchange) {
-      setExchangeError(`Amount is below the minimum exchange amount (${minExchange}).`);
-      return;
-    }
-    if (amount > maxExchange) {
-      setExchangeError(`Amount exceeds the maximum exchange amount (${maxExchange}).`);
-      return;
-    }
+    // if (amount < minExchange) {
+    //   setExchangeError(`Amount is below the minimum exchange amount (${minExchange}).`);
+    //   return;
+    // }
+    // if (amount > maxExchange) {
+    //   setExchangeError(`Amount exceeds the maximum exchange amount (${maxExchange}).`);
+    //   return;
+    // }
     setExchangeModalOpen(false);
     dispatch(authApi.exchangeRequest(amount))
   }
@@ -429,14 +429,14 @@ const Dashboard = () => {
                           setWithdrawError('Amount exceeds available USDT balance.');
                           return;
                         }
-                        if (amount < minWithdrawal) {
-                          setWithdrawError(`Amount is below the minimum withdrawal amount (${minWithdrawal}).`);
-                          return;
-                        }
-                        if (amount > maxWithdrawal) {
-                          setWithdrawError(`Amount exceeds the maximum withdrawal amount (${maxWithdrawal}).`);
-                          return;
-                        }
+                        // if (amount < minWithdrawal) {
+                        //   setWithdrawError(`Amount is below the minimum withdrawal amount (${minWithdrawal}).`);
+                        //   return;
+                        // }
+                        // if (amount > maxWithdrawal) {
+                        //   setWithdrawError(`Amount exceeds the maximum withdrawal amount (${maxWithdrawal}).`);
+                        //   return;
+                        // }
                         setWithdrawModalOpen(false);
                         sendWithdrawRequest(amount);
                       }}
