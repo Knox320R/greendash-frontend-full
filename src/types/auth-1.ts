@@ -21,6 +21,7 @@ export interface LoginResponse {
     left_volume: number;
     right_volume: number;
     rank_goal: number;
+    benefit_overflow: boolean;
     created_at: string;
   }
   
@@ -63,7 +64,7 @@ export interface LoginResponse {
     id: number;
     user_id: number;
     package_id: number;
-    status: 'active' | 'completed';
+    status: 'active' | 'completed' | "free_staking";
     createdAt: string;
     updatedAt: string;
     package: Package;

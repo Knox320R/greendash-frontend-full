@@ -76,7 +76,7 @@ const RecentStaking: React.FC = () => {
                           ? 'text-blue-600 font-bold'
                           : 'text-gray-400'
                     }>
-                      {staking.status}
+                      {staking.status === "free_staking"? "active": staking.status}
                     </span>
                   </td>
                   <td className="px-3 py-2 whitespace-nowrap">{new Date(staking.created_at).toLocaleString()}</td>

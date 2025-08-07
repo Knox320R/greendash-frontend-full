@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { FaUser } from 'react-icons/fa';
-import { fetchPageData, updateUserActive, adminForceStake } from '@/store/admin';
-import { UserData } from '@/types/landing';
+import { fetchPageData, updateUserActive, adminForceStake, adminCancelStaking } from '@/store/admin';
+import { AdminUserData } from '@/types/admin-user';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
@@ -13,9 +13,11 @@ const RecentUser: React.FC = () => {
   const [limit, setLimit] = useState(10)
   const [search, setSearch] = useState('');
   const stakingPackages = useSelector((state: RootState) => state.adminData?.staking_packages || []);
-  const [stakeModalUser, setStakeModalUser] = useState<UserData | null>(null);
+  const stakings = useSelector((state: RootState) => state.adminData?.stakings?.list || []);
+  const [stakeModalUser, setStakeModalUser] = useState<AdminUserData | null>(null);
   const [selectedPackageId, setSelectedPackageId] = useState<number | null>(null);
   const [isStaking, setIsStaking] = useState(false);
+  const [cancellingStakingId, setCancellingStakingId] = useState<number | null>(null);
 
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
@@ -40,19 +42,19 @@ const RecentUser: React.FC = () => {
     )
   );
 
-  const handleToggleActive = (user: UserData) => {
+  const handleToggleActive = (user: AdminUserData) => {
     const newActiveState = !user.is_active;
     dispatch(updateUserActive(user.is_email_verified, !user.is_active, { ...user, is_active: newActiveState }));
   };
-  const handleVerifyEmail = (user: UserData) => {
+  const handleVerifyEmail = (user: AdminUserData) => {
     dispatch(updateUserActive(true, user.is_active, { ...user, is_email_verified: true }));
   };
 
   const handleForceStake = async (user_id: number) => {
 
-    if(!window.confirm('Are you sure to offer tokens for free ?')) return
+    if (!window.confirm('Are you sure to offer tokens for free ?')) return
     console.log(user_id, selectedPackageId);
-    
+
     if (!stakeModalUser || !selectedPackageId) return;
     setIsStaking(true);
     try {
@@ -98,7 +100,7 @@ const RecentUser: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((user: UserData) => (
+              {filtered.map((user: AdminUserData) => (
                 <tr key={user.id} className="border-b last:border-0">
                   <td className="px-3 py-2 whitespace-nowrap">{user.name}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{user.email}</td>
@@ -134,13 +136,58 @@ const RecentUser: React.FC = () => {
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle>Stake for {user.name}</DialogTitle>
+                          <DialogTitle className='flex w-full justify-between'>
+                            {user.name}
+                            <span className='text-sm mr-10'>{user.email}</span>
+                          </DialogTitle>
                         </DialogHeader>
-                        <div className="my-4">
-                          <div className="mb-4 p-2 bg-gray-50 rounded border text-sm">
-                            <div><span className="font-semibold">User:</span> {user.name}</div>
-                            <div><span className="font-semibold">Email:</span> {user.email}</div>
+                        {stakeModalUser && (
+                          <div className="mb-4">
+                            <div className="flex gap-4 mb-2">
+                              <div className="bg-blue-50 border border-blue-200 rounded px-3 py-1 text-sm">
+                                <span className="font-semibold">Left Volume:</span> {stakeModalUser.left_volume ?? '-'}
+                              </div>
+                              <div className="bg-green-50 border border-green-200 rounded px-3 py-1 text-sm">
+                                <span className="font-semibold">Right Volume:</span> {stakeModalUser.right_volume ?? '-'}
+                              </div>
+                            </div>
+                            <div className="font-semibold mb-2">Staking Packages</div>
+                            {stakeModalUser.stakings.length === 0 ? (
+                              <div className="text-xs text-gray-500">No staking packages found for this user.</div>
+                            ) : (
+                              <div className="flex flex-col gap-2 w-full max-h-[300px] overflow-y-auto border-green-100 bg-gray-50 border-[1px] shadow-lg ">
+                                {stakeModalUser.stakings.map(staking => (
+                                  <div key={staking.id} className="rounded p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                                    <div>
+                                      <div className="font-semibold text-green-700">{staking.package?.name || '-'}</div>
+                                      <div className="text-xs text-gray-600">{staking.package?.description || ''}</div>
+                                    </div>
+                                    <div className="flex flex-wrap gap-4 text-sm items-center">
+                                      <div><span className="font-semibold">Amount:</span> {parseFloat(staking.package?.stake_amount) || '-'}</div>
+                                      <div><span className="font-semibold">Status:</span> <span className={staking.status === 'active' ? 'text-green-600' : staking.status === 'completed' ? 'text-blue-600' : 'text-gray-500'}>{staking.status}</span></div>
+                                      <div><span className="font-semibold">Date:</span> {new Date(staking.created_at).toLocaleDateString()}</div>
+                                      <button
+                                        className="ml-2 px-3 py-1 border border-red-400 text-red-600 rounded text-xs disabled:opacity-[0.3] font-medium bg-white hover:bg-red-50 transition-colors"
+                                        disabled={staking.status !== 'free_staking' || cancellingStakingId === staking.id}
+                                        onClick={async () => {
+                                          setCancellingStakingId(staking.id);
+                                          try {
+                                            await dispatch<any>(adminCancelStaking(staking.id, stakeModalUser.id));
+                                          } finally {
+                                            setCancellingStakingId(null);
+                                          }
+                                        }}
+                                      >
+                                        {cancellingStakingId === staking.id ? 'Cancelling...' : 'Cancel'}
+                                      </button>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </div>
+                        )}
+                        <div className="my-4">
                           <label className="block mb-2 text-sm font-medium">Select Staking Package</label>
                           <select
                             className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-green-400 text-sm"

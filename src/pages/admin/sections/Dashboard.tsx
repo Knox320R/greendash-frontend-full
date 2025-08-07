@@ -183,16 +183,20 @@ const Dashboard: React.FC = () => {
                       <h4 className="font-semibold text-green-800 mb-2">Staking</h4>
                       <div className="space-y-1 text-sm">
                         <div className="flex justify-between">
-                          <span>Total Staked:</span>
+                          <span>Total Active Staking Amount:</span>
                           <span>{enterprise.staking.total_staked} EGD</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Active:</span>
+                          <span>Number of Active Staking:</span>
                           <span>{enterprise.staking.active}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Rewards Paid:</span>
-                          <span>{enterprise.staking.total_rewards_paid} USDT</span>
+                          <span>Number of Total Staking:</span>
+                          <span>{enterprise.staking.total}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Number of Admin Offered Staking:</span>
+                          <span>{enterprise.staking.total_rewards_paid}</span>
                         </div>
                       </div>
                     </div>
@@ -203,15 +207,15 @@ const Dashboard: React.FC = () => {
                       <h4 className="font-semibold text-purple-800 mb-2">Financial</h4>
                       <div className="space-y-1 text-sm">
                         <div className="flex justify-between">
-                          <span>Total Invested:</span>
-                          <span>{enterprise.financial.total_invested} EGD</span>
+                          <span>Total Investment by Stakers:</span>
+                          <span>{enterprise.financial.total_invested} USDT</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Total Earned:</span>
-                          <span>{enterprise.financial.total_earned} EGD</span>
+                          <span>Total Bonuses Given to Stakers:</span>
+                          <span>{enterprise.financial.total_earned} USDT</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Total Withdrawn:</span>
+                          <span>Total Amount Withdrawn by Stakers:</span>
                           <span>{enterprise.financial.total_withdrawn} USDT</span>
                         </div>
                       </div>

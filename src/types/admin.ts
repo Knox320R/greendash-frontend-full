@@ -1,3 +1,5 @@
+import { AdminUserData } from "./admin-user";
+
 export interface Pagenation {
   isMore: boolean
 }
@@ -71,7 +73,7 @@ interface RecentUser {
 
 export interface UserList {
   isMore: boolean;
-  list: RecentUser[];
+  list: AdminUserData[];
 }
 
 // Recent staking activity entry

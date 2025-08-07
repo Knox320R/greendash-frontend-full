@@ -17,6 +17,7 @@ export interface UserData {
   is_active: boolean;
   is_email_verified: boolean;
   created_at: string;
+  benefit_overflow: boolean;
   wallet_address: string | null;
 }
 

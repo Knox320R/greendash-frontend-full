@@ -358,7 +358,7 @@ const Staking = () => {
                               {staking.status === 'completed' && <FaCheckCircle className="h-5 w-5 text-green-600" title="Completed" />}
                               <h3 className="text-xl font-semibold">{staking.package?.name || 'Staking Package'}</h3>
                             </div>
-                            <Badge className={getStatusColor(staking.status)}>{staking.status}</Badge>
+                            <Badge className={getStatusColor(staking.status)}>{staking.status === "free_staking"? "active": staking.status}</Badge>
                           </div>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                             <div>

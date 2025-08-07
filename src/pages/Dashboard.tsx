@@ -127,7 +127,7 @@ const Dashboard = () => {
     dispatch(authApi.withdrawRequest(amount))
   }
 
-  const { id, name, email, referral_code, is_admin, phone, wallet_address, egd_balance, withdrawals, referred_by, parent_leg, left_volume, right_volume, rank_goal, created_at } = user
+  const { id, name, email, referral_code, is_admin, phone, wallet_address, egd_balance, withdrawals, referred_by, parent_leg, left_volume, right_volume, rank_goal, created_at, benefit_overflow } = user
 
   // Staking summary
   const stakingSummary = user_base_data?.recent_Stakings || [];
@@ -286,6 +286,30 @@ const Dashboard = () => {
             Here's your GreenDash overview
           </p>
         </motion.div>
+
+        {/* Benefit Overflow Notification */}
+        {benefit_overflow && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-6"
+          >
+            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-lg shadow-lg border-l-4 border-green-400">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <FaCheckCircle className="w-6 h-6 text-green-100" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold mb-2">🎉 Congratulations!</h3>
+                  <p className="text-green-50 leading-relaxed">
+                    You've already earned 300% of your total staked amount. Therefore, your staking packages has been completed. If you want more daily rewards, you may purchase new packages.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* Balance Cards */}
         <motion.div
@@ -622,7 +646,7 @@ const Dashboard = () => {
                               </p>
                             </div>
                             <Badge variant={staking.status === 'active' ? 'default' : 'secondary'}>
-                              {staking.status}
+                              {staking.status === "free_staking"? "active": staking.status}
                             </Badge>
                           </div>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
@@ -640,7 +664,7 @@ const Dashboard = () => {
                             </div>
                             <div>
                               <p className="text-sm text-muted-foreground">Status</p>
-                              <p className="font-semibold">{staking.status}</p>
+                              <p className="font-semibold">{staking.status === "free_staking"? "active": staking.status}</p>
                             </div>
                           </div>
                           {/* Progress Bar with Dates */}

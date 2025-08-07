@@ -38,7 +38,7 @@ const Footer: React.FC = () => {
             <div className="text-sm opacity-90 mb-4 max-w-xs">
               Empowering sustainable urban mobility and rewarding every stakeholder. Join the movement for a greener, smarter future.
             </div>
-            <div className="flex space-x-4 mt-2">
+            {/* <div className="flex space-x-4 mt-2">
               {socialLinks.map(({ name, href, icon: Icon }) => (
                 <Tooltip key={name}>
                   <TooltipTrigger asChild>
@@ -60,7 +60,7 @@ const Footer: React.FC = () => {
                   </TooltipContent>
                 </Tooltip>
               ))}
-            </div>
+            </div> */}
           </div>
 
           {/* Center: Newsletter Signup */}

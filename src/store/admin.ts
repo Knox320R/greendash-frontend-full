@@ -6,6 +6,7 @@ import { AppDispatch } from './index';
 import { setLoading } from './auth';
 import { toast } from 'sonner';
 import { WithdrawalItem } from '@/types/admin';
+import { AdminUserData } from '@/types/admin-user';
 
 const initialState: AdminData = {
     admin_settings: [],
@@ -83,6 +84,16 @@ const adminSlice = createSlice({
         clearDashboardData: (state) => {
             state.dashboardData = null
         },
+        cancelAdminStaking: (state, action) => {
+            const stake_id = action.payload
+            console.log(stake_id);
+            state.stakings.list = state.stakings.list.filter(item => item.id !== stake_id)
+            state.users.list = state.users.list.map(user =>
+                user.stakings.find(item => item.id === stake_id)
+                    ? { ...user, stakings: user.stakings.filter(it => it.id !== stake_id) }
+                    : user
+            )
+        }
     },
 });
 
@@ -97,10 +108,11 @@ export const {
     setSelectedTab,
     setDashboardData,
     setDashboardLoading,
-    clearDashboardData
+    clearDashboardData,
+    cancelAdminStaking
 } = adminSlice.actions;
 
-export const updateUserActive = (is_email_verified: boolean, is_active: boolean, data: UserData) => async (dispatch: AppDispatch) => {
+export const updateUserActive = (is_email_verified: boolean, is_active: boolean, data: AdminUserData) => async (dispatch: AppDispatch) => {
     try {
         dispatch(setLoading(true))
         const res = await api.put<{ success: boolean, message: string }>('/admin/users/' + data.id, { is_active, is_email_verified })
@@ -250,10 +262,10 @@ export const universalCashback = () => async (dispatch: AppDispatch) => {
     try {
         const res = await api.post('/users/universal-cashback', {})
         console.log(res);
-        
+
     } catch (e) {
         console.log(e);
-        
+
     }
 }
 
@@ -268,6 +280,25 @@ export const adminForceStake = (user_id: number, package_id: number) => async (d
         }
     } catch (e: any) {
         toast.error(e.message || 'Failed to force stake');
+        throw e;
+    } finally {
+        dispatch(setLoading(false));
+    }
+}
+
+export const adminCancelStaking = (staking_id: number, user_id: number) => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(setLoading(true));
+        const res = await api.post<{ success: boolean, message: string }>('/admin/cancel-staking', { staking_id });
+        if (res.success) {
+            dispatch(cancelAdminStaking(staking_id))
+            toast.success(res.message || 'Staking cancelled successfully!');
+            // Optionally, you could refresh the stakings list here
+        } else {
+            throw new Error(res.message || 'Failed to cancel staking');
+        }
+    } catch (e: any) {
+        toast.error(e.message || 'Failed to cancel staking');
         throw e;
     } finally {
         dispatch(setLoading(false));
