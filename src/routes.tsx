@@ -7,6 +7,7 @@ import Staking from "./pages/Staking";
 import Affiliates from "./pages/Affiliates";
 import Profile from "./pages/Profile";
 import ResetPassword from "./pages/ResetPassword";
+import Maintenance from "./pages/Maintenance";
 
 export default [
     {
@@ -40,7 +41,8 @@ export default [
     },
     {
         path: '/staking',
-        element: <Staking/>
+        // element: <Staking/>
+        element: <Maintenance/>
     },
     {
         path: '/affiliates',
