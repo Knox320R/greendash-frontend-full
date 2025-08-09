@@ -41,8 +41,8 @@ export default [
     },
     {
         path: '/staking',
-        // element: <Staking/>
-        element: <Maintenance/>
+        element: <Staking/>
+        // element: <Maintenance/>
     },
     {
         path: '/affiliates',
