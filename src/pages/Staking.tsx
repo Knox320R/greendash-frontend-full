@@ -362,62 +362,37 @@ const Staking = () => {
                   <p className="mt-2 text-gray-600">Loading your stakings...</p>
                 </div>
               ) : filteredStakings.length > 0 ? (
-                <div className="space-y-6">
-                  {filteredStakings.map((staking) => {
-                    const progressInfo = stakingStats.staking_progress.find(p => p.id === staking.id);
-                    const unlockDate = progressInfo?.unlock_date ? new Date(progressInfo.unlock_date) : new Date(new Date(staking.createdAt).getTime() + staking.package.lock_period_days * 24 * 60 * 60 * 1000);
-                    const nowDate = new Date();
-                    const progress = progressInfo?.progress_percentage ?? 0;
-                    const daysRemaining = Math.max(0, Math.ceil((unlockDate.getTime() - nowDate.getTime()) / (24 * 60 * 60 * 1000)));
-
-                    return (
-                      <Card key={staking.id} className="shadow-md border-2 border-gray-100">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center gap-2">
-                              {staking.status === 'active' && <FaLock className="h-5 w-5 text-blue-600" title="Active" />}
-                              {staking.status === 'completed' && <FaCheckCircle className="h-5 w-5 text-green-600" title="Completed" />}
-                              <h3 className="text-xl font-semibold">{staking.package?.name || 'Staking Package'}</h3>
-                            </div>
-                            <Badge className={getStatusColor(staking.status)}>{staking.status === "free_staking" ? "active" : staking.status}</Badge>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {filteredStakings.map(({ id, package: pkg, status, createdAt }) => (
+                    <Card key={id}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <h3 className="font-semibold text-sm">{pkg?.name || 'Staking Package'}</h3>
+                            <p className="text-xs text-muted-foreground">
+                              Started {formatDate(createdAt)}
+                            </p>
                           </div>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                            <div>
-                              <p className="text-sm text-muted-foreground">Staked Amount</p>
-                              <p className="font-semibold">{parseFloat(staking.package.stake_amount)} EGD</p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-muted-foreground">Start Date</p>
-                              <p className="font-semibold">{new Date(staking.createdAt).toDateString()}</p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-muted-foreground">Lock Period</p>
-                              <p className="font-semibold">{staking.package.lock_period_days} days</p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-muted-foreground">Progress</p>
-                              <p className="font-semibold">{progress.toFixed(1)}%</p>
-                            </div>
+                          <Badge 
+                            className={getStatusColor(status)}
+                            variant={status === 'active' ? 'default' : 'secondary'}
+                          >
+                            {status === "free_staking" ? "active" : status}
+                          </Badge>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="text-center p-2 bg-gray-50 rounded">
+                            <p className="text-xs text-muted-foreground">Staked</p>
+                            <p className="font-semibold text-sm">{parseFloat(pkg.stake_amount)} EGD</p>
                           </div>
-                          <Progress value={progress} className="mb-4" />
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mb-2">
-                            <div className="flex items-center gap-2">
-                              <FaCalendarAlt className="h-4 w-4 text-gray-500" />
-                              <span>Unlock Date: {new Date(unlockDate).toDateString()}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <FaClock className="h-4 w-4 text-gray-500" />
-                              <span>{daysRemaining} days remaining</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <FaChartLine className="h-4 w-4 text-gray-500" />
-                              <span>Daily Rate: {staking.package?.daily_yield_percentage}%</span>
-                            </div>
+                          <div className="text-center p-2 bg-gray-50 rounded">
+                            <p className="text-xs text-muted-foreground">Daily Yield</p>
+                            <p className="font-semibold text-sm">{(parseFloat(pkg.stake_amount) * (pkg?.daily_yield_percentage / 100)).toFixed(2)} EGD</p>
                           </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
               ) : (
                 <Card>

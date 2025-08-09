@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   FaWallet,
@@ -28,8 +28,7 @@ import { formatCurrency, formatNumber, formatDate } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { authApi, setLoading } from '@/store/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import { addDays, format as formatDateFns, differenceInDays, parseISO } from 'date-fns';
-import { format } from 'date-fns';
+import { format as formatDateFns } from 'date-fns';
 import { Mail, Phone, Calendar, Users, ArrowLeftRight, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
@@ -42,15 +41,7 @@ import USDT_ABI from '@/lib/usdt_abi.json';
 import { useWallet } from '@/hooks/WalletContext';
 import { USDT_ADDRESS } from '@/lib/constants';
 
-const packageColorMap: Record<string, string> = {
-  'Daily Ride': '#22c55e', // green
-  'Weekly Pass': '#3b82f6', // blue
-  'Economy Car': '#a78bfa', // purple
-  'Business Fleet': '#f59e42', // orange
-  'Personal EV': '#eab308', // yellow
-  'Luxury Fleet': '#f43f5e', // red
-  'Corporate Mobility Hub': '#06b6d4', // cyan
-};
+
 
 // Update ReferralNode interface to match backend (id: number)
 interface ReferralNode {
@@ -93,6 +84,7 @@ const Dashboard = () => {
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [withdrawError, setWithdrawError] = useState('');
   const adminSettings = useSelector((state: RootState) => state.adminData.admin_settings);
+  const totalTokens = useSelector((state: RootState) => state.adminData.total_tokens);
   const minWithdrawalSetting = adminSettings.find(s => s.title === 'min_withdrawal');
   const maxWithdrawalSetting = adminSettings.find(s => s.title === 'max_withdrawal');
   const minWithdrawal = minWithdrawalSetting ? Number(minWithdrawalSetting.value) : 0;
@@ -379,7 +371,7 @@ const Dashboard = () => {
               <p className="text-xs text-muted-foreground">
                 Total withdrawable amount
               </p>
-              <Button className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white" onClick={() => setWithdrawModalOpen(true)}>
+              <Button className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white" onClick={() => setWithdrawModalOpen(true)} disabled={!user?.benefit_overflow}>
                 Send Withdrawal Request
               </Button>
               <Dialog open={withdrawModalOpen} onOpenChange={setWithdrawModalOpen}>
@@ -453,14 +445,6 @@ const Dashboard = () => {
                           setWithdrawError('Amount exceeds available USDT balance.');
                           return;
                         }
-                        // if (amount < minWithdrawal) {
-                        //   setWithdrawError(`Amount is below the minimum withdrawal amount (${minWithdrawal}).`);
-                        //   return;
-                        // }
-                        // if (amount > maxWithdrawal) {
-                        //   setWithdrawError(`Amount exceeds the maximum withdrawal amount (${maxWithdrawal}).`);
-                        //   return;
-                        // }
                         setWithdrawModalOpen(false);
                         sendWithdrawRequest(amount);
                       }}
@@ -570,7 +554,7 @@ const Dashboard = () => {
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-purple-500" />
                         <span className="font-medium text-gray-600">Registered:</span>
-                        <span className="ml-auto text-gray-900">{created_at ? format(new Date(created_at), 'yyyy-MM-dd') : '-'}</span>
+                        <span className="ml-auto text-gray-900">{created_at ? formatDateFns(new Date(created_at), 'yyyy-MM-dd') : '-'}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <ArrowLeftRight className="w-4 h-4 text-orange-500" />
@@ -625,72 +609,124 @@ const Dashboard = () => {
             <TabsContent value="staking" className="space-y-6">
               {stakingSummary?.length > 0 ? (
                 <div className="space-y-4">
-                  {stakingSummary.map((staking) => {
-                    const stakingProgress = stakingStats.staking_progress.find(p => p.id === staking.id);
-                    const startDate = parseISO(staking.createdAt);
-                    const nowDate = Date.now();
-                    const lockDays = staking.package?.lock_period_days || 0;
-                    const endDate = addDays(startDate, lockDays);
-                    const totalPeriod = differenceInDays(endDate, startDate);
-                    const elapsed = Math.min(differenceInDays(nowDate, startDate), totalPeriod);
-                    const percent = totalPeriod > 0 ? (elapsed / totalPeriod) * 100 : 0;
-                    const barColor = packageColorMap[staking.package?.name || ''] || '#22c55e';
-                    return (
-                      <Card key={staking.id}>
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between mb-4">
+                  {/* Single 300% Progress Bar */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>300% Profit Cap Progress</CardTitle>
+                      <CardDescription>Overall progress toward maximum profit cap</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      {(() => {
+                        // Get package price from admin settings (seed_sale)
+                        const seedSaleToken = totalTokens.find(s => s.title === 'seed_sale');
+                        const packagePrice = seedSaleToken?.price || 0.01;
+                        
+                        // Calculate total profit progress toward 300% cap
+                        const totalProfit = Number(egd_balance) + (Number(withdrawals) / packagePrice);
+                        
+                        // Calculate target profit using only ACTIVE staking packages (300% of active staked amount)
+                        const activeStakingAmount = stakingSummary
+                          .filter(staking => staking.status === 'active' || staking.status === 'free_staking')
+                          .reduce((total, staking) => total + parseFloat(staking.package.stake_amount), 0);
+                        const targetProfit = activeStakingAmount * 3; // 300% of active stakings only
+                        const profitPercent = targetProfit > 0 ? Math.min((totalProfit / targetProfit) * 100, 100) : 0;
+                        
+                        return (
+                          <>
+                            {/* 300% Cap Status */}
+                            {benefit_overflow && (
+                              <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded text-center">
+                                <span className="text-green-700 text-sm font-medium">🎯 300% Cap Reached - Staking Complete!</span>
+                              </div>
+                            )}
+                            
+                            {/* Progress Bar */}
+                            <div className="mb-3 flex items-center justify-between text-sm font-medium text-gray-600">
+                              <span>0%</span>
+                              <span className="text-lg font-bold">{profitPercent.toFixed(1)}%</span>
+                              <span>300% Cap</span>
+                            </div>
+                            <div className="relative h-6 rounded-full bg-gray-200 overflow-hidden mb-3">
+                              <div
+                                className="absolute top-0 left-0 h-6 rounded-full bg-gradient-to-r from-blue-500 to-green-500"
+                                style={{ width: `${profitPercent}%`, transition: 'width 0.5s' }}
+                              ></div>
+                              {/* Current progress marker */}
+                              <div
+                                className="absolute top-0 h-6 w-1 bg-blue-600"
+                                style={{ left: `${profitPercent}%`, transition: 'left 0.5s' }}
+                              ></div>
+                            </div>
+                            
+                            {/* Profit Details */}
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                              <div className="p-3 bg-gray-50 border border-gray-200 rounded">
+                                <div className="text-gray-600 mb-1">Current Profit</div>
+                                <div className="font-semibold text-lg">{totalProfit.toFixed(2)} EGD</div>
+                              </div>
+                              <div className="p-3 bg-gray-50 border border-gray-200 rounded">
+                                <div className="text-gray-600 mb-1">Target (300%)</div>
+                                <div className="font-semibold text-lg">{targetProfit.toFixed(2)} EGD</div>
+                              </div>
+                            </div>
+                            
+                            {/* Breakdown */}
+                            <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded text-xs">
+                              <div className="text-blue-700 mb-2">Profit Breakdown:</div>
+                              <div className="space-y-1">
+                                <div className="flex justify-between">
+                                  <span>EGD Balance:</span>
+                                  <span className="font-medium">{Number(egd_balance).toFixed(2)} EGD</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>USDT Commissions:</span>
+                                  <span className="font-medium">{Number(withdrawals).toFixed(2)} USDT</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>USDT in EGD:</span>
+                                  <span className="font-medium">{(Number(withdrawals) / packagePrice).toFixed(2)} EGD</span>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        );
+                      })()}
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Individual Staking Packages */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {stakingSummary.map(({ id, package: pkg, status, createdAt }) => (
+                      <Card key={id}>
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between mb-3">
                             <div>
-                              <h3 className="font-semibold">{staking.package?.name || 'Staking Package'}</h3>
-                              <p className="text-sm text-muted-foreground">
-                                Started {formatDate(staking.createdAt)}
+                              <h3 className="font-semibold text-sm">{pkg?.name || 'Staking Package'}</h3>
+                              <p className="text-xs text-muted-foreground">
+                                Started {formatDate(createdAt)}
                               </p>
                             </div>
-                            <Badge variant={staking.status === 'active' ? 'default' : 'secondary'}>
-                              {staking.status === "free_staking"? "active": staking.status}
+                            <Badge 
+                              variant={status === 'active' ? 'default' : 'secondary'}
+                              className="text-xs px-2 py-1"
+                            >
+                              {status === "free_staking" ? "active" : status}
                             </Badge>
                           </div>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                            <div>
-                              <p className="text-sm text-muted-foreground">Staked Amount</p>
-                              <p className="font-semibold">{parseFloat(staking.package.stake_amount)} EGD</p>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="text-center p-2 bg-gray-50 rounded">
+                              <p className="text-xs text-muted-foreground">Staked</p>
+                              <p className="font-semibold text-sm">{parseFloat(pkg.stake_amount)} EGD</p>
                             </div>
-                            <div>
-                              <p className="text-sm text-muted-foreground">Daily Yield</p>
-                              <p className="font-semibold">{staking.package?.daily_yield_percentage}%</p>
+                            <div className="text-center p-2 bg-gray-50 rounded">
+                              <p className="text-xs text-muted-foreground">Daily Yield</p>
+                              <p className="font-semibold text-sm">{(parseFloat(pkg.stake_amount) * (pkg?.daily_yield_percentage / 100)).toFixed(2)} EGD</p>
                             </div>
-                            <div>
-                              <p className="text-sm text-muted-foreground">Lock Period</p>
-                              <p className="font-semibold">{staking.package?.lock_period_days} days</p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-muted-foreground">Status</p>
-                              <p className="font-semibold">{staking.status === "free_staking"? "active": staking.status}</p>
-                            </div>
-                          </div>
-                          {/* Progress Bar with Dates */}
-                          <div className="mb-2 flex items-center justify-between text-xs font-medium text-gray-500">
-                            <span>{formatDateFns(startDate, 'yyyy-MM-dd')}</span>
-                            <span>{formatDateFns(endDate, 'yyyy-MM-dd')}</span>
-                          </div>
-                          <div className="relative h-4 rounded-full bg-gray-200 overflow-hidden mb-2">
-                            <div
-                              className="absolute top-0 left-0 h-4 rounded-full"
-                              style={{ width: `${percent}%`, background: barColor, transition: 'width 0.5s' }}
-                            ></div>
-                            {/* Marker for today */}
-                            <div
-                              className="absolute top-0 h-4 w-1 bg-blue-600"
-                              style={{ left: `${percent}%`, transition: 'left 0.5s' }}
-                            ></div>
-                          </div>
-                          <div className="flex justify-between text-xs text-gray-400">
-                            <span>Start</span>
-                            <span>End</span>
                           </div>
                         </CardContent>
                       </Card>
-                    );
-                  })}
+                    ))}
+                  </div>
                 </div>
               ) : (
                 <Card>
