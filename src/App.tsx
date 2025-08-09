@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { authApi } from './store/auth';
 import { AppDispatch } from './store';
+import Maintenance from './pages/Maintenance';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>()
