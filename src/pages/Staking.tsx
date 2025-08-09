@@ -114,7 +114,7 @@ const Staking = () => {
       // Calculate amount (use correct decimals)
       const decimals = 18//await newToken.decimals();
       console.log(decimals);
-      const usdt_amount = parseFloat(pkg.stake_amount) * parseFloat(tokenPrice) / 100;
+      const usdt_amount = parseFloat(pkg.stake_amount) * parseFloat(tokenPrice);
       console.log(usdt_amount);
       
       const amount = ethers.parseUnits(usdt_amount.toString(), decimals);
