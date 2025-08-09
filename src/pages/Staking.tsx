@@ -14,10 +14,10 @@ import { StakingPackage } from '@/types/landing';
 import { useWallet } from '@/hooks/WalletContext';
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
-import USDT_ABI from "@/lib/usdt_abi.json"; // Replace with your actual ABI/address
+// import USDT_ABI from "@/lib/usdt_abi.json"; // Replace with your actual ABI/address
 import { authApi } from '@/store/auth';
 import { getStakingStats } from '@/lib/staking';
-import { USDT_ADDRESS } from '@/lib/constants';
+import { USDT_ADDRESS, USDT_ABI } from '@/lib/constants';
 
 // Interface for pending staking transaction
 interface PendingStaking {
@@ -81,33 +81,51 @@ const Staking = () => {
   const handleStartStaking = async (pkg: StakingPackage) => {
     try {
       setIsStaking(true);
-      
+
       // Check if wallet is connected
       if (!isConnected) {
         toast.info('Please connect your wallet first');
         await connectWallet(user.wallet_address);
         return;
       }
-
+      
       // Validate that the connected wallet matches the user's wallet address
       if (!isCorrectWallet(user.wallet_address)) {
         toast.error(`Please connect the correct wallet address: ${user.wallet_address.slice(0, 6)}...${user.wallet_address.slice(-4)}`);
         return;
       }
 
+      const { ethereum } = window as any;
+      const chainId = await ethereum.request({ method: 'eth_chainId' });
+      if (chainId !== '0x38') { // 56 in decimal
+        // toast.error('Please switch to Binance Smart Chain Mainnet');
+        await ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x38' }]
+        });
+        // return;
+      }
+      
       const web3Provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await web3Provider.getSigner();
+
       const newToken = new ethers.Contract(USDT_ADDRESS, USDT_ABI, signer);
+      
       // Calculate amount (use correct decimals)
-      const decimals = await newToken.decimals();
-      const usdt_amount = parseFloat(pkg.stake_amount) * parseFloat(tokenPrice);
+      const decimals = 18//await newToken.decimals();
+      console.log(decimals);
+      const usdt_amount = parseFloat(pkg.stake_amount) * parseFloat(tokenPrice) / 100;
+      console.log(usdt_amount);
+      
       const amount = ethers.parseUnits(usdt_amount.toString(), decimals);
       // Send token to staking contract/platform
       const tx = await newToken.transfer(platformReceiver, amount);
       toast.warn('Waiting for transaction confirmation...');
+      
       const receipt = await tx.wait();
       toast.success(usdt_amount + ' USDT sent to platform successfully!');
-      
+      console.log(receipt);
+
       // Store pending staking data instead of immediately calling API
       const pendingStakingData: PendingStaking = {
         txHash: receipt.hash,
@@ -117,11 +135,13 @@ const Staking = () => {
         amount: pkg.stake_amount,
         timestamp: Date.now()
       };
-      
+
       setPendingStaking(pendingStakingData);
       toast.info('Transaction confirmed! Please click "Confirm Staking" to complete the process.');
-      
+
     } catch (err: any) {
+      console.log(err);
+      
       toast.error('Staking failed.');
     } finally {
       setIsStaking(false);
@@ -130,6 +150,7 @@ const Staking = () => {
 
   const handleConfirmStaking = async () => {
     if (!pendingStaking) return;
+    console.log(pendingStaking);
     
     try {
       dispatch(authApi.stakingRequest(pendingStaking.txHash, pendingStaking.packageId, pendingStaking.userId));
@@ -358,7 +379,7 @@ const Staking = () => {
                               {staking.status === 'completed' && <FaCheckCircle className="h-5 w-5 text-green-600" title="Completed" />}
                               <h3 className="text-xl font-semibold">{staking.package?.name || 'Staking Package'}</h3>
                             </div>
-                            <Badge className={getStatusColor(staking.status)}>{staking.status === "free_staking"? "active": staking.status}</Badge>
+                            <Badge className={getStatusColor(staking.status)}>{staking.status === "free_staking" ? "active" : staking.status}</Badge>
                           </div>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                             <div>
