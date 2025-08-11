@@ -29,7 +29,7 @@ import { useNavigate } from 'react-router-dom';
 import { authApi, setLoading } from '@/store/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { format as formatDateFns } from 'date-fns';
-import { Mail, Phone, Calendar, Users, ArrowLeftRight, UserPlus } from 'lucide-react';
+import { Mail, Phone, Calendar, Users, ArrowLeftRight, UserPlus, PackagePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -463,7 +463,7 @@ const Dashboard = () => {
               <FaLock className="h-4 w-4 text-purple-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stakingStats.total_staking_amount} EGD</div>
+              <div className="text-2xl font-bold">{stakingStats.total_staking_amount} USDT</div>
               <p className="text-xs text-muted-foreground">
                 Across {stakingSummary?.length || 0} stakings
               </p>
@@ -620,17 +620,17 @@ const Dashboard = () => {
                         // Get package price from admin settings (seed_sale)
                         const seedSaleToken = totalTokens.find(s => s.title === 'seed_sale');
                         const packagePrice = seedSaleToken?.price || 0.01;
-                        
+
                         // Calculate total profit progress toward 300% cap
                         const totalProfit = Number(egd_balance) + (Number(withdrawals) / packagePrice);
-                        
+
                         // Calculate target profit using only ACTIVE staking packages (300% of active staked amount)
                         const activeStakingAmount = stakingSummary
                           .filter(staking => staking.status === 'active' || staking.status === 'free_staking')
                           .reduce((total, staking) => total + parseFloat(staking.package.stake_amount), 0);
                         const targetProfit = activeStakingAmount * 3; // 300% of active stakings only
                         const profitPercent = targetProfit > 0 ? Math.min((totalProfit / targetProfit) * 100, 100) : 0;
-                        
+
                         return (
                           <>
                             {/* 300% Cap Status */}
@@ -639,7 +639,7 @@ const Dashboard = () => {
                                 <span className="text-green-700 text-sm font-medium">🎯 300% Cap Reached - Staking Complete!</span>
                               </div>
                             )}
-                            
+
                             {/* Progress Bar */}
                             <div className="mb-3 flex items-center justify-between text-sm font-medium text-gray-600">
                               <span>0%</span>
@@ -657,19 +657,19 @@ const Dashboard = () => {
                                 style={{ left: `${profitPercent}%`, transition: 'left 0.5s' }}
                               ></div>
                             </div>
-                            
+
                             {/* Profit Details */}
                             <div className="grid grid-cols-2 gap-4 text-sm">
                               <div className="p-3 bg-gray-50 border border-gray-200 rounded">
                                 <div className="text-gray-600 mb-1">Current Profit</div>
-                                <div className="font-semibold text-lg">{totalProfit.toFixed(2)} EGD</div>
+                                <div className="font-semibold text-lg">{(totalProfit * packagePrice).toFixed(2)} USDT</div>
                               </div>
                               <div className="p-3 bg-gray-50 border border-gray-200 rounded">
                                 <div className="text-gray-600 mb-1">Target (300%)</div>
-                                <div className="font-semibold text-lg">{targetProfit.toFixed(2)} EGD</div>
+                                <div className="font-semibold text-lg">{(targetProfit * packagePrice).toFixed(2)} USDT</div>
                               </div>
                             </div>
-                            
+
                             {/* Breakdown */}
                             <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded text-xs">
                               <div className="text-blue-700 mb-2">Profit Breakdown:</div>
@@ -693,7 +693,7 @@ const Dashboard = () => {
                       })()}
                     </CardContent>
                   </Card>
-                  
+
                   {/* Individual Staking Packages */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {stakingSummary.map(({ id, package: pkg, status, createdAt }) => (
@@ -706,7 +706,7 @@ const Dashboard = () => {
                                 Started {formatDate(createdAt)}
                               </p>
                             </div>
-                            <Badge 
+                            <Badge
                               variant={status === 'active' ? 'default' : 'secondary'}
                               className="text-xs px-2 py-1"
                             >
