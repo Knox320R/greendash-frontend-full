@@ -371,7 +371,7 @@ const Dashboard = () => {
               <p className="text-xs text-muted-foreground">
                 Total withdrawable amount
               </p>
-              <Button className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white" onClick={() => setWithdrawModalOpen(true)} disabled={!user?.benefit_overflow}>
+              <Button className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white" onClick={() => setWithdrawModalOpen(true)} >
                 Send Withdrawal Request
               </Button>
               <Dialog open={withdrawModalOpen} onOpenChange={setWithdrawModalOpen}>

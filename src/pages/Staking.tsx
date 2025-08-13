@@ -14,12 +14,10 @@ import { StakingPackage } from '@/types/landing';
 import { useWallet } from '@/hooks/WalletContext';
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
-// import USDT_ABI from "@/lib/usdt_abi.json"; // Replace with your actual ABI/address
 import { authApi } from '@/store/auth';
 import { getStakingStats } from '@/lib/staking';
 import { USDT_ADDRESS, USDT_ABI } from '@/lib/constants';
 
-// Interface for pending staking transaction
 interface PendingStaking {
   txHash: string;
   packageId: number;
@@ -37,8 +35,9 @@ const Staking = () => {
   const adminData = useSelector((state: RootState) => state.adminData);
   const stakingPackages = adminData.staking_packages;
   const adminSettings = adminData.admin_settings;
+  const totalTokens = adminData.total_tokens;
   const tokenPrice = adminSettings.find(s => s.title === 'token_price')?.value || '0.01';
-  const platformReceiver = adminSettings.find(s => s.title === 'platform_wallet_address')?.value || "0x000000000000000" // '0x0D80C0513D48579c38e45D60a39D93E7cF87273b';
+  const platformReceiver = adminSettings.find(s => s.title === 'platform_wallet_address')?.value || "0x000000000000000";
   const [activeTab, setActiveTab] = useState('packages');
   const [isStaking, setIsStaking] = useState(false);
   const [pendingStaking, setPendingStaking] = useState<PendingStaking | null>(null);
@@ -50,13 +49,11 @@ const Staking = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  // Load pending staking from localStorage on component mount
   useEffect(() => {
     const savedPendingStaking = localStorage.getItem(`pendingStaking_${user.id}`);
     if (savedPendingStaking) {
       try {
         const parsed = JSON.parse(savedPendingStaking);
-        // Check if the pending staking is not too old (24 hours)
         const isNotExpired = Date.now() - parsed.timestamp < 24 * 60 * 60 * 1000;
         if (isNotExpired) {
           setPendingStaking(parsed);
@@ -69,7 +66,6 @@ const Staking = () => {
     }
   }, [user.id]);
 
-  // Save pending staking to localStorage whenever it changes
   useEffect(() => {
     if (pendingStaking) {
       localStorage.setItem(`pendingStaking_${user.id}`, JSON.stringify(pendingStaking));
@@ -82,14 +78,12 @@ const Staking = () => {
     try {
       setIsStaking(true);
 
-      // Check if wallet is connected
       if (!isConnected) {
         toast.info('Please connect your wallet first');
         await connectWallet(user.wallet_address);
         return;
       }
       
-      // Validate that the connected wallet matches the user's wallet address
       if (!isCorrectWallet(user.wallet_address)) {
         toast.error(`Please connect the correct wallet address: ${user.wallet_address.slice(0, 6)}...${user.wallet_address.slice(-4)}`);
         return;
@@ -97,13 +91,11 @@ const Staking = () => {
 
       const { ethereum } = window as any;
       const chainId = await ethereum.request({ method: 'eth_chainId' });
-      if (chainId !== '0x38') { // 56 in decimal
-        // toast.error('Please switch to Binance Smart Chain Mainnet');
+      if (chainId !== '0x38') {
         await ethereum.request({
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: '0x38' }]
         });
-        // return;
       }
       
       const web3Provider = new ethers.BrowserProvider(window.ethereum);
@@ -111,22 +103,16 @@ const Staking = () => {
 
       const newToken = new ethers.Contract(USDT_ADDRESS, USDT_ABI, signer);
       
-      // Calculate amount (use correct decimals)
-      const decimals = 18//await newToken.decimals();
-      console.log(decimals);
+      const decimals = 18;
       const usdt_amount = parseFloat(pkg.stake_amount) * parseFloat(tokenPrice);
-      console.log(usdt_amount);
       
       const amount = ethers.parseUnits(usdt_amount.toString(), decimals);
-      // Send token to staking contract/platform
       const tx = await newToken.transfer(platformReceiver, amount);
       toast.warn('Waiting for transaction confirmation...');
       
       const receipt = await tx.wait();
       toast.success(usdt_amount + ' USDT sent to platform successfully!');
-      console.log(receipt);
 
-      // Store pending staking data instead of immediately calling API
       const pendingStakingData: PendingStaking = {
         txHash: receipt.hash,
         packageId: pkg.id,
@@ -141,7 +127,6 @@ const Staking = () => {
 
     } catch (err: any) {
       console.log(err);
-      
       toast.error('Staking failed.');
     } finally {
       setIsStaking(false);
@@ -150,7 +135,6 @@ const Staking = () => {
 
   const handleConfirmStaking = async () => {
     if (!pendingStaking) return;
-    console.log(pendingStaking);
     
     try {
       dispatch(authApi.stakingRequest(pendingStaking.txHash, pendingStaking.packageId, pendingStaking.userId));
@@ -164,13 +148,6 @@ const Staking = () => {
   const clearPendingStaking = () => {
     setPendingStaking(null);
     toast.info('Pending staking cleared.');
-  };
-
-  const calculateDailyReward = (amount: string, rate: number) => {
-    return (parseFloat(amount) * rate) / 100;
-  };
-  const calculateTotalReward = (amount: string, rate: number, days: number) => {
-    return (parseFloat(amount) * rate * days) / 100;
   };
 
   const getStatusColor = (status: string) => {
@@ -203,7 +180,7 @@ const Staking = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Staking</h1>
           <div className="text-gray-600 mt-2 w-full gap-8 flex-wrap  justify-between flex">
-            <span>  Lock your tokens and earn daily rewards </span>
+            <span>Lock your tokens and earn daily rewards</span>
           </div>
           {pendingStaking && (
             <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
@@ -237,6 +214,7 @@ const Staking = () => {
             </div>
           )}
         </motion.div>
+
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -256,9 +234,7 @@ const Staking = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stakingStats.active_staking_number}</div>
-              <p className="text-xs text-muted-foreground">
-                Currently locked
-              </p>
+              <p className="text-xs text-muted-foreground">Currently locked</p>
             </CardContent>
           </Card>
 
@@ -271,14 +247,11 @@ const Staking = () => {
               <div className="text-2xl font-bold">
                 {formatNumber(stakingStats.total_staking_amount)} EGD
               </div>
-              <p className="text-xs text-muted-foreground">
-                From all stakings
-              </p>
+              <p className="text-xs text-muted-foreground">From all stakings</p>
             </CardContent>
           </Card>
         </motion.div>
 
-        {/* Main Content Tabs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -301,22 +274,18 @@ const Staking = () => {
                       </CardTitle>
                       <CardDescription>{pkg.description}</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-10">
+                    <CardContent className="space-y-6">
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                           <p className="text-muted-foreground">Daily Reward</p>
                           <p className="font-semibold text-green-600">{pkg.daily_yield_percentage}%</p>
                         </div>
                         <div>
-                          <p className="text-muted-foreground">Lock Period</p>
-                          <p className="font-semibold">{pkg.lock_period_days} days</p>
+                          <p className="text-muted-foreground">Stake Amount</p>
+                          <p className="font-semibold">{Number(pkg.stake_amount)} EGD</p>
                         </div>
                       </div>
                       <div className="bg-gray-50 p-3 rounded-lg">
-                        <div className="flex items-center gap-2 mb-2">
-                          <FaCalculator className="h-4 w-4 text-gray-600" />
-                          <span className="text-sm font-medium">Stake Amount: {Number(pkg.stake_amount)} EGD</span>
-                        </div>
                         <div className="flex items-center gap-2 mb-2">
                           <FaWallet className="h-4 w-4 text-blue-600" />
                           <span className="text-sm font-semibold text-blue-700">Required: {Number(pkg.stake_amount) * Number(tokenPrice)} USDT</span>
@@ -324,21 +293,16 @@ const Staking = () => {
                         <div className="text-sm space-y-1">
                           <div className="flex justify-between">
                             <span>Daily Reward:</span>
-                            <span className="font-medium">{formatNumber(calculateDailyReward(pkg.stake_amount, pkg.daily_yield_percentage))} EGD</span>
+                            <span className="font-medium">{formatNumber((parseFloat(pkg.stake_amount) * pkg.daily_yield_percentage / 100))} EGD</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>Total Reward:</span>
-                            <span className="font-medium">{formatNumber(calculateTotalReward(pkg.stake_amount, pkg.daily_yield_percentage, pkg.lock_period_days))} EGD</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Unlock Date:</span>
-                            <span className="font-medium">{formatDate(new Date(Date.now() + pkg.lock_period_days * 24 * 60 * 60 * 1000).toISOString())}</span>
+                            <span>Max Profit (300%):</span>
+                            <span className="font-medium">{formatNumber(parseFloat(pkg.stake_amount) * 3)} EGD</span>
                           </div>
                         </div>
                       </div>
                       <Button className="w-full" onClick={() => handleStartStaking(pkg)} disabled={isStaking}>
-                        {isStaking ? (<><div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>Staking...</>) : 'Stake'}
-                      </Button>
+                        {isStaking ? (<><div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>Staking...</>) : 'Stake'}</Button>
                     </CardContent>
                   </Card>
                 ))}
@@ -346,7 +310,6 @@ const Staking = () => {
             </TabsContent>
 
             <TabsContent value="my-stakings" className="space-y-6">
-              {/* Filter Dropdown */}
               <div className="mb-4 flex items-center gap-2">
                 <label htmlFor="staking-filter" className="text-sm font-medium">Filter:</label>
                 <select id="staking-filter" className="border rounded px-2 py-1" value={stakingFilter} onChange={e => setStakingFilter(e.target.value)}>
@@ -355,7 +318,53 @@ const Staking = () => {
                   <option value="completed">Completed</option>
                 </select>
               </div>
-              {/* Staking Cards */}
+
+              {/* Overall 300% Profit Cap Progress */}
+              <Card className="mb-6">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-semibold text-sm">300% Profit Cap Progress</h3>
+                    <Badge variant="outline" className="text-xs">
+                      {(() => {
+                        const seedSaleToken = totalTokens?.find(s => s.title === 'seed_sale');
+                        const packagePrice = seedSaleToken?.price || 0.01;
+                        const totalProfit = Number(user?.egd_balance || 0) + (Number(user?.withdrawals || 0) / packagePrice);
+                        const activeStakingAmount = staking_list
+                          .filter(staking => staking.status === 'active' || staking.status === 'free_staking')
+                          .reduce((total, staking) => total + parseFloat(staking.package.stake_amount), 0);
+                        const targetProfit = activeStakingAmount * 3;
+                        return targetProfit > 0 ? ((totalProfit / targetProfit) * 100).toFixed(1) : '0.0';
+                      })()}%
+                    </Badge>
+                  </div>
+                  <Progress
+                    value={(() => {
+                      const seedSaleToken = totalTokens?.find(s => s.title === 'seed_sale');
+                      const packagePrice = seedSaleToken?.price || 0.01;
+                      const totalProfit = Number(user?.egd_balance || 0) + (Number(user?.withdrawals || 0) / packagePrice);
+                      const activeStakingAmount = staking_list
+                        .filter(staking => staking.status === 'active' || staking.status === 'free_staking')
+                        .reduce((total, staking) => total + parseFloat(staking.package.stake_amount), 0);
+                      const targetProfit = activeStakingAmount * 3;
+                      return targetProfit > 0 ? Math.min(100, (totalProfit / targetProfit) * 100) : 0;
+                    })()}
+                    className="h-2"
+                  />
+                  <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                    <span>Current: {(() => {
+                      const seedSaleToken = totalTokens?.find(s => s.title === 'seed_sale');
+                      const packagePrice = seedSaleToken?.price || 0.01;
+                      const totalProfit = Number(user?.egd_balance || 0) + (Number(user?.withdrawals || 0) / packagePrice);
+                      const activeStakingAmount = staking_list
+                        .filter(staking => staking.status === 'active' || staking.status === 'free_staking')
+                        .reduce((total, staking) => total + parseFloat(staking.package.stake_amount), 0);
+                      return activeStakingAmount > 0 ? ((totalProfit / activeStakingAmount) * 100).toFixed(1) : '0.0';
+                    })()}%</span>
+                    <span>Target: 300%</span>
+                  </div>
+                </CardContent>
+              </Card>
+
               {stakingLoading ? (
                 <div className="text-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
