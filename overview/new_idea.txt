@@ -1,0 +1,301 @@
+**Project Name:**
+🚀 GreenDash – Sustainable Mobility, Decentralized
+
+---
+
+## 🎯 Overall Requirements
+
+✅ **Retain every detail from the provided summary, do not eliminate or rephrase content.**
+✅ **Embed smooth animations for every item in each section:**
+
+* Vary **animation direction (left, right, up, down, fade, scale) for each item.**
+* Use **slow durations (1.5s–3s)** for premium feel.
+* Stagger animations for item-by-item reveal.
+
+✅ **Add hover effects on every item**:
+
+* Slight scale-up (1.02x).
+* Smooth color or shadow glow aligned with GreenDash’s eco-theme (green glow on hover).
+* Cursor changes to pointer on hover.
+* Smooth transition (0.3s–0.5s) on hover.
+
+✅ Use **eco-friendly colors (green, white, dark gray) with modern typography.**
+
+✅ **Insert CTA buttons after critical sections with hover glow animation.**
+
+---
+
+## 📌 Sections to Generate (DO NOT REMOVE ANY DETAIL)
+
+### 1️⃣ Hero Section
+
+* Headline:
+
+  > “🚀 Ride, Earn, Stake – Transform Urban Mobility with GreenDash”
+
+* Subheadline:
+
+  > “How much would you have earned in 2024 if you had received \$0.01 for every Uber ride completed that year?”
+
+* CTA: \[Invest Now] (animated pulse on hover, slow fade-in)
+
+* Background: Animated hero video or clean image of electric vehicles in city streets, with slow parallax scroll.
+
+---
+
+### 2️⃣ Market Opportunity Section
+
+Content:
+
+* 🚀 Total Earnings if earning \$0.01 per Uber ride in 2024:
+
+  * Daily: \$300,000
+  * Monthly: \$9,000,000
+  * Annually: \$109,500,000
+
+* Text:
+
+  > “This is the size of the market!”
+
+**Animation:**
+
+* Title fade-in up (2s).
+* Each bullet point slides in from a different direction with 2.5s duration.
+* Hover: Each bullet scales up slightly with a green glow.
+
+---
+
+### 3️⃣ What is GreenDash?
+
+> “eGreenDash is a platform that revolutionizes urban mobility. Our system is decentralized, where drivers earn more, passengers pay less, and we guarantee a positive environmental impact.”
+
+**Animation:**
+
+* Slow fade-in (2.5s).
+* Hover: Green underline animation on hover.
+
+---
+
+### 4️⃣ Project Pillars Section
+
+✅ Drivers earn more: Drivers keep 90% of the earnings from each ride.
+✅ Passengers pay less: Ride costs are up to 20% cheaper.
+✅ Sustainability: Exclusive use of electric cars, reducing carbon emissions.
+
+**Animation:**
+
+* Each pillar block animates in with a different direction (left, right, bottom) with 2s–2.5s duration.
+* Hover: Subtle shadow and scale-up glow effect.
+
+---
+
+### 5️⃣ Direct Comparison with Uber
+
+| Criteria       | eGreenDash             | Uber                    |
+| -------------- | ---------------------- | ----------------------- |
+| Driver Fee     | 10%                    | 20%-30% (up to 3x more) |
+| Profit Sharing | Yes, for token holders | No                      |
+| Sustainability | Use of electric cars   | No clear focus          |
+| Governance     | Decentralized          | Centralized             |
+| Passenger Cost | Up to 20% cheaper      | High fares              |
+
+> “The eGreenDash model offers lower fees for drivers and affordable fares for passengers. Unlike other platforms, everyone can profit from its growth.”
+
+**Animation:**
+
+* Table rows fade in sequentially with 2s duration each.
+* Hover: Row highlights with a green glow and slight lift.
+
+---
+
+### 6️⃣ Growth Opportunity Section
+
+Content:
+
+* 🚗 Uber MarketCap reach \$170 billion in 2025.
+* 📊 35 million rides per day, 12 billion rides per year.
+* 💡 When eGreenDash captures only 1% of this market, it will already be a billion-dollar business.
+
+**Animation:**
+
+* Each point slides in from alternating directions with 2.5s duration.
+* Hover: Scale glow on icons.
+
+---
+
+### 7️⃣ Growth Comparison Section
+
+> If a person had invested \$100 in Uber in 2009 at \$0.01, they would have 10,000 tokens. With Uber’s MarketCap at \$170 billion today, that investment would now be \$1,700,000, representing a 1,700,000% increase.
+
+> 💡 eGreenDash follows a similar model but with competitive advantages such as sustainable mobility and profit-sharing.
+
+⚠️ *Disclaimer: Simulation based on Uber’s history. Past results do not guarantee future returns. Token success depends on the market, regulations, and project growth.*
+
+**Animation:**
+
+* Slow fade-in, then slight zoom reveal (2s).
+* Hover: Text highlight glow.
+
+---
+
+### 8️⃣ Cashback System Section
+
+> All earnings in eGreenDash are based on Cashback rewards paid in USDT. Here’s how each type works:
+
+**Items:**
+1️⃣ Direct Cashback
+
+* Earn 10% from direct referrals.
+* Example: Refer \$1,000, earn \$100 USDT.
+
+2️⃣ Network Cashback
+
+* Earn on 5 levels:
+
+  * L1: 5%
+  * L2: 3%
+  * L3: 2%
+  * L4: 1%
+  * L5: 0.5%
+* Example: L1 generates \$10,000, you earn \$500.
+
+3️⃣ Universal Cashback
+
+* 10% of all platform investment fees shared among EGD holders.
+* Example: \$1M in fees = \$100K shared.
+
+4️⃣ Performance Cashback
+
+* Weekly: \$10K = \$100, \$50K = \$500
+* Monthly: \$100K = \$1,000
+* Example: Manage \$100K in a month to qualify.
+
+5️⃣ Viral Cashback
+
+* Level 1: 5 refs = \$50, 10 refs = \$100
+* Level 2: 5 refs = \$25, 10 refs = \$50
+* Example: Alex invites 10, you earn \$100. His ref invites 10, you earn \$50.
+
+💡 All cashback rewards are paid in USDT for stability.
+
+**Animation:**
+
+* Each cashback type slides in from different directions with 2s–3s duration.
+* Hover: Card glow + subtle icon bounce.
+
+---
+
+### 9️⃣ Staking Investment Packages Section
+
+Table:
+
+| Package Name   | Investment | Tokens Received | Daily Return |
+| -------------- | ---------- | --------------- | ------------ |
+| Starter Drive  | \$100      | 10,000          | 0.1%         |
+| Basic Drive    | \$500      | 50,000          | 0.15%        |
+| Standard Drive | \$1,000    | 100,000         | 0.2%         |
+| Advanced Drive | \$5,000    | 500,000         | 0.25%        |
+| Pro Drive      | \$10,000   | 1,000,000       | 0.3%         |
+| Elite Drive    | \$50,000   | 5,000,000       | 0.4%         |
+| Fleet Master   | \$100,000  | 10,000,000      | 0.5%         |
+
+⚠️ EGD launch price: \$0.01. Staking earnings in EGD tokens; cashback in USDT.
+
+**Animation:**
+
+* Table rows fade up with 2s–2.5s.
+* Hover: Row lift + green border glow.
+
+---
+
+### 🔟 Affiliate Ranks and Rewards Section
+
+| Rank     | Volume (Weak Leg) | Reward                      |
+| -------- | ----------------- | --------------------------- |
+| Bronze   | \$10,000          | \$500                       |
+| Silver   | \$50,000          | \$2,500 / iPhone 16 Pro Max |
+| Gold     | \$100,000         | \$5,000 / Int’l Trip        |
+| Platinum | \$250,000         | \$12,500 / Luxury Trip      |
+| Diamond  | \$500,000         | \$25,000 / BYD Dolphin Mini |
+| Ruby     | \$750,000         | \$37,500 / BYD Dolphin      |
+| Emerald  | \$1,000,000       | BYD Yuan Plus + \$5,000     |
+| Sapphire | \$1,500,000       | BYD Seal + \$7,000          |
+| Titanium | \$2,000,000       | \$100,000 / BYD Tang        |
+
+*Volume from weaker leg ensures balanced, sustainable growth.*
+
+**Animation:**
+
+* Each row slides in from different directions, 2s–2.5s.
+* Hover: Row glow + slight lift.
+
+---
+
+### 1️⃣1️⃣ Project Roadmap Section
+
+**Phase 1: Token Launch (\$0.01/token)**
+
+* Build engaged community.
+
+**Phase 2: Electric Vehicle Fleet**
+
+* Deploy EV fleet.
+
+**Phase 3: App Launch & Pilot Cities**
+
+* Launch app, refine via feedback.
+
+**Phase 4: Expansion & Partnerships**
+
+* Scale to new cities, form EV partnerships.
+
+**Phase 5: Full Integration & Profit Distribution**
+
+* Global expansion and profit-sharing for token holders.
+
+**Animation:**
+
+* Each phase card slides in with different directions, 2.5s–3s.
+* Hover: Card glow and gentle floating effect.
+
+---
+
+### 1️⃣2️⃣ Conclusion Section
+
+> **Be Part of the Future of Mobility**
+
+GreenDash offers a unique opportunity to participate in transforming urban transportation with decentralization, electric vehicles, and a fair earnings structure.
+
+✅ Earn from every transaction
+✅ Invest in a sustainable system
+✅ Help revolutionize urban mobility
+
+🚀 **Invest now! Start earning with a system that values sustainability, efficiency, and financial well-being for all.**
+
+CTA: \[Join GreenDash Now] (animated pulse + glow on hover)
+
+---
+
+## ✨ Footer Section
+
+* Social media links with hover glow.
+* Token disclaimers.
+* Newsletter sign-up with slow fade-in on scroll.
+
+---
+
+## 🖌️ Design Consistency
+
+✅ Modern typography with bold headers.
+✅ Green, white, and charcoal palette.
+✅ Subtle background animations (floating leaf/EV elements).
+✅ Parallax sections for depth.
+✅ Conversion-focused CTA positioning.
+
+---
+
+## ✅ Final Instructions for Lovable.dev:
+
+**Use this prompt to generate a fully sectioned, animation-embedded, hover-enhanced landing page for GreenDash, ensuring every provided detail is included exactly, with no omissions, and optimized for user engagement and conversions.**
+
+---

@@ -35,7 +35,7 @@ const Profile = () => {
 
   const user = useSelector((store: RootState) => store.auth.user) as User | null;
   const user_base_data = useSelector((store: RootState) => store.auth.user_base_data) as UserBaseData | null;
-  const stakingStats = getStakingStats(user_base_data?.recent_Stakings || []);
+  const stakingStats = getStakingStats(user_base_data?.recent_stakings ? user_base_data.recent_stakings : []);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
