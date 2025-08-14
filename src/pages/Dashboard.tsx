@@ -123,7 +123,7 @@ const Dashboard = () => {
   const { id, name, email, referral_code, is_admin, phone, wallet_address, egd_balance, withdrawals, referred_by, parent_leg, left_volume, right_volume, rank_goal, created_at, benefit_overflow } = user
 
   // Staking summary
-  const stakingSummary = user_base_data?.recent_staking ? [user_base_data.recent_staking] : [];
+  const stakingSummary = user_base_data?.recent_stakings ? user_base_data.recent_stakings : [];
   const stakingStats = getStakingStats(stakingSummary);
   const referralNetwork = user_base_data?.referral_network || [];
 
@@ -309,7 +309,7 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
         >
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -481,18 +481,6 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Staking Amount</CardTitle>
-              <FaBolt className="h-4 w-4 text-green-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">{(stakingStats.active_staking_amount * 0.01).toFixed(2)} USDT</div>
-              <p className="text-xs text-muted-foreground">
-                Currently Staking Amount
-              </p>
-            </CardContent>
-          </Card>
         </motion.div>
 
         {/* Staking Progress */}

@@ -30,7 +30,7 @@ interface PendingStaking {
 
 const Staking = () => {
   const { user, user_base_data, staking_progress } = useAuth();
-  const staking_list = user_base_data?.recent_staking ? [user_base_data.recent_staking] : [];
+  const staking_list = user_base_data?.recent_stakings ? user_base_data.recent_stakings : [];
   const stakingStats = getStakingStats(staking_list);
   const stakingLoading = false;
   const adminData = useSelector((state: RootState) => state.adminData);
@@ -218,7 +218,7 @@ const Staking = () => {
           )}
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Your EGD Balance</CardTitle>
@@ -227,17 +227,6 @@ const Staking = () => {
             <CardContent>
               <div className="text-2xl font-bold">{(user?.egd_balance).toFixed(2) || 0}</div>
               <p className="text-xs text-muted-foreground">Available for staking</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Stakings</CardTitle>
-              <FaLock className="h-4 w-4 text-green-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stakingStats.active_staking_number}</div>
-              <p className="text-xs text-muted-foreground">Currently locked</p>
             </CardContent>
           </Card>
 
@@ -259,7 +248,7 @@ const Staking = () => {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="packages">Staking Packages</TabsTrigger>
-              <TabsTrigger value="my-stakings">My Stakings</TabsTrigger>
+              <TabsTrigger value="my-stakings">My Staking</TabsTrigger>
             </TabsList>
 
             <TabsContent value="packages" className="space-y-6">

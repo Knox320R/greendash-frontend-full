@@ -31,7 +31,7 @@ export interface LoginResponse {
   export interface UserBaseData {
     upline_users: UplineUserEntry[];
     referral_network: ReferralNode[];
-    recent_staking: Staking;
+    recent_stakings: Staking[];
     recent_transactions: Transaction[];
     recent_withdrawals: Withdrawal[];
   }
