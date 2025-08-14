@@ -29,7 +29,7 @@ interface PendingStaking {
 
 const Staking = () => {
   const { user, user_base_data } = useAuth();
-  const staking_list = user_base_data?.recent_Stakings || [];
+  const staking_list = user_base_data?.recent_staking ? [user_base_data.recent_staking] : [];
   const stakingStats = getStakingStats(staking_list);
   const stakingLoading = false;
   const adminData = useSelector((state: RootState) => state.adminData);
@@ -215,7 +215,7 @@ const Staking = () => {
           )}
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Your EGD Balance</CardTitle>
@@ -250,13 +250,9 @@ const Staking = () => {
               <p className="text-xs text-muted-foreground">From all stakings</p>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
+        <div>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="packages">Staking Packages</TabsTrigger>
@@ -371,37 +367,12 @@ const Staking = () => {
                   <p className="mt-2 text-gray-600">Loading your stakings...</p>
                 </div>
               ) : filteredStakings.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {filteredStakings.map(({ id, package: pkg, status, createdAt }) => (
-                    <Card key={id}>
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <div>
-                            <h3 className="font-semibold text-sm">{pkg?.name || 'Staking Package'}</h3>
-                            <p className="text-xs text-muted-foreground">
-                              Started {formatDate(createdAt)}
-                            </p>
-                          </div>
-                          <Badge 
-                            className={getStatusColor(status)}
-                            variant={status === 'active' ? 'default' : 'secondary'}
-                          >
-                            {status === "free_staking" ? "active" : status}
-                          </Badge>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="text-center p-2 bg-gray-50 rounded">
-                            <p className="text-xs text-muted-foreground">Staked</p>
-                            <p className="font-semibold text-sm">{parseFloat(pkg.stake_amount)} EGD</p>
-                          </div>
-                          <div className="text-center p-2 bg-gray-50 rounded">
-                            <p className="text-xs text-muted-foreground">Daily Yield</p>
-                            <p className="font-semibold text-sm">{(parseFloat(pkg.stake_amount) * (pkg?.daily_yield_percentage / 100)).toFixed(2)} EGD</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                <div className="text-center py-8">
+                  <FaCheckCircle className="h-12 w-12 text-green-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">Active Staking Found</h3>
+                  <p className="text-muted-foreground mb-4">
+                    You have {filteredStakings.length} active staking(s)
+                  </p>
                 </div>
               ) : (
                 <Card>
@@ -420,7 +391,7 @@ const Staking = () => {
               )}
             </TabsContent>
           </Tabs>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

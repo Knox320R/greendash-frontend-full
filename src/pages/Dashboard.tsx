@@ -122,7 +122,7 @@ const Dashboard = () => {
   const { id, name, email, referral_code, is_admin, phone, wallet_address, egd_balance, withdrawals, referred_by, parent_leg, left_volume, right_volume, rank_goal, created_at, benefit_overflow } = user
 
   // Staking summary
-  const stakingSummary = user_base_data?.recent_Stakings || [];
+  const stakingSummary = user_base_data?.recent_staking ? [user_base_data.recent_staking] : [];
   const stakingStats = getStakingStats(stakingSummary);
   const referralNetwork = user_base_data?.referral_network || [];
 
@@ -463,7 +463,7 @@ const Dashboard = () => {
               <FaLock className="h-4 w-4 text-purple-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stakingStats.total_staking_amount} EGD</div>
+              <div className="text-2xl font-bold">{(stakingStats.total_staking_amount * 0.01).toFixed(2)} USDT</div>
               <p className="text-xs text-muted-foreground">
                 Across {stakingSummary?.length || 0} stakings
               </p>
@@ -486,7 +486,7 @@ const Dashboard = () => {
               <FaBolt className="h-4 w-4 text-green-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">{stakingStats.active_staking_amount} EGD</div>
+              <div className="text-2xl font-bold text-green-600">{(stakingStats.active_staking_amount * 0.01).toFixed(2)} USDT</div>
               <p className="text-xs text-muted-foreground">
                 Currently Staking Amount
               </p>
@@ -662,11 +662,11 @@ const Dashboard = () => {
                             <div className="grid grid-cols-2 gap-4 text-sm">
                               <div className="p-3 bg-gray-50 border border-gray-200 rounded">
                                 <div className="text-gray-600 mb-1">Current Profit</div>
-                                <div className="font-semibold text-lg">{totalProfit.toFixed(2)} EGD</div>
+                                <div className="font-semibold text-lg">{(totalProfit * packagePrice).toFixed(2)} USDT</div>
                               </div>
                               <div className="p-3 bg-gray-50 border border-gray-200 rounded">
                                 <div className="text-gray-600 mb-1">Target (300%)</div>
-                                <div className="font-semibold text-lg">{targetProfit.toFixed(2)} EGD</div>
+                                <div className="font-semibold text-lg">{(targetProfit * packagePrice).toFixed(2)} USDT</div>
                               </div>
                             </div>
                             
@@ -694,39 +694,7 @@ const Dashboard = () => {
                     </CardContent>
                   </Card>
                   
-                  {/* Individual Staking Packages */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {stakingSummary.map(({ id, package: pkg, status, createdAt }) => (
-                      <Card key={id}>
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between mb-3">
-                            <div>
-                              <h3 className="font-semibold text-sm">{pkg?.name || 'Staking Package'}</h3>
-                              <p className="text-xs text-muted-foreground">
-                                Started {formatDate(createdAt)}
-                              </p>
-                            </div>
-                            <Badge 
-                              variant={status === 'active' ? 'default' : 'secondary'}
-                              className="text-xs px-2 py-1"
-                            >
-                              {status === "free_staking" ? "active" : status}
-                            </Badge>
-                          </div>
-                          <div className="grid grid-cols-2 gap-2">
-                            <div className="text-center p-2 bg-gray-50 rounded">
-                              <p className="text-xs text-muted-foreground">Staked</p>
-                              <p className="font-semibold text-sm">{parseFloat(pkg.stake_amount)} EGD</p>
-                            </div>
-                            <div className="text-center p-2 bg-gray-50 rounded">
-                              <p className="text-xs text-muted-foreground">Daily Yield</p>
-                              <p className="font-semibold text-sm">{(parseFloat(pkg.stake_amount) * (pkg?.daily_yield_percentage / 100)).toFixed(2)} EGD</p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+
                 </div>
               ) : (
                 <Card>

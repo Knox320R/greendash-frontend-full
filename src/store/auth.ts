@@ -64,7 +64,7 @@ const authSlice = createSlice({
         updateUserBaseData: (state, action) => {
             const { new_transaction, new_staking } = action.payload
             state.user_base_data.recent_transactions?.unshift(new_transaction)
-            state.user_base_data.recent_Stakings?.unshift(new_staking)
+            state.user_base_data.recent_staking = new_staking
         },
         updateExchangeBaseData: (state, action) => {
             const { withd, egd } = action.payload
