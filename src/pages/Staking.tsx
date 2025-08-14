@@ -8,6 +8,7 @@ import { FaLock, FaChartLine, FaCalendarAlt, FaClock, FaCheckCircle, FaArrowUp, 
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { formatNumber, formatDate } from '@/lib/utils';
+import StakingProgress from '@/components/StakingProgress';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
 import { StakingPackage } from '@/types/landing';
@@ -28,7 +29,7 @@ interface PendingStaking {
 }
 
 const Staking = () => {
-  const { user, user_base_data } = useAuth();
+  const { user, user_base_data, staking_progress } = useAuth();
   const staking_list = user_base_data?.recent_staking ? [user_base_data.recent_staking] : [];
   const stakingStats = getStakingStats(staking_list);
   const stakingLoading = false;
@@ -308,104 +309,8 @@ const Staking = () => {
             </TabsContent>
 
             <TabsContent value="my-stakings" className="space-y-6">
-              <div className="mb-4 flex items-center gap-2">
-                <label htmlFor="staking-filter" className="text-sm font-medium">Filter:</label>
-                <select id="staking-filter" className="border rounded px-2 py-1" value={stakingFilter} onChange={e => setStakingFilter(e.target.value)}>
-                  <option value="all">All</option>
-                  <option value="active">Active</option>
-                  <option value="completed">Completed</option>
-                </select>
-              </div>
-
-              {/* Overall 300% Profit Cap Progress */}
-              <Card className="mb-6">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-semibold text-sm">300% Profit Cap Progress</h3>
-                    <Badge variant="outline" className="text-xs">
-                      {(() => {
-                        const seedSaleToken = totalTokens?.find(s => s.title === 'seed_sale');
-                        const packagePrice = seedSaleToken?.price || 0.01;
-                        const totalProfit = Number(user?.egd_balance || 0) + (Number(user?.withdrawals || 0) / packagePrice);
-                        const activeStakingAmount = staking_list
-                          .filter(staking => staking.status === 'active' || staking.status === 'free_staking')
-                          .reduce((total, staking) => total + parseFloat(staking.package.stake_amount), 0);
-                        const targetProfit = activeStakingAmount * 3;
-                        return targetProfit > 0 ? ((totalProfit / targetProfit) * 100).toFixed(1) : '0.0';
-                      })()}%
-                    </Badge>
-                  </div>
-                  <Progress
-                    value={(() => {
-                      const seedSaleToken = totalTokens?.find(s => s.title === 'seed_sale');
-                      const packagePrice = seedSaleToken?.price || 0.01;
-                      const totalProfit = Number(user?.egd_balance || 0) + (Number(user?.withdrawals || 0) / packagePrice);
-                      const activeStakingAmount = staking_list
-                        .filter(staking => staking.status === 'active' || staking.status === 'free_staking')
-                        .reduce((total, staking) => total + parseFloat(staking.package.stake_amount), 0);
-                      const targetProfit = activeStakingAmount * 3;
-                      return targetProfit > 0 ? Math.min(100, (totalProfit / targetProfit) * 100) : 0;
-                    })()}
-                    className="h-2"
-                  />
-                  <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                    <span>Current: {(() => {
-                      const seedSaleToken = totalTokens?.find(s => s.title === 'seed_sale');
-                      const packagePrice = seedSaleToken?.price || 0.01;
-                      const totalProfit = Number(user?.egd_balance || 0) + (Number(user?.withdrawals || 0) / packagePrice);
-                      const activeStakingAmount = staking_list
-                        .filter(staking => staking.status === 'active' || staking.status === 'free_staking')
-                        .reduce((total, staking) => total + parseFloat(staking.package.stake_amount), 0);
-                      return activeStakingAmount > 0 ? ((totalProfit / activeStakingAmount) * 100).toFixed(1) : '0.0';
-                    })()}%</span>
-                    <span>Target: 300%</span>
-                  </div>
-                  
-                  {/* Staking Amounts in USDT */}
-                  <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                      <div>
-                        <div className="text-gray-600 mb-1">Active Staking</div>
-                        <div className="font-semibold text-lg text-purple-600">
-                          {(() => {
-                            const activeStakingAmount = staking_list
-                              .filter(staking => staking.status === 'active' || staking.status === 'free_staking')
-                              .reduce((total, staking) => total + parseFloat(staking.package.stake_amount), 0);
-                            const seedSaleToken = totalTokens?.find(s => s.title === 'seed_sale');
-                            const packagePrice = seedSaleToken?.price || 0.01;
-                            return (activeStakingAmount * packagePrice).toFixed(2);
-                          })()} USDT
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-gray-600 mb-1">Current Profit</div>
-                        <div className="font-semibold text-lg text-green-600">
-                          {(() => {
-                            const seedSaleToken = totalTokens?.find(s => s.title === 'seed_sale');
-                            const packagePrice = seedSaleToken?.price || 0.01;
-                            const totalProfit = Number(user?.egd_balance || 0) + (Number(user?.withdrawals || 0) / packagePrice);
-                            return (totalProfit * packagePrice).toFixed(2);
-                          })()} USDT
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-gray-600 mb-1">Target (300%)</div>
-                        <div className="font-semibold text-lg text-blue-600">
-                          {(() => {
-                            const activeStakingAmount = staking_list
-                              .filter(staking => staking.status === 'active' || staking.status === 'free_staking')
-                              .reduce((total, staking) => total + parseFloat(staking.package.stake_amount), 0);
-                            const targetProfit = activeStakingAmount * 3;
-                            const seedSaleToken = totalTokens?.find(s => s.title === 'seed_sale');
-                            const packagePrice = seedSaleToken?.price || 0.01;
-                            return (targetProfit * packagePrice).toFixed(2);
-                          })()} USDT
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              {/* Staking Progress */}
+              <StakingProgress stakingProgress={staking_progress} />
 
               {stakingLoading ? (
                 <div className="text-center py-8">

@@ -40,6 +40,7 @@ import { ethers } from 'ethers';
 import USDT_ABI from '@/lib/usdt_abi.json';
 import { useWallet } from '@/hooks/WalletContext';
 import { USDT_ADDRESS } from '@/lib/constants';
+import StakingProgress from '@/components/StakingProgress';
 
 
 
@@ -74,7 +75,7 @@ const ReferralTree: React.FC<{ nodes: ReferralNode[]; level?: number }> = ({ nod
 );
 
 const Dashboard = () => {
-  const { user, user_base_data, isLoading, confirmUpdateWithdrawal, isAuthenticated } = useAuth();
+  const { user, user_base_data, isLoading, confirmUpdateWithdrawal, isAuthenticated, staking_progress } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
   const { connectWallet, isConnected, isCorrectWallet } = useWallet();
   const [exchangeModalOpen, setExchangeModalOpen] = useState(false);
@@ -494,6 +495,16 @@ const Dashboard = () => {
           </Card>
         </motion.div>
 
+        {/* Staking Progress */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mb-8"
+        >
+          <StakingProgress stakingProgress={staking_progress} />
+        </motion.div>
+
         {/* Main Content Tabs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -501,9 +512,8 @@ const Dashboard = () => {
           transition={{ delay: 0.3 }}
         >
           <Tabs defaultValue="overview" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="staking">Staking</TabsTrigger>
               <TabsTrigger value="referrals">Referrals</TabsTrigger>
               <TabsTrigger value="activity">Activity</TabsTrigger>
               <TabsTrigger value="withdrawals">Withdrawals</TabsTrigger>
@@ -603,110 +613,6 @@ const Dashboard = () => {
                   </CardContent>
                 </Card>
               </div>
-            </TabsContent>
-
-            {/* Staking Tab */}
-            <TabsContent value="staking" className="space-y-6">
-              {stakingSummary?.length > 0 ? (
-                <div className="space-y-4">
-                  {/* Single 300% Progress Bar */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>300% Profit Cap Progress</CardTitle>
-                      <CardDescription>Overall progress toward maximum profit cap</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      {(() => {
-                        // Get package price from admin settings (seed_sale)
-                        const seedSaleToken = totalTokens.find(s => s.title === 'seed_sale');
-                        const packagePrice = seedSaleToken?.price || 0.01;
-                        
-                        // Calculate total profit progress toward 300% cap
-                        const totalProfit = Number(egd_balance) + (Number(withdrawals) / packagePrice);
-                        
-                        // Calculate target profit using only ACTIVE staking packages (300% of active staked amount)
-                        const activeStakingAmount = stakingSummary
-                          .filter(staking => staking.status === 'active' || staking.status === 'free_staking')
-                          .reduce((total, staking) => total + parseFloat(staking.package.stake_amount), 0);
-                        const targetProfit = activeStakingAmount * 3; // 300% of active stakings only
-                        const profitPercent = targetProfit > 0 ? Math.min((totalProfit / targetProfit) * 100, 100) : 0;
-                        
-                        return (
-                          <>
-                            {/* 300% Cap Status */}
-                            {benefit_overflow && (
-                              <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded text-center">
-                                <span className="text-green-700 text-sm font-medium">🎯 300% Cap Reached - Staking Complete!</span>
-                              </div>
-                            )}
-                            
-                            {/* Progress Bar */}
-                            <div className="mb-3 flex items-center justify-between text-sm font-medium text-gray-600">
-                              <span>0%</span>
-                              <span className="text-lg font-bold">{profitPercent.toFixed(1)}%</span>
-                              <span>300% Cap</span>
-                            </div>
-                            <div className="relative h-6 rounded-full bg-gray-200 overflow-hidden mb-3">
-                              <div
-                                className="absolute top-0 left-0 h-6 rounded-full bg-gradient-to-r from-blue-500 to-green-500"
-                                style={{ width: `${profitPercent}%`, transition: 'width 0.5s' }}
-                              ></div>
-                              {/* Current progress marker */}
-                              <div
-                                className="absolute top-0 h-6 w-1 bg-blue-600"
-                                style={{ left: `${profitPercent}%`, transition: 'left 0.5s' }}
-                              ></div>
-                            </div>
-                            
-                            {/* Profit Details */}
-                            <div className="grid grid-cols-2 gap-4 text-sm">
-                              <div className="p-3 bg-gray-50 border border-gray-200 rounded">
-                                <div className="text-gray-600 mb-1">Current Profit</div>
-                                <div className="font-semibold text-lg">{(totalProfit * packagePrice).toFixed(2)} USDT</div>
-                              </div>
-                              <div className="p-3 bg-gray-50 border border-gray-200 rounded">
-                                <div className="text-gray-600 mb-1">Target (300%)</div>
-                                <div className="font-semibold text-lg">{(targetProfit * packagePrice).toFixed(2)} USDT</div>
-                              </div>
-                            </div>
-                            
-                            {/* Breakdown */}
-                            <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded text-xs">
-                              <div className="text-blue-700 mb-2">Profit Breakdown:</div>
-                              <div className="space-y-1">
-                                <div className="flex justify-between">
-                                  <span>EGD Balance:</span>
-                                  <span className="font-medium">{Number(egd_balance).toFixed(2)} EGD</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>USDT Commissions:</span>
-                                  <span className="font-medium">{Number(withdrawals).toFixed(2)} USDT</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>USDT in EGD:</span>
-                                  <span className="font-medium">{(Number(withdrawals) / packagePrice).toFixed(2)} EGD</span>
-                                </div>
-                              </div>
-                            </div>
-                          </>
-                        );
-                      })()}
-                    </CardContent>
-                  </Card>
-                  
-
-                </div>
-              ) : (
-                <Card>
-                  <CardContent className="p-8 text-center">
-                    <FaChartLine className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No Stakings</h3>
-                    <p className="text-muted-foreground mb-4">
-                      Start your first staking to earn daily rewards
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
             </TabsContent>
 
             {/* Referrals Tab */}

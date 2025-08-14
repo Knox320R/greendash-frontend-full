@@ -15,6 +15,7 @@ export const useAuth = () => {
     isLoading: auth.isLoading,
     error: auth.error,
     user_base_data: auth.user_base_data,
+    staking_progress: auth.staking_progress,
 
     // Actions
     login: (credentials: LoginForm) => dispatch(authApi.login(credentials)),

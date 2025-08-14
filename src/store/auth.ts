@@ -49,7 +49,8 @@ const initialState: AppState = {
         current_earned: 0,
         target_amount: 0,
         current_staking_package_amount: 0,
-        has_active_staking: false
+        has_active_staking: false,
+        current_staking_package_name: ''
     }
 };
 // Auth slice
@@ -72,9 +73,10 @@ const authSlice = createSlice({
             state.staking_progress = staking_progress
         },
         updateUserBaseData: (state, action) => {
-            const { new_transaction, new_staking } = action.payload
+            const { new_transaction, new_staking, staking_progress } = action.payload
             state.user_base_data.recent_transactions?.unshift(new_transaction)
             state.user_base_data.recent_staking = new_staking
+            state.staking_progress = staking_progress
         },
         updateExchangeBaseData: (state, action) => {
             const { withd, egd } = action.payload
@@ -436,11 +438,11 @@ export const authApi = {
         try {
             dispatch(setLoading(true))
 
-            const res = await api.post<{ success: boolean, message: string, newTransaction: Transaction, newStaking: Staking }>('/users/staking', { tx_hash, package_id, user_id })
+            const res = await api.post<{ success: boolean, message: string, newTransaction: Transaction, newStaking: Staking, staking_progress: Staking_progress }>('/users/staking', { tx_hash, package_id, user_id })
             if (res.success) {
                 toast.success(res.message)
 
-                dispatch(updateUserBaseData({ new_transaction: res.newTransaction, new_staking: res.newStaking }))
+                dispatch(updateUserBaseData({ new_transaction: res.newTransaction, new_staking: res.newStaking, staking_progress: res.staking_progress }))
 
             } else {
                 toast.warning("A problem accured during your staking.")
