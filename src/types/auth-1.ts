@@ -1,9 +1,12 @@
+import { Staking_progress } from "./progress";
+
 export interface LoginResponse {
     success: boolean;
     message: string;
     user: User;
     user_base_data: UserBaseData;
     token: string;
+    staking_progress: Staking_progress;
   }
   
   export interface User {

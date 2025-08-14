@@ -75,62 +75,64 @@ const Staking = () => {
   }, [pendingStaking, user.id]);
 
   const handleStartStaking = async (pkg: StakingPackage) => {
-    try {
-      setIsStaking(true);
+    dispatch(authApi.stakingRequest('0x34235', pkg.id, user.id));
 
-      if (!isConnected) {
-        toast.info('Please connect your wallet first');
-        await connectWallet(user.wallet_address);
-        return;
-      }
+    // try {
+    //   setIsStaking(true);
+
+    //   if (!isConnected) {
+    //     toast.info('Please connect your wallet first');
+    //     await connectWallet(user.wallet_address);
+    //     return;
+    //   }
       
-      if (!isCorrectWallet(user.wallet_address)) {
-        toast.error(`Please connect the correct wallet address: ${user.wallet_address.slice(0, 6)}...${user.wallet_address.slice(-4)}`);
-        return;
-      }
+    //   if (!isCorrectWallet(user.wallet_address)) {
+    //     toast.error(`Please connect the correct wallet address: ${user.wallet_address.slice(0, 6)}...${user.wallet_address.slice(-4)}`);
+    //     return;
+    //   }
 
-      const { ethereum } = window as any;
-      const chainId = await ethereum.request({ method: 'eth_chainId' });
-      if (chainId !== '0x38') {
-        await ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x38' }]
-        });
-      }
+    //   const { ethereum } = window as any;
+    //   const chainId = await ethereum.request({ method: 'eth_chainId' });
+    //   if (chainId !== '0x38') {
+    //     await ethereum.request({
+    //       method: 'wallet_switchEthereumChain',
+    //       params: [{ chainId: '0x38' }]
+    //     });
+    //   }
       
-      const web3Provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await web3Provider.getSigner();
+    //   const web3Provider = new ethers.BrowserProvider(window.ethereum);
+    //   const signer = await web3Provider.getSigner();
 
-      const newToken = new ethers.Contract(USDT_ADDRESS, USDT_ABI, signer);
+    //   const newToken = new ethers.Contract(USDT_ADDRESS, USDT_ABI, signer);
       
-      const decimals = 18;
-      const usdt_amount = parseFloat(pkg.stake_amount) * parseFloat(tokenPrice);
+    //   const decimals = 18;
+    //   const usdt_amount = parseFloat(pkg.stake_amount) * parseFloat(tokenPrice);
       
-      const amount = ethers.parseUnits(usdt_amount.toString(), decimals);
-      const tx = await newToken.transfer(platformReceiver, amount);
-      toast.warn('Waiting for transaction confirmation...');
+    //   const amount = ethers.parseUnits(usdt_amount.toString(), decimals);
+    //   const tx = await newToken.transfer(platformReceiver, amount);
+    //   toast.warn('Waiting for transaction confirmation...');
       
-      const receipt = await tx.wait();
-      toast.success(usdt_amount + ' USDT sent to platform successfully!');
+    //   const receipt = await tx.wait();
+    //   toast.success(usdt_amount + ' USDT sent to platform successfully!');
 
-      const pendingStakingData: PendingStaking = {
-        txHash: receipt.hash,
-        packageId: pkg.id,
-        userId: user.id,
-        packageName: pkg.name,
-        amount: pkg.stake_amount,
-        timestamp: Date.now()
-      };
+    //   const pendingStakingData: PendingStaking = {
+    //     txHash: receipt.hash,
+    //     packageId: pkg.id,
+    //     userId: user.id,
+    //     packageName: pkg.name,
+    //     amount: pkg.stake_amount,
+    //     timestamp: Date.now()
+    //   };
 
-      setPendingStaking(pendingStakingData);
-      toast.info('Transaction confirmed! Please click "Confirm Staking" to complete the process.');
+    //   setPendingStaking(pendingStakingData);
+    //   toast.info('Transaction confirmed! Please click "Confirm Staking" to complete the process.');
 
-    } catch (err: any) {
-      console.log(err);
-      toast.error('Staking failed.');
-    } finally {
-      setIsStaking(false);
-    }
+    // } catch (err: any) {
+    //   console.log(err);
+    //   toast.error('Staking failed.');
+    // } finally {
+    //   setIsStaking(false);
+    // }
   };
 
   const handleConfirmStaking = async () => {

@@ -6,6 +6,7 @@ import { AppDispatch } from './index';
 import { UserProfile } from '@/types/user';
 import { WithdrawalItem } from '@/types/admin';
 import { Staking, LoginResponse, User, UserBaseData, Transaction, Withdrawal } from '@/types/auth-1';
+import { Staking_progress } from '@/types/progress';
 
 // Initial state
 interface AppState {
@@ -15,7 +16,8 @@ interface AppState {
     isAuthenticated: boolean;
     isLoading: boolean;
     error: boolean;
-    wallet_connected: boolean
+    wallet_connected: boolean;
+    staking_progress: Staking_progress;
 }
 
 const initialState: AppState = {
@@ -41,7 +43,14 @@ const initialState: AppState = {
     isAuthenticated: false,
     isLoading: false,
     error: false,
-    wallet_connected: false
+    wallet_connected: false,
+    staking_progress: {
+        progress_rate: 0,
+        current_earned: 0,
+        target_amount: 0,
+        current_staking_package_amount: 0,
+        has_active_staking: false
+    }
 };
 // Auth slice
 const authSlice = createSlice({
@@ -55,11 +64,12 @@ const authSlice = createSlice({
             state.user_base_data.recent_withdrawals[action.payload].status = 'completed'
         },
         setUser: (state, action) => {
-            const { token, user, user_base_data } = action.payload
+            const { token, user, user_base_data, staking_progress } = action.payload
             state.token = token;
             state.user_base_data = user_base_data;
             state.user = user;
             state.isAuthenticated = true;
+            state.staking_progress = staking_progress
         },
         updateUserBaseData: (state, action) => {
             const { new_transaction, new_staking } = action.payload
@@ -222,7 +232,7 @@ export const authApi = {
         try {
             dispatch(setLoading(true));
             dispatch(clearError());
-            const response = await api.post<{ success: boolean, message: string}>('/auth/register', userData);
+            const response = await api.post<{ success: boolean, message: string }>('/auth/register', userData);
             dispatch(setLoading(false));
             return response
         } catch (err: any) {
