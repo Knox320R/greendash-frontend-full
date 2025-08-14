@@ -245,7 +245,7 @@ const Staking = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {formatNumber(stakingStats.total_staking_amount)} EGD
+                {formatNumber(stakingStats.total_staking_amount*0.01)} USDT
               </div>
               <p className="text-xs text-muted-foreground">From all stakings</p>
             </CardContent>
