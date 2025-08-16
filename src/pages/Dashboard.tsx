@@ -657,7 +657,7 @@ const Dashboard = () => {
                           </div>
                           <div className="text-right">
                             <p className="font-semibold">
-                              +{formatNumber(activity.amount)} {['withdrawal', 'weak_leg_bonus', 'unilevel_commission'].includes(activity.type) ? 'USDT' : 'EGD'}
+                              +{['withdrawal', 'weak_leg_bonus', 'unilevel_commission'].includes(activity.type) ? formatNumber(activity.amount * 100): formatNumber(activity.amount)} EGD
                             </p>
                             <Badge className={getStatusColor(activity.type)}>
                               {activity.type}

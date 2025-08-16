@@ -74,7 +74,7 @@ const StakingProgress: React.FC<StakingProgressProps> = ({ stakingProgress, clas
             <div className="font-bold text-lg text-blue-600">
               {formatNumber(current_earned)}
             </div>
-            <div className="text-xs text-gray-500">USDT</div>
+            <div className="text-xs text-gray-500">EGD</div>
           </div>
 
           <div className="text-center p-3 bg-green-50 rounded-lg">
@@ -85,7 +85,7 @@ const StakingProgress: React.FC<StakingProgressProps> = ({ stakingProgress, clas
             <div className="font-bold text-lg text-green-600">
               {formatNumber(target_amount)}
             </div>
-            <div className="text-xs text-gray-500">USDT</div>
+            <div className="text-xs text-gray-500">EGD</div>
           </div>
         </div>
 
