@@ -464,7 +464,7 @@ const Dashboard = () => {
               <FaLock className="h-4 w-4 text-purple-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{(stakingStats.total_staking_amount * 0.01).toFixed(2)} USDT</div>
+              <div className="text-2xl font-bold">{(stakingStats.total_staking_amount).toFixed(2)} EGD</div>
               <p className="text-xs text-muted-foreground">
                 Across {stakingSummary?.length || 0} stakings
               </p>
