@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { FaCar, FaMobileAlt, FaGlobe, FaCoins, FaLeaf } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 const phaseColors = [
   'from-green-400 via-green-200 to-green-100',
@@ -96,13 +97,16 @@ const roadmapData = [
   }
 ];
 
-const RoadmapSection = () => (
+const RoadmapSection = () => {
+  const { t } = useTranslation(['home', 'common']);
+  
+  return (
   <section className="py-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-50 via-white to-green-50">
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 md:px-20">
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-extrabold text-green-700 mb-8 tracking-tight drop-shadow-lg">Our Journey Ahead</h2>
+        <h2 className="text-3xl font-extrabold text-green-700 mb-8 tracking-tight drop-shadow-lg">{t('home:roadmap.title')}</h2>
         <p className="text-xl text-gray-600">
-          Explore our roadmap and milestones for the GreenDash project.
+          {t('home:roadmap.subtitle')}
         </p>
       </div>
       <div className="relative">
@@ -164,6 +168,7 @@ const RoadmapSection = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default RoadmapSection; 

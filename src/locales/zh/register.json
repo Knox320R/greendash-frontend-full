@@ -1,0 +1,55 @@
+{
+  "title": "加入 GreenDash",
+  "subtitle": "创建您的账户并开始赚钱",
+  "form": {
+    "name": {
+      "label": "姓名",
+      "placeholder": "输入您的名字",
+      "required": "姓名是必填项"
+    },
+    "email": {
+      "label": "邮箱",
+      "placeholder": "输入您的邮箱"
+    },
+    "phone": {
+      "label": "电话（可选）",
+      "placeholder": "输入您的电话号码"
+    },
+    "password": {
+      "label": "密码",
+      "placeholder": "输入您的密码",
+      "required": "密码必须至少3个字符"
+    },
+    "confirmPassword": {
+      "label": "确认密码",
+      "placeholder": "确认您的密码"
+    },
+    "referralCode": {
+      "label": "推荐码",
+      "placeholder": "输入推荐码"
+    },
+    "parentLeg": {
+      "label": "父级分支",
+      "left": "左",
+      "right": "右"
+    },
+    "walletAddress": {
+      "label": "钱包地址（可选）",
+      "placeholder": "输入您的钱包地址"
+    }
+  },
+  "validation": {
+    "passwordsDoNotMatch": "密码不匹配"
+  },
+  "button": {
+    "createAccount": "创建账户",
+    "creatingAccount": "正在创建账户..."
+  },
+  "footer": {
+    "alreadyHaveAccount": "已有账户？",
+    "signIn": "登录"
+  },
+  "errors": {
+    "registrationFailed": "注册失败"
+  }
+} 

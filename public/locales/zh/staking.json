@@ -1,0 +1,42 @@
+{
+  "title": "质押仪表板",
+  "subtitle": "管理您的质押投资并跟踪进度",
+  "packages": "套餐",
+  "activeStakings": "活跃质押",
+  "pendingStakings": "待处理质押",
+  "stats": "统计",
+  "totalStaked": "总质押量",
+  "totalEarned": "总收益",
+  "activePackages": "活跃套餐",
+  "packageName": "套餐名称",
+  "stakeAmount": "质押金额",
+  "dailyYield": "日收益率",
+  "lockPeriod": "锁定期",
+  "totalEarning": "总收益",
+  "startStaking": "开始质押",
+  "connectWallet": "连接钱包",
+  "walletRequired": "请先连接您的钱包",
+  "incorrectWallet": "请连接正确的钱包地址",
+  "stakingInProgress": "质押进行中...",
+  "stakingSuccess": "质押成功开始！",
+  "stakingError": "开始质押失败",
+  "noPackages": "没有可用的质押套餐",
+  "noActiveStakings": "未找到活跃质押",
+  "noPendingStakings": "未找到待处理质押",
+  "noActiveStaking": "未找到活跃质押套餐",
+  "startStakingMessage": "开始质押以查看您的进度",
+  "trackStakingJourney": "跟踪您的质押旅程和收益",
+  "unknownPackage": "未知套餐",
+  "status": {
+    "active": "活跃",
+    "completed": "已完成",
+    "pending": "待处理",
+    "free_staking": "免费质押"
+  },
+  "filters": {
+    "all": "全部",
+    "active": "活跃",
+    "completed": "已完成",
+    "pending": "待处理"
+  }
+} 

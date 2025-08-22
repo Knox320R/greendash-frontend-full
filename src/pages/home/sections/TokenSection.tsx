@@ -3,67 +3,7 @@ import { FaCoins, FaChartLine, FaGift, FaSeedling, FaUsers, FaExchangeAlt, FaVot
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { TotalToken, AdminSetting } from '@/types/landing';
-
-const tokenUtilities = [
-  {
-    icon: FaCoins,
-    title: 'Stake & Earn',
-    desc: 'Lock GREEN tokens to earn daily rewards and participate in sustainable growth.'
-  },
-  {
-    icon: FaVoteYea,
-    title: 'Governance',
-    desc: 'Vote on proposals and help shape the future of the GreenDash ecosystem.'
-  },
-  {
-    icon: FaExchangeAlt,
-    title: 'Trade',
-    desc: 'Buy, sell, or swap GREEN tokens on major decentralized exchanges.'
-  },
-  {
-    icon: FaSeedling,
-    title: 'Support Green Projects',
-    desc: 'Fund eco-friendly initiatives and track your positive impact.'
-  },
-];
-
-
-const cashbackTypes = [
-  {
-    icon: FaMoneyBillWave,
-    title: 'Direct Cashback',
-    desc: 'Earn 15% of the amount invested by each direct referral. Example: Refer someone who invests $1,000, you receive $150 USDT instantly.'
-  },
-  {
-    icon: FaNetworkWired,
-    title: 'Network Cashback',
-    desc: 'Earn a percentage of the fees generated from investments within your referral network, up to 9 levels deep (7.5, 4%, 3%, 2.5%, 2%, 1%, 0.75%, 0.5%). Example: Level 3 referrals generate $10,000, you earn $400 USDT.'
-  },
-  {
-    icon: FaGlobeAmericas,
-    title: 'Universal Cashback',
-    desc: '10% of the fees from ALL investments in the platform are distributed among all EGD token holders. Example: $1,000,000 in fees = $100,000 shared among holders.'
-  },
-  {
-    icon: FaBolt,
-    title: 'Performance Cashback',
-    desc: 'Boost your earnings by reaching investment or ride volume targets. Weekly: $10,000 = $100 USDT, $50,000 = $500 USDT. Monthly: $100,000 = $1,000 USDT.'
-  },
-  {
-    icon: FaUserPlus,
-    title: 'Viral Cashback',
-    desc: 'Earn extra cashback when new users join through your referral network. Their investement will raise your ranking and you can get USDT or vheicle option according to your ranking.'
-  },
-];
-
-interface TokenSectionProps {
-  totalTokens?: TotalToken[];
-  adminSettings?: AdminSetting[];
-  openTokenDialog: boolean;
-  setOpenTokenDialog: (open: boolean) => void;
-  handleBuyGreenClick: () => void;
-  handleBuyToken: (tokenType: string) => void;
-}
+import { useTranslation } from 'react-i18next';
 
 const TokenSection = ({ 
   totalTokens, 
@@ -73,6 +13,59 @@ const TokenSection = ({
   handleBuyGreenClick, 
   handleBuyToken 
 }: TokenSectionProps) => {
+  const { t } = useTranslation('home');
+  
+  const tokenUtilities = [
+    {
+      icon: FaCoins,
+      title: t('token.tokenUtilities.stakeAndEarn.title'),
+      desc: t('token.tokenUtilities.stakeAndEarn.description')
+    },
+    {
+      icon: FaVoteYea,
+      title: t('token.tokenUtilities.governance.title'),
+      desc: t('token.tokenUtilities.governance.description')
+    },
+    {
+      icon: FaExchangeAlt,
+      title: t('token.tokenUtilities.trade.title'),
+      desc: t('token.tokenUtilities.trade.description')
+    },
+    {
+      icon: FaSeedling,
+      title: t('token.tokenUtilities.supportGreenProjects.title'),
+      desc: t('token.tokenUtilities.supportGreenProjects.description')
+    },
+  ];
+
+  const cashbackTypes = [
+    {
+      icon: FaMoneyBillWave,
+      title: t('token.cashback.directCashback.title'),
+      desc: t('token.cashback.directCashback.description')
+    },
+    {
+      icon: FaNetworkWired,
+      title: t('token.cashback.networkCashback.title'),
+      desc: t('token.cashback.networkCashback.description')
+    },
+    {
+      icon: FaGlobeAmericas,
+      title: t('token.cashback.universalCashback.title'),
+      desc: t('token.cashback.universalCashback.description')
+    },
+    {
+      icon: FaBolt,
+      title: t('token.cashback.performanceCashback.title'),
+      desc: t('token.cashback.performanceCashback.description')
+    },
+    {
+      icon: FaUserPlus,
+      title: t('token.cashback.viralCashback.title'),
+      desc: t('token.cashback.viralCashback.description')
+    },
+  ];
+
   // Helper function to format token amounts
   const formatTokenAmount = (amount: string) => {
     const num = parseFloat(amount);
@@ -140,7 +133,7 @@ const TokenSection = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading token information...</p>
+            <p className="text-gray-600">{t('token.loading')}</p>
           </div>
         </div>
       </section>
@@ -161,17 +154,20 @@ const TokenSection = ({
             <FaCoins className="w-12 h-12 text-green-500 mr-2" />
             <span className="text-4xl font-extrabold text-green-700 tracking-tight">GREEN</span>
           </div>
-          <h2 className="text-2xl font-bold text-gray-700 mb-8">The GREEN Token</h2>
+          <h2 className="text-2xl font-bold text-gray-700 mb-8">{t('token.title')}</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            The heart of the GreenDash ecosystem. Earn, stake, govern, and make a real-world impact with every token.
+            {t('token.subtitle')}
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-6 text-gray-700 text-sm">
-            <span className="bg-green-100 text-green-700 px-4 py-2 rounded-md font-semibold">Symbol: GREEN</span>
-            <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-md font-semibold">Total Supply: {formatTokenAmount(totalSupply.toString())}</span>
-            <span className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-md font-semibold">Decimals: 18</span>
+            <span className="bg-green-100 text-green-700 px-4 py-2 rounded-md font-semibold">{t('token.symbol')}</span>
+            <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-md font-semibold">{t('token.totalSupply', { amount: formatTokenAmount(totalSupply.toString()) })}</span>
+            <span className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-md font-semibold">{t('token.decimals')}</span>
             {safeAdminSettings.length > 0 && (
               <span className="bg-purple-100 text-purple-700 px-4 py-2 rounded-md font-semibold">
-                {safeAdminSettings.find(setting => setting.title === 'token_price')?.value || 'Price: TBD'}
+                {safeAdminSettings.find(setting => setting.title === 'token_price')?.value 
+                  ? t('token.price', { price: safeAdminSettings.find(setting => setting.title === 'token_price')?.value })
+                  : t('token.priceTBD')
+                }
               </span>
             )}
           </div>
@@ -184,7 +180,7 @@ const TokenSection = ({
           viewport={{ once: true, amount: 0.3 }}
           className="mb-16"
         >
-          <h3 className="text-2xl font-bold text-green-700 mb-6 text-center">How Cashback Works</h3>
+          <h3 className="text-2xl font-bold text-green-700 mb-6 text-center">{t('token.cashback.title')}</h3>
           <div className="flex flex-col gap-8 mx-auto w-full">
             {cashbackTypes.map((cb, idx) => (
               <motion.div
@@ -207,7 +203,7 @@ const TokenSection = ({
                 {/* Badge for Most Popular */}
                 {idx === 0 && (
                   <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg uppercase tracking-wider z-10 animate-pulse">
-                    Most Popular
+                    {t('token.cashback.mostPopular')}
                   </span>
                 )}
                 <div className={`w-[130px]  flex items-center justify-center w-20 h-20 rounded-full mb-4 shadow-lg bg-gradient-to-br transition-all duration-500 ease-in-out
@@ -232,7 +228,7 @@ const TokenSection = ({
           </div>
           <div className="mt-8 text-center">
             <span className="inline-block bg-green-100 text-green-700 font-semibold px-4 py-2 rounded-md shadow-sm mb-2">
-              All Cashback rewards are paid in <span className="font-bold">USDT</span> for stability and immediate usability.
+              {t('token.cashback.note')}
             </span>
           </div>
         </motion.div>
@@ -245,7 +241,7 @@ const TokenSection = ({
             viewport={{ once: true }}
             className="bg-white rounded-md shadow-lg p-8 flex flex-col items-center"
           >
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Tokenomics</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-4">{t('token.tokenomics.title')}</h3>
             <div className="w-full flex flex-col md:flex-row items-center gap-8">
               <div style={{ width: 220, height: 220 }}>
                 <ResponsiveContainer width="100%" height="100%">
@@ -294,7 +290,7 @@ const TokenSection = ({
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <h3 className="text-xl font-bold text-gray-900 mb-4">What Can You Do With GREEN?</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-4">{t('token.tokenUtilities.title')}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {tokenUtilities.map((util, idx) => (
                 <div key={idx} className="bg-white rounded-md shadow-md p-6 flex flex-col items-center text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
@@ -316,22 +312,22 @@ const TokenSection = ({
           className="mt-16 text-center"
         >
           <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-8 shadow-xl">
-            <h3 className="text-2xl font-bold text-white mb-4">Ready to Join the Green Revolution?</h3>
+            <h3 className="text-2xl font-bold text-white mb-4">{t('token.cta.title')}</h3>
             <p className="text-green-100 mb-6 max-w-2xl mx-auto">
-              Start earning with GREEN tokens today. Stake, earn rewards, and contribute to a sustainable future.
+              {t('token.cta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={handleBuyGreenClick}
                 className="bg-white text-green-600 font-bold py-3 px-8 rounded-lg hover:bg-green-50 transition-colors duration-300 shadow-lg"
               >
-                Buy GREEN Tokens
+                {t('token.cta.buyTokens')}
               </button>
               <button
                 onClick={() => handleBuyToken('green')}
                 className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-green-600 transition-colors duration-300"
               >
-                Learn More
+                {t('token.cta.learnMore')}
               </button>
             </div>
           </div>
@@ -340,5 +336,14 @@ const TokenSection = ({
     </section>
   );
 };
+
+interface TokenSectionProps {
+  totalTokens?: TotalToken[];
+  adminSettings?: AdminSetting[];
+  openTokenDialog: boolean;
+  setOpenTokenDialog: (open: boolean) => void;
+  handleBuyGreenClick: () => void;
+  handleBuyToken: (tokenType: string) => void;
+}
 
 export default TokenSection; 

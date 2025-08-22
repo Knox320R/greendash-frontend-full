@@ -3,8 +3,10 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import { useTranslation } from 'react-i18next';
 
 const ConclusionSection = () => {
+  const { t } = useTranslation('home');
   const isAuthenticated = useSelector((store: RootState) => store.auth.isAuthenticated)
   const nav = useNavigate()
   return (
@@ -17,7 +19,7 @@ const ConclusionSection = () => {
           transition={{ duration: 0.7, ease: 'easeOut' }}
           viewport={{ once: true, amount: 0.3 }}
         >
-          Ready to Start Earning?
+          {t('conclusion.title')}
         </motion.h2>
         <motion.p
           className="text-lg text-gray-500 mb-8 max-w-xl mx-auto"
@@ -26,7 +28,7 @@ const ConclusionSection = () => {
           transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
           viewport={{ once: true, amount: 0.3 }}
         >
-          Join GreenDash today and take your first step toward daily rewards and a sustainable future. It's easy, secure, and open to everyone.
+          {t('conclusion.subtitle')}
         </motion.p>
         <motion.div
           onClick={() => isAuthenticated? nav('/dashboard'): nav('/login')}
@@ -36,7 +38,7 @@ const ConclusionSection = () => {
           transition={{ duration: 0.9, delay: 0.2, ease: 'easeOut' }}
           viewport={{ once: true, amount: 0.3 }}
         >
-          Get Started with GreenDash
+          {t('conclusion.button')}
         </motion.div>
       </div>
     </section>

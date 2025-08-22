@@ -1,15 +1,17 @@
 import { motion } from 'framer-motion';
 import { FaArrowRight, FaPause, FaPlay } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 const TestimonialsSection = ({ testimonials, isAutoPlaying, setIsAutoPlaying, currentSlide, setCurrentSlide, slidesPerView, goToSlide, nextSlide, prevSlide }: any) => {
+  const { t } = useTranslation(['home', 'common']);
   const dots = Array.from({ length: testimonials.length - slidesPerView + 1 }, (_, i) => i);
   return (
     <section className="py-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-50 via-white to-green-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-2xl font-bold text-gray-700 mb-8 bg-gradient-to-b from-gray-50 to-white">What Our Users Say</h2>
+          <h2 className="text-2xl font-bold text-gray-700 mb-8 bg-gradient-to-b from-gray-50 to-white">{t('home:testimonials.title')}</h2>
           <p className="text-xl text-gray-600">
-            Read testimonials from GreenDash users who are making a difference.
+            {t('home:testimonials.subtitle')}
           </p>
         </div>
         {/* Testimonials Carousel */}

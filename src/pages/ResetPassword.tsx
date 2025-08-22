@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { setLoading } from '@/store/auth';
 
 const ResetPassword = () => {
+  const { t } = useTranslation('auth');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoadingState] = useState(false);
@@ -28,15 +30,15 @@ const ResetPassword = () => {
     e.preventDefault();
     setError('');
     if (!password || !confirmPassword) {
-      setError('Please fill in all fields.');
+      setError(t('fillAllFields'));
       return;
     }
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      setError(t('passwordsDoNotMatch'));
       return;
     }
     if (!token) {
-      setError('Invalid or missing reset token.');
+      setError(t('invalidToken'));
       return;
     }
     setLoadingState(true);
@@ -44,10 +46,10 @@ const ResetPassword = () => {
     try {
       // Adjust API call as per your backend
       await api.post('/auth/reset-password', { token, password });
-      toast.success('Password reset successful! Please log in.');
+      toast.success(t('passwordResetSuccess'));
       navigate('/login');
     } catch (err: any) {
-      setError(err?.response?.data?.message || 'Failed to reset password.');
+      setError(err?.response?.data?.message || t('resetPasswordFailed'));
     } finally {
       setLoadingState(false);
       dispatch(setLoading(false));
@@ -60,44 +62,44 @@ const ResetPassword = () => {
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="text-center">
             <CardTitle className="flex items-center justify-center gap-2 text-2xl font-bold">
-              <FaLock className="text-green-600" /> Reset Password
+              <FaLock className="text-green-600" /> {t('resetPasswordTitle')}
             </CardTitle>
-            <CardDescription>Enter your new password below.</CardDescription>
+            <CardDescription>{t('resetPasswordSubtitle')}</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="password" className="block mb-1 font-medium">New Password</label>
+                <label htmlFor="password" className="block mb-1 font-medium">{t('newPassword')}</label>
                 <Input
                   id="password"
                   type="password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  placeholder="Enter new password"
+                  placeholder={t('newPasswordPlaceholder')}
                   required
                   disabled={loading}
                 />
               </div>
               <div>
-                <label htmlFor="confirmPassword" className="block mb-1 font-medium">Confirm Password</label>
+                <label htmlFor="confirmPassword" className="block mb-1 font-medium">{t('confirmNewPassword')}</label>
                 <Input
                   id="confirmPassword"
                   type="password"
                   value={confirmPassword}
                   onChange={e => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm new password"
+                  placeholder={t('confirmNewPasswordPlaceholder')}
                   required
                   disabled={loading}
                 />
               </div>
               {error && <div className="text-red-600 text-sm font-medium">{error}</div>}
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Resetting...' : 'Reset Password'}
+                {loading ? t('resettingButton') : t('resetPasswordButton')}
               </Button>
             </form>
             <div className="mt-4 text-center text-sm">
               <Link to="/login" className="text-green-700 hover:underline flex items-center justify-center gap-1">
-                <FaSignInAlt /> Back to Login
+                <FaSignInAlt /> {t('backToLogin')}
               </Link>
             </div>
           </CardContent>

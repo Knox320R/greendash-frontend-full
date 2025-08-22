@@ -1,0 +1,94 @@
+{
+  "title": "个人资料设置",
+  "subtitle": "管理您的账户信息和偏好设置",
+  "loading": "正在加载个人资料...",
+  "tabs": {
+    "profile": "个人资料",
+    "security": "安全",
+    "preferences": "偏好设置"
+  },
+  "personalInformation": {
+    "title": "个人信息",
+    "description": "更新您的个人信息和联系方式",
+    "edit": "编辑",
+    "save": "保存",
+    "saving": "保存中...",
+    "cancel": "取消",
+    "name": "姓名",
+    "emailAddress": "邮箱地址",
+    "walletAddress": "钱包地址 (BEP-20)",
+    "phoneNumber": "您的电话号码",
+    "placeholder": {
+      "wallet": "0x...",
+      "phone": "输入电话号码"
+    }
+  },
+  "accountSummary": {
+    "title": "账户摘要",
+    "memberSince": "注册时间",
+    "totalInvested": "总投资",
+    "totalEarned": "总收益",
+    "potentialFromActive": "活跃投资潜力",
+    "egdBalance": "EGD 余额",
+    "availableWithdrawals": "可提现余额"
+  },
+  "referralCode": {
+    "title": "推荐码",
+    "yourReferralCode": "您的推荐码",
+    "copy": "复制",
+    "copied": "已复制！",
+    "shareMessage": "与朋友分享此代码以获得推荐奖励！"
+  },
+  "security": {
+    "passwordSecurity": {
+      "title": "密码和安全",
+      "description": "管理您的密码和安全设置",
+      "changePassword": "更改密码",
+      "currentPassword": "当前密码",
+      "newPassword": "新密码",
+      "confirmNewPassword": "确认新密码",
+      "savePassword": "保存密码",
+      "saving": "保存中...",
+      "cancel": "取消"
+    },
+    "walletSecurity": {
+      "title": "钱包安全",
+      "description": "管理您的钱包连接和安全",
+      "walletConnected": "钱包已连接",
+      "noWalletConnected": "未连接钱包",
+      "connectWallet": "连接钱包",
+      "copyAddress": "复制地址",
+      "addressCopied": "地址已复制！"
+    },
+    "twoFactorAuth": "启用双重认证",
+    "loginHistory": "登录历史"
+  },
+  "preferences": {
+    "title": "通知偏好设置",
+    "description": "管理您的通知设置",
+    "emailNotifications": {
+      "title": "邮件通知",
+      "description": "通过邮件接收更新",
+      "configure": "配置"
+    },
+    "stakingAlerts": {
+      "title": "质押提醒",
+      "description": "接收质押奖励通知",
+      "configure": "配置"
+    },
+    "referralNotifications": {
+      "title": "推荐通知",
+      "description": "接收新推荐通知",
+      "configure": "配置"
+    }
+  },
+  "alerts": {
+    "profileUpdated": "个人资料更新成功！",
+    "profileUpdateFailed": "更新个人资料失败，请重试。",
+    "fillAllPasswordFields": "请填写所有密码字段。",
+    "passwordsDoNotMatch": "新密码不匹配。",
+    "passwordTooShort": "新密码必须至少3个字符。",
+    "passwordChanged": "密码更改成功！",
+    "passwordChangeFailed": "更改密码失败。"
+  }
+} 

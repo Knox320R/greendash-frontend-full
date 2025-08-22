@@ -1,0 +1,113 @@
+{
+  "welcome": "Welcome",
+  "dashboard": "Dashboard",
+  "staking": "Staking",
+  "referrals": "Referrals",
+  "activity": "Activity",
+  "withdrawals": "Withdrawals",
+  "overview": "Overview",
+  "logout": "Logout",
+  "login": "Login",
+  "register": "Register",
+  "email": "Email",
+  "password": "Password",
+  "submit": "Submit",
+  "cancel": "Cancel",
+  "loading": "Loading...",
+  "error": "Error",
+  "success": "Success",
+  "balance": "Balance",
+  "amount": "Amount",
+  "status": "Status",
+  "date": "Date",
+  "actions": "Actions",
+  "learnMore": "Learn More",
+  "getStarted": "Get Started",
+  "contactUs": "Contact Us",
+  "about": "About",
+  "features": "Features",
+  "pricing": "Pricing",
+  "support": "Support",
+  "progress": "Progress",
+  "notificationBanner": {
+    "withdrawalApproved": "Withdrawal approved: {amount} USDT",
+    "withdrawalReturned": "Withdrawal returned: {amount} USDT",
+    "approvedMessage": "Your withdrawal request has been approved. Click 'Withdraw' to complete the transaction.",
+    "returnedMessage": "The withdrawal amount has been returned to your account balance.",
+    "withdraw": "Withdraw",
+    "dismiss": "Dismiss"
+  },
+  "walletConfirmation": {
+    "defaultTitle": "Connect to Platform Wallet",
+    "defaultDescription": "Please connect your wallet to the platform address",
+    "connectionStatus": "Connection Status:",
+    "connected": "Connected",
+    "notConnected": "Not Connected",
+    "expectedAddress": "Expected Address:",
+    "connectedAddress": "Connected Address:",
+    "addressMatchesCorrectly": "Address matches correctly",
+    "addressDoesNotMatch": "Address does not match",
+    "connectWallet": "Connect Wallet",
+    "wrongWallet": "Wrong Wallet",
+    "walletConnected": "Wallet Connected",
+    "showFullAddresses": "Show Full Addresses",
+    "expected": "Expected:",
+    "connected": "Connected:",
+    "switchWalletMessage": "Please switch to the correct wallet in MetaMask and try again."
+  },
+  "header": {
+    "navigation": {
+      "staking": "Staking",
+      "benefits": "Benefits",
+      "opportunity": "Opportunity",
+      "tokens": "Tokens",
+      "ranks": "Ranks",
+      "roadmap": "Roadmap",
+      "testimonials": "Testimonials",
+      "contact": "Contact",
+      "join": "Join"
+    },
+    "auth": {
+      "dashboard": "Dashboard",
+      "affiliates": "Affiliates",
+      "staking": "Staking",
+      "profile": "Profile",
+      "admin": "Admin",
+      "login": "Login",
+      "register": "Register",
+      "logout": "Logout"
+    },
+    "ui": {
+      "goTo": "Go to",
+      "more": "More",
+      "openMenu": "Open Menu",
+      "greenDashHome": "GreenDash Home"
+    }
+  },
+  "footer": {
+    "mission": "Empowering sustainable urban mobility and rewarding every stakeholder. Join the movement for a greener, smarter future.",
+    "newsletter": {
+      "title": "Subscribe to our Newsletter",
+      "placeholder": "Your email address",
+      "subscribe": "Subscribe",
+      "subscribed": "Subscribed!",
+      "noSpam": "No spam. Unsubscribe anytime."
+    },
+    "legal": {
+      "title": "Legal",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "copyright": "© {year} GreenDash. All rights reserved."
+    },
+    "social": {
+      "twitter": "Twitter",
+      "telegram": "Telegram",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "discord": "Discord"
+    }
+  }
+} 

@@ -1,0 +1,42 @@
+{
+  "title": "Painel de Staking",
+  "subtitle": "Gerencie seus investimentos em staking e acompanhe seu progresso",
+  "packages": "Pacotes",
+  "activeStakings": "Stakings Ativos",
+  "pendingStakings": "Stakings Pendentes",
+  "stats": "Estatísticas",
+  "totalStaked": "Total em Staking",
+  "totalEarned": "Total Ganho",
+  "activePackages": "Pacotes Ativos",
+  "packageName": "Nome do Pacote",
+  "stakeAmount": "Quantidade em Staking",
+  "dailyYield": "Rendimento Diário",
+  "lockPeriod": "Período de Bloqueio",
+  "totalEarning": "Ganho Total",
+  "startStaking": "Iniciar Staking",
+  "connectWallet": "Conectar Carteira",
+  "walletRequired": "Por favor, conecte sua carteira primeiro",
+  "incorrectWallet": "Por favor, conecte o endereço correto da carteira",
+  "stakingInProgress": "Staking em andamento...",
+  "stakingSuccess": "Staking iniciado com sucesso!",
+  "stakingError": "Falha ao iniciar staking",
+  "noPackages": "Nenhum pacote de staking disponível",
+  "noActiveStakings": "Nenhum staking ativo encontrado",
+  "noPendingStakings": "Nenhum staking pendente encontrado",
+  "noActiveStaking": "Nenhum pacote de staking ativo encontrado",
+  "startStakingMessage": "Inicie o staking para ver seu progresso",
+  "trackStakingJourney": "Acompanhe sua jornada de staking e ganhos",
+  "unknownPackage": "Pacote Desconhecido",
+  "status": {
+    "active": "Ativo",
+    "completed": "Concluído",
+    "pending": "Pendente",
+    "free_staking": "Staking Gratuito"
+  },
+  "filters": {
+    "all": "Todos",
+    "active": "Ativo",
+    "completed": "Concluído",
+    "pending": "Pendente"
+  }
+} 

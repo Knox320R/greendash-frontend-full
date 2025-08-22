@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import { authApi } from '@/store/auth';
 import { getStakingStats } from '@/lib/staking';
 import { USDT_ADDRESS, USDT_ABI } from '@/lib/constants';
+import { useTranslation } from 'react-i18next';
 
 interface PendingStaking {
   txHash: string;
@@ -29,6 +30,7 @@ interface PendingStaking {
 }
 
 const Staking = () => {
+  const { t } = useTranslation(['staking', 'common']);
   const { user, user_base_data, staking_progress } = useAuth();
   const staking_list = user_base_data?.recent_stakings ? user_base_data.recent_stakings : [];
   const stakingStats = getStakingStats(staking_list);

@@ -1,0 +1,113 @@
+{
+  "welcome": "Chào mừng",
+  "dashboard": "Bảng điều khiển",
+  "staking": "Staking",
+  "referrals": "Giới thiệu",
+  "activity": "Hoạt động",
+  "withdrawals": "Rút tiền",
+  "overview": "Tổng quan",
+  "logout": "Đăng xuất",
+  "login": "Đăng nhập",
+  "register": "Đăng ký",
+  "email": "Email",
+  "password": "Mật khẩu",
+  "submit": "Gửi",
+  "cancel": "Hủy",
+  "loading": "Đang tải...",
+  "error": "Lỗi",
+  "success": "Thành công",
+  "balance": "Số dư",
+  "amount": "Số lượng",
+  "status": "Trạng thái",
+  "date": "Ngày",
+  "actions": "Hành động",
+  "learnMore": "Tìm hiểu thêm",
+  "getStarted": "Bắt đầu",
+  "contactUs": "Liên hệ chúng tôi",
+  "about": "Về chúng tôi",
+  "features": "Tính năng",
+  "pricing": "Giá cả",
+  "support": "Hỗ trợ",
+  "progress": "Tiến độ",
+  "notificationBanner": {
+    "withdrawalApproved": "Rút tiền đã được phê duyệt: {amount} USDT",
+    "withdrawalReturned": "Rút tiền đã được trả lại: {amount} USDT",
+    "approvedMessage": "Yêu cầu rút tiền của bạn đã được phê duyệt. Nhấp vào 'Rút tiền' để hoàn thành giao dịch.",
+    "returnedMessage": "Số tiền rút đã được trả lại vào số dư tài khoản của bạn.",
+    "withdraw": "Rút tiền",
+    "dismiss": "Bỏ qua"
+  },
+  "walletConfirmation": {
+    "defaultTitle": "Kết nối với Ví Nền tảng",
+    "defaultDescription": "Vui lòng kết nối ví của bạn với địa chỉ nền tảng",
+    "connectionStatus": "Trạng thái Kết nối:",
+    "connected": "Đã kết nối",
+    "notConnected": "Chưa kết nối",
+    "expectedAddress": "Địa chỉ Mong đợi:",
+    "connectedAddress": "Địa chỉ Đã kết nối:",
+    "addressMatchesCorrectly": "Địa chỉ khớp chính xác",
+    "addressDoesNotMatch": "Địa chỉ không khớp",
+    "connectWallet": "Kết nối Ví",
+    "wrongWallet": "Sai Ví",
+    "walletConnected": "Ví Đã kết nối",
+    "showFullAddresses": "Hiển thị Địa chỉ Đầy đủ",
+    "expected": "Mong đợi:",
+    "connected": "Đã kết nối:",
+    "switchWalletMessage": "Vui lòng chuyển sang ví đúng trong MetaMask và thử lại."
+  },
+  "header": {
+    "navigation": {
+      "staking": "Staking",
+      "benefits": "Lợi ích",
+      "opportunity": "Cơ hội",
+      "tokens": "Token",
+      "ranks": "Cấp bậc",
+      "roadmap": "Lộ trình",
+      "testimonials": "Đánh giá",
+      "contact": "Liên hệ",
+      "join": "Tham gia"
+    },
+    "auth": {
+      "dashboard": "Bảng điều khiển",
+      "affiliates": "Tiếp thị liên kết",
+      "staking": "Staking",
+      "profile": "Hồ sơ",
+      "admin": "Quản trị",
+      "login": "Đăng nhập",
+      "register": "Đăng ký",
+      "logout": "Đăng xuất"
+    },
+    "ui": {
+      "goTo": "Đi đến",
+      "more": "Thêm",
+      "openMenu": "Mở Menu",
+      "greenDashHome": "Trang chủ GreenDash"
+    }
+  },
+  "footer": {
+    "mission": "Trao quyền cho di chuyển đô thị bền vững và thưởng cho mọi bên liên quan. Tham gia phong trào vì một tương lai xanh hơn, thông minh hơn.",
+    "newsletter": {
+      "title": "Đăng ký nhận Bản tin của chúng tôi",
+      "placeholder": "Địa chỉ email của bạn",
+      "subscribe": "Đăng ký",
+      "subscribed": "Đã đăng ký!",
+      "noSpam": "Không spam. Hủy đăng ký bất cứ lúc nào."
+    },
+    "legal": {
+      "title": "Pháp lý",
+      "privacyPolicy": "Chính sách Bảo mật",
+      "termsOfService": "Điều khoản Dịch vụ",
+      "copyright": "© {year} GreenDash. Đã đăng ký bản quyền."
+    },
+    "social": {
+      "twitter": "Twitter",
+      "telegram": "Telegram",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "discord": "Discord"
+    }
+  }
+} 

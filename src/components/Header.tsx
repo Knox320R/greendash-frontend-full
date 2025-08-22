@@ -7,47 +7,51 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { CardContent } from './ui/card';
 import { useWallet } from '@/hooks/WalletContext';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 interface HeaderProps {
   scrollToSection?: (sectionId: string) => void;
 }
 
-// Navigation items for landing page sections
-const sectionNavItems = [
-  // { id: 1, label: 'Home', section: 'home', primary: true },
-  { id: 2, label: 'Staking', section: 'staking', primary: false },
-  { id: 3, label: 'Benefits', section: 'benefits', primary: false },
-  { id: 4, label: 'Opportunity', section: 'opportunity', primary: false },
-  { id: 5, label: 'Tokens', section: 'token', primary: false },
-  { id: 6, label: 'Ranks', section: 'ranks', primary: false },
-  { id: 7, label: 'Roadmap', section: 'roadmap', primary: false },
-  { id: 8, label: 'Testimonials', section: 'testimonials', primary: false },
-  { id: 9, label: 'Contact', section: 'contact', primary: false },
-  { id: 10, label: 'Join', section: 'conclusion', primary: false },
-];
-
 const Header: React.FC<HeaderProps> = ({ scrollToSection }) => {
+  const { t } = useTranslation('common');
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isAuthenticated, logout } = useAuth();
   const { connectWallet, disconnectWallet, isConnected } = useWallet()
+  
+  // Navigation items for landing page sections
+  const sectionNavItems = [
+    // { id: 1, label: 'Home', section: 'home', primary: true },
+    { id: 2, label: t('header.navigation.staking'), section: 'staking', primary: false },
+    { id: 3, label: t('header.navigation.benefits'), section: 'benefits', primary: false },
+    { id: 4, label: t('header.navigation.opportunity'), section: 'opportunity', primary: false },
+    { id: 5, label: t('header.navigation.tokens'), section: 'token', primary: false },
+    { id: 6, label: t('header.navigation.ranks'), section: 'ranks', primary: false },
+    { id: 7, label: t('header.navigation.roadmap'), section: 'roadmap', primary: false },
+    { id: 8, label: t('header.navigation.testimonials'), section: 'testimonials', primary: false },
+    { id: 9, label: t('header.navigation.contact'), section: 'contact', primary: false },
+    { id: 10, label: t('header.navigation.join'), section: 'conclusion', primary: false },
+  ];
+  
   // Auth/page links
   const getAuthButtons = () => {
     if (isAuthenticated && user) {
       const buttons = [
-        { id: 1, label: 'Dashboard', to: '/dashboard' },
-        { id: 2, label: 'Affiliates', to: '/affiliates' },
-        { id: 3, label: 'Staking', to: '/staking' },
-        { id: 4, label: 'Profile', to: '/profile' },
+        { id: 1, label: t('header.auth.dashboard'), to: '/dashboard' },
+        { id: 2, label: t('header.auth.affiliates'), to: '/affiliates' },
+        { id: 3, label: t('header.auth.staking'), to: '/staking' },
+        { id: 4, label: t('header.auth.profile'), to: '/profile' },
       ];
       if (user.is_admin) {
-        buttons.push({ id: 99, label: 'Admin', to: '/admin' });
+        buttons.push({ id: 99, label: t('header.auth.admin'), to: '/admin' });
       }
       return buttons;
     } else {
       return [
-        { id: 1, label: 'Login', to: '/login' },
-        { id: 2, label: 'Register', to: '/register' },
+        { id: 1, label: t('header.auth.login'), to: '/login' },
+        { id: 2, label: t('header.auth.register'), to: '/register' },
       ];
     }
   };
@@ -129,7 +133,7 @@ const Header: React.FC<HeaderProps> = ({ scrollToSection }) => {
           <div
             className="text-2xl font-extrabold text-white tracking-wide drop-shadow-lg cursor-pointer flex items-center gap-2"
             onClick={() => { handleScroll('home'); }}
-            aria-label="GreenDash Home"
+            aria-label={t('header.ui.greenDashHome')}
             tabIndex={0}
           >
             <FaLeaf className="w-7 h-7 text-white drop-shadow-lg" />
@@ -157,7 +161,7 @@ const Header: React.FC<HeaderProps> = ({ scrollToSection }) => {
                   onClick={() => setMoreOpen((v) => !v)}
                   onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setMoreOpen(v => !v); }}
                 >
-                  Go to
+                  {t('header.ui.goTo')}
                   <span className="ml-1">▼</span>
                 </button>
                 {moreOpen && (
@@ -181,6 +185,7 @@ const Header: React.FC<HeaderProps> = ({ scrollToSection }) => {
 
           {/* Auth/Page Links (Desktop) */}
           <div className="hidden md:flex items-center gap-2 ml-4">
+            <LanguageSwitcher />
             {authButtons.map((btn) => (
               <Link
                 key={btn.id}
@@ -195,7 +200,7 @@ const Header: React.FC<HeaderProps> = ({ scrollToSection }) => {
                 onClick={handleLogout}
                 className="ml-2 px-3 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-200 flex items-center gap-1"
               >
-                <FaSignOutAlt className="w-4 h-4" /> Logout
+                <FaSignOutAlt className="w-4 h-4" /> {t('header.auth.logout')}
               </button>
             )}
           </div>
@@ -204,7 +209,7 @@ const Header: React.FC<HeaderProps> = ({ scrollToSection }) => {
           <button
             className="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white focus:outline-none focus:ring-2 focus:ring-green-200"
             onClick={() => setMobileOpen((v) => !v)}
-            aria-label="Open Menu"
+            aria-label={t('header.ui.openMenu')}
           >
             {mobileOpen ? <FaTimes className="w-6 h-6" /> : <FaBars className="w-6 h-6" />}
           </button>
@@ -241,7 +246,7 @@ const Header: React.FC<HeaderProps> = ({ scrollToSection }) => {
                     aria-expanded={mobileMoreOpen}
                     aria-controls="mobile-more-menu"
                   >
-                    More
+                    {t('header.ui.more')}
                     <span>{mobileMoreOpen ? '▲' : '▼'}</span>
                   </button>
                   {mobileMoreOpen && (
@@ -262,6 +267,9 @@ const Header: React.FC<HeaderProps> = ({ scrollToSection }) => {
               </>
             )}
             <div className="border-t border-white/20 my-4" />
+            <div className="px-4 py-2">
+              <LanguageSwitcher />
+            </div>
             {authButtons.map((btn) => (
               <Link
                 key={btn.id}
@@ -277,7 +285,7 @@ const Header: React.FC<HeaderProps> = ({ scrollToSection }) => {
                 onClick={() => { setMobileOpen(false); handleLogout(); }}
                 className="w-full text-left px-4 py-3 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-200 flex items-center gap-1 mt-2"
               >
-                <FaSignOutAlt className="w-4 h-4" /> Logout
+                <FaSignOutAlt className="w-4 h-4" /> {t('header.auth.logout')}
               </button>
             )}
           </div>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { AdminSetting } from '@/types/landing';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import { useTranslation } from 'react-i18next';
 
 interface HeroSectionProps {
   scrollToSection?: (sectionId: string) => void;
@@ -12,6 +13,7 @@ interface HeroSectionProps {
 const HeroSection: React.FC<HeroSectionProps> = ({ scrollToSection, adminSettings }) => {
   const isAuthenticated = useSelector((store: RootState) => store.auth.isAuthenticated)
   const navigate = useNavigate()
+  const { t } = useTranslation(['home', 'common']);
   return (
     <section className="relative mt-[100px] flex flex-col justify-center items-center py-0">
       {/* Animated Gradient Background */}
@@ -33,10 +35,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ scrollToSection, adminSetting
             transition={{ duration: 1, delay: 0.2 }}
           >
             <span className="bg-gradient-to-r from-green-500 via-blue-500 to-purple-600 bg-clip-text text-transparent animate-gradient-x drop-shadow-[0_4px_24px_rgba(34,197,94,0.25)]">
-              The Future of Mobility
+              {t('home:hero.title')}
             </span>
             <br />
-            <span className="text-gray-900 drop-shadow-lg">is Profit-Sharing</span>
+            <span className="text-gray-900 drop-shadow-lg">{t('home:hero.subtitle')}</span>
           </motion.h1>
           <motion.p
             className="text-lg md:text-2xl text-gray-700 mb-10 max-w-3xl mx-auto font-medium drop-shadow"
@@ -44,8 +46,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ scrollToSection, adminSetting
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4 }}
           >
-            Join the revolution where every ride, every transaction, and every mile contributes to your wealth.
-            <span className="text-green-600 font-bold"> Earn while the world moves.</span>
+            {t('home:hero.description')}
           </motion.p>
           {/* CTA Button */}
           <motion.div
@@ -55,7 +56,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ scrollToSection, adminSetting
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.7 }}
           >
-            Get Started
+            {t('home:hero.ctaPrimary')}
           </motion.div>
         </motion.div>
       </div>

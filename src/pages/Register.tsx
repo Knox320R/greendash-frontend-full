@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'react-toastify';
 
 const Register = () => {
+  const { t } = useTranslation(['register', 'common']);
   const [formData, setFormData] = useState({
     name: '',
     email: '',

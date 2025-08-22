@@ -1,0 +1,55 @@
+{
+  "title": "Tham gia GreenDash",
+  "subtitle": "Tạo tài khoản và bắt đầu kiếm tiền",
+  "form": {
+    "name": {
+      "label": "Tên",
+      "placeholder": "Nhập tên của bạn",
+      "required": "Tên là bắt buộc"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "Nhập email của bạn"
+    },
+    "phone": {
+      "label": "Điện thoại (Tùy chọn)",
+      "placeholder": "Nhập số điện thoại của bạn"
+    },
+    "password": {
+      "label": "Mật khẩu",
+      "placeholder": "Nhập mật khẩu của bạn",
+      "required": "Mật khẩu phải có ít nhất 3 ký tự"
+    },
+    "confirmPassword": {
+      "label": "Xác nhận Mật khẩu",
+      "placeholder": "Xác nhận mật khẩu của bạn"
+    },
+    "referralCode": {
+      "label": "Mã Giới thiệu",
+      "placeholder": "Nhập mã giới thiệu"
+    },
+    "parentLeg": {
+      "label": "Nhánh Cha",
+      "left": "Trái",
+      "right": "Phải"
+    },
+    "walletAddress": {
+      "label": "Địa chỉ Ví (Tùy chọn)",
+      "placeholder": "Nhập địa chỉ ví của bạn"
+    }
+  },
+  "validation": {
+    "passwordsDoNotMatch": "Mật khẩu không khớp"
+  },
+  "button": {
+    "createAccount": "Tạo Tài khoản",
+    "creatingAccount": "Đang tạo tài khoản..."
+  },
+  "footer": {
+    "alreadyHaveAccount": "Đã có tài khoản?",
+    "signIn": "Đăng nhập"
+  },
+  "errors": {
+    "registrationFailed": "Đăng ký thất bại"
+  }
+} 

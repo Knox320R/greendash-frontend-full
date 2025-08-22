@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,6 +33,7 @@ import { User, UserBaseData } from '@/types/auth-1';
 import { getStakingStats } from '@/lib/staking';
 
 const Profile = () => {
+  const { t } = useTranslation(['profile', 'common']);
 
   const user = useSelector((store: RootState) => store.auth.user) as User | null;
   const user_base_data = useSelector((store: RootState) => store.auth.user_base_data) as UserBaseData | null;
@@ -79,11 +81,11 @@ const Profile = () => {
       if (response.success) {
         dispatch(updateUser(formData)); // Refresh user data
         setIsEditing(false);
-        alert('Profile updated successfully!');
+        alert(t('profile:alerts.profileUpdated'));
       }
     } catch (error) {
       console.error('Failed to update profile:', error);
-      alert('Failed to update profile. Please try again.');
+              alert(t('profile:alerts.profileUpdateFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -126,15 +128,15 @@ const Profile = () => {
 
   const handleChangePassword = async () => {
     if (!passwordForm.current_password || !passwordForm.new_password || !passwordForm.confirm_password) {
-      toast.error('Please fill in all password fields.');
+      toast.error(t('profile:alerts.fillAllPasswordFields'));
       return;
     }
     if (passwordForm.new_password !== passwordForm.confirm_password) {
-      toast.error('New passwords do not match.');
+      toast.error(t('profile:alerts.passwordsDoNotMatch'));
       return;
     }
     if (passwordForm.new_password.length < 3) {
-      toast.error('New password must be at least 3 characters.');
+      toast.error(t('profile:alerts.passwordTooShort'));
       return;
     }
     setIsChangingPassword(true);
@@ -144,14 +146,14 @@ const Profile = () => {
         new_password: passwordForm.new_password
       });
       if (response.success) {
-        toast.success('Password changed successfully!');
+        toast.success(t('profile:alerts.passwordChanged'));
         setShowChangePassword(false);
         setPasswordForm({ current_password: '', new_password: '', confirm_password: '' });
       } else {
-        toast.error(response.message || 'Failed to change password.');
+        toast.error(response.message || t('profile:alerts.passwordChangeFailed'));
       }
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || 'Failed to change password.');
+      toast.error(error?.response?.data?.message || t('profile:alerts.passwordChangeFailed'));
     } finally {
       setIsChangingPassword(false);
     }
@@ -162,7 +164,7 @@ const Profile = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading profile...</p>
+          <p className="mt-4 text-gray-600">{t('profile:loading')}</p>
         </div>
       </div>
     );
@@ -177,9 +179,9 @@ const Profile = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-gray-900">Profile Settings</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t('profile:title')}</h1>
           <p className="text-gray-600 mt-2">
-            Manage your account information and preferences
+            {t('profile:subtitle')}
           </p>
         </motion.div>
 
@@ -191,9 +193,9 @@ const Profile = () => {
         >
           <Tabs defaultValue="profile" className="space-y-6">
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="profile">Profile</TabsTrigger>
-              <TabsTrigger value="security">Security</TabsTrigger>
-              <TabsTrigger value="preferences">Preferences</TabsTrigger>
+              <TabsTrigger value="profile">{t('profile:tabs.profile')}</TabsTrigger>
+              <TabsTrigger value="security">{t('profile:tabs.security')}</TabsTrigger>
+              <TabsTrigger value="preferences">{t('profile:tabs.preferences')}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="profile" className="space-y-6">
@@ -205,43 +207,43 @@ const Profile = () => {
                       <CardTitle className="flex items-center justify-between">
                         <span className="flex items-center gap-2">
                           <FaUser className="h-5 w-5 text-green-600" />
-                          Personal Information
+                          {t('profile:personalInformation.title')}
                         </span>
                         {!isEditing ? (
                           <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
                             <FaEdit className="mr-2 h-4 w-4" />
-                            Edit
+                            {t('profile:personalInformation.edit')}
                           </Button>
                         ) : (
                           <div className="flex gap-2">
                             <Button size="sm" onClick={handleSave} disabled={isLoading}>
-                              {isLoading ? (
-                                <>
-                                  <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
-                                  Saving...
-                                </>
-                              ) : (
+                                                                {isLoading ? (
+                                    <>
+                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
+                                      {t('profile:personalInformation.saving')}
+                                    </>
+                                  ) : (
                                 <>
                                   <FaSave className="mr-2 h-4 w-4" />
-                                  Save
+                                  {t('profile:personalInformation.save')}
                                 </>
                               )}
                             </Button>
                             <Button variant="outline" size="sm" onClick={handleCancel}>
-                              <FaTimes className="mr-2 h-4 w-4" />
-                              Cancel
+                                                          <FaTimes className="mr-2 h-4 w-4" />
+                            {t('profile:personalInformation.cancel')}
                             </Button>
                           </div>
                         )}
                       </CardTitle>
                       <CardDescription>
-                        Update your personal information and contact details
+                        {t('profile:personalInformation.description')}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="name">Name</Label>
+                          <Label htmlFor="name">{t('profile:personalInformation.name')}</Label>
                           <Input
                             id="name"
                             value={formData.name}
@@ -250,7 +252,7 @@ const Profile = () => {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="email">Email Address</Label>
+                          <Label htmlFor="email">{t('profile:personalInformation.emailAddress')}</Label>
                           <Input
                             id="email"
                             type="email"
@@ -261,13 +263,13 @@ const Profile = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="wallet_address">Wallet Address (BEP-20)</Label>
+                        <Label htmlFor="wallet_address">{t('profile:personalInformation.walletAddress')}</Label>
                         <Input
                           id="wallet_address"
                           value={formData.wallet_address || ''}
                           onChange={(e) => handleInputChange('wallet_address', e.target.value)}
                           disabled={!isEditing}
-                          placeholder="0x..."
+                          placeholder={t('profile:personalInformation.placeholder.wallet')}
                         />
                         {formData.wallet_address && (
                           <p className="text-sm text-muted-foreground">
@@ -276,7 +278,7 @@ const Profile = () => {
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="phone">Your Phone Number</Label>
+                        <Label htmlFor="phone">{t('profile:personalInformation.phoneNumber')}</Label>
                         <Input
                           id="phone"
                           value={formData.phone || ''}
@@ -295,32 +297,32 @@ const Profile = () => {
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <FaUser className="h-5 w-5 text-blue-600" />
-                        Account Summary
+                        {t('profile:accountSummary.title')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Member Since</span>
+                        <span className="text-sm text-muted-foreground">{t('profile:accountSummary.memberSince')}</span>
                         <span className="text-sm font-medium">{formatDate(user.created_at)}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Total Invested</span>
+                        <span className="text-sm text-muted-foreground">{t('profile:accountSummary.totalInvested')}</span>
                         <span className="text-sm font-medium text-pink-600">{stakingStats.total_staking_amount} <span className='ml-1 text-[#888] text-[12px]'>EGD</span></span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Total Earned</span>
+                        <span className="text-sm text-muted-foreground">{t('profile:accountSummary.totalEarned')}</span>
                         <span className="text-sm font-medium text-blue-600">{stakingStats.earned_from_active + stakingStats.earned_from_completed}<span className='ml-1 text-[#888] text-[12px]'>EGD</span></span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Potential from Active</span>
+                        <span className="text-sm text-muted-foreground">{t('profile:accountSummary.potentialFromActive')}</span>
                         <span className="text-sm font-medium text-green-600">{stakingStats.earning_claimed_from_active}<span className='ml-1 text-[#888] text-[12px]'>EGD</span></span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">EGD Balance</span>
+                        <span className="text-sm text-muted-foreground">{t('profile:accountSummary.egdBalance')}</span>
                         <span className="text-sm font-medium text-green-600">{(user.egd_balance).toFixed(2)}<span className='ml-1 text-[#888] text-[12px]'>EGD</span></span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Available withdrawals</span>
+                        <span className="text-sm text-muted-foreground">{t('profile:accountSummary.availableWithdrawals')}</span>
                         <span className="text-sm font-medium text-yellow-600">{user.withdrawals}<span className='ml-1 text-[#888] text-[12px]'>USDT</span></span>
                       </div>
                     </CardContent>
@@ -330,39 +332,39 @@ const Profile = () => {
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <FaQrcode className="h-5 w-5 text-purple-600" />
-                        Referral Code
+                        {t('profile:referralCode.title')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <Label>Your Referral Code</Label>
-                        <div className="flex gap-2">
-                          <Input
-                            value={user.referral_code}
-                            readOnly
-                            className="font-mono"
-                          />
-                          <Button variant="outline" onClick={copyReferralCode}>
-                            {copied ? (
-                              <>
-                                <FaCheckCircle className="mr-2 h-4 w-4" />
-                                Copied!
-                              </>
-                            ) : (
-                              <>
-                                <FaCopy className="mr-2 h-4 w-4" />
-                                Copy
-                              </>
-                            )}
-                          </Button>
+                                              <div className="space-y-2">
+                          <Label>{t('profile:referralCode.yourReferralCode')}</Label>
+                          <div className="flex gap-2">
+                            <Input
+                              value={user.referral_code}
+                              readOnly
+                              className="font-mono"
+                            />
+                            <Button variant="outline" onClick={copyReferralCode}>
+                              {copied ? (
+                                <>
+                                  <FaCheckCircle className="mr-2 h-4 w-4" />
+                                  {t('profile:referralCode.copied')}
+                                </>
+                              ) : (
+                                <>
+                                  <FaCopy className="mr-2 h-4 w-4" />
+                                  {t('profile:referralCode.copy')}
+                                </>
+                              )}
+                            </Button>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="bg-green-50 p-3 rounded-lg">
-                        <p className="text-sm text-green-800">
-                          Share this code with friends to earn referral rewards!
-                        </p>
-                      </div>
+                                              <div className="bg-green-50 p-3 rounded-lg">
+                          <p className="text-sm text-green-800">
+                            {t('profile:referralCode.shareMessage')}
+                          </p>
+                        </div>
                     </CardContent>
                   </Card>
                 </div>
@@ -375,22 +377,22 @@ const Profile = () => {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <FaKey className="h-5 w-5 text-red-600" />
-                      Password & Security
+                      {t('profile:security.passwordSecurity.title')}
                     </CardTitle>
                     <CardDescription>
-                      Manage your password and security settings
+                      {t('profile:security.passwordSecurity.description')}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {!showChangePassword ? (
                       <Button variant="outline" className="w-full" onClick={() => setShowChangePassword(true)}>
                         <FaKey className="mr-2 h-4 w-4" />
-                        Change Password
+                        {t('profile:security.passwordSecurity.changePassword')}
                       </Button>
                     ) : (
                       <div className="space-y-3">
                         <div className="space-y-2">
-                          <Label htmlFor="current_password">Current Password</Label>
+                          <Label htmlFor="current_password">{t('profile:security.passwordSecurity.currentPassword')}</Label>
                           <Input
                             id="current_password"
                             type="password"
@@ -400,7 +402,7 @@ const Profile = () => {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="new_password">New Password</Label>
+                          <Label htmlFor="new_password">{t('profile:security.passwordSecurity.newPassword')}</Label>
                           <Input
                             id="new_password"
                             type="password"
@@ -410,7 +412,7 @@ const Profile = () => {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="confirm_password">Confirm New Password</Label>
+                          <Label htmlFor="confirm_password">{t('profile:security.passwordSecurity.confirmNewPassword')}</Label>
                           <Input
                             id="confirm_password"
                             type="password"
@@ -421,21 +423,21 @@ const Profile = () => {
                         </div>
                         <div className="flex gap-2">
                           <Button onClick={handleChangePassword} disabled={isChangingPassword}>
-                            {isChangingPassword ? 'Saving...' : 'Save Password'}
+                            {isChangingPassword ? t('profile:security.passwordSecurity.saving') : t('profile:security.passwordSecurity.savePassword')}
                           </Button>
                           <Button variant="outline" onClick={() => setShowChangePassword(false)} disabled={isChangingPassword}>
-                            Cancel
+                            {t('profile:security.passwordSecurity.cancel')}
                           </Button>
                         </div>
                       </div>
                     )}
                     <Button variant="outline" className="w-full mt-4" disabled>
                       <FaShieldAlt className="mr-2 h-4 w-4" />
-                      Enable 2FA
+                      {t('profile:security.twoFactorAuth')}
                     </Button>
                     <Button variant="outline" className="w-full" disabled>
                       <FaHistory className="mr-2 h-4 w-4" />
-                      Login History
+                      {t('profile:security.loginHistory')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -444,10 +446,10 @@ const Profile = () => {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <FaWallet className="h-5 w-5 text-orange-600" />
-                      Wallet Security
+                      {t('profile:security.walletSecurity.title')}
                     </CardTitle>
                     <CardDescription>
-                      Manage your wallet connection and security
+                      {t('profile:security.walletSecurity.description')}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -455,7 +457,7 @@ const Profile = () => {
                       <div className="space-y-3">
                         <div className="flex items-center gap-2">
                           <FaCheckCircle className="h-4 w-4 text-green-500" />
-                          <span className="text-sm font-medium">Wallet Connected</span>
+                          <span className="text-sm font-medium">{t('profile:security.walletSecurity.walletConnected')}</span>
                         </div>
                         <div className="bg-gray-50 p-3 rounded-lg">
                           <p className="text-sm font-mono">{truncateAddress(user.wallet_address)}</p>
@@ -464,12 +466,12 @@ const Profile = () => {
                           {copied ? (
                             <>
                               <FaCheckCircle className="mr-2 h-4 w-4" />
-                              Address Copied!
+                              {t('profile:security.walletSecurity.addressCopied')}
                             </>
                           ) : (
                             <>
                               <FaCopy className="mr-2 h-4 w-4" />
-                              Copy Address
+                              {t('profile:security.walletSecurity.copyAddress')}
                             </>
                           )}
                         </Button>
@@ -477,9 +479,9 @@ const Profile = () => {
                     ) : (
                       <div className="text-center py-4">
                         <FaWallet className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                        <p className="text-sm text-muted-foreground">No wallet connected</p>
+                        <p className="text-sm text-muted-foreground">{t('profile:security.walletSecurity.noWalletConnected')}</p>
                         <Button variant="outline" className="mt-2">
-                          Connect Wallet
+                          {t('profile:security.walletSecurity.connectWallet')}
                         </Button>
                       </div>
                     )}
@@ -493,43 +495,43 @@ const Profile = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <FaCog className="h-5 w-5 text-gray-600" />
-                    Notification Preferences
+                    {t('profile:preferences.title')}
                   </CardTitle>
                   <CardDescription>
-                    Manage your notification settings
+                    {t('profile:preferences.description')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Email Notifications</p>
-                      <p className="text-sm text-muted-foreground">Receive updates via email</p>
+                      <p className="font-medium">{t('profile:preferences.emailNotifications.title')}</p>
+                      <p className="text-sm text-muted-foreground">{t('profile:preferences.emailNotifications.description')}</p>
                     </div>
                     <Button variant="outline" size="sm">
                       <FaBell className="mr-2 h-4 w-4" />
-                      Configure
+                      {t('profile:preferences.emailNotifications.configure')}
                     </Button>
                   </div>
                   <Separator />
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Staking Alerts</p>
-                      <p className="text-sm text-muted-foreground">Get notified about staking rewards</p>
+                      <p className="font-medium">{t('profile:preferences.stakingAlerts.title')}</p>
+                      <p className="text-sm text-muted-foreground">{t('profile:preferences.stakingAlerts.description')}</p>
                     </div>
                     <Button variant="outline" size="sm">
                       <FaBell className="mr-2 h-4 w-4" />
-                      Configure
+                      {t('profile:preferences.stakingAlerts.configure')}
                     </Button>
                   </div>
                   <Separator />
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Referral Notifications</p>
-                      <p className="text-sm text-muted-foreground">Get notified about new referrals</p>
+                      <p className="font-medium">{t('profile:preferences.referralNotifications.title')}</p>
+                      <p className="text-sm text-muted-foreground">{t('profile:preferences.referralNotifications.description')}</p>
                     </div>
                     <Button variant="outline" size="sm">
                       <FaBell className="mr-2 h-4 w-4" />
-                      Configure
+                      {t('profile:preferences.referralNotifications.configure')}
                     </Button>
                   </div>
                 </CardContent>

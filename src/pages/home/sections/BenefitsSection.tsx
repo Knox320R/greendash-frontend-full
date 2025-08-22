@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaArrowRight } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 interface Benefit {
   id: number;
@@ -13,6 +14,7 @@ interface Benefit {
 const slidesPerView = 1;
 
 const BenefitsSection = ({ benefits = [] }: { benefits?: Benefit[] }) => {
+  const { t } = useTranslation(['home', 'common']);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -50,7 +52,7 @@ const BenefitsSection = ({ benefits = [] }: { benefits?: Benefit[] }) => {
             transition={{ duration: 0.7, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            Why GreenDash?
+            {t('home:benefits.title')}
           </motion.h2>
           <motion.p
             className="text-xl text-gray-500"
@@ -59,7 +61,7 @@ const BenefitsSection = ({ benefits = [] }: { benefits?: Benefit[] }) => {
             transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            Discover the advantages of joining our sustainable ecosystem.
+            {t('home:benefits.subtitle')}
           </motion.p>
         </div>
         {/* What is GreenDash? */}

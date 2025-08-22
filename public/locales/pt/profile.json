@@ -1,0 +1,94 @@
+{
+  "title": "Configurações do Perfil",
+  "subtitle": "Gerencie suas informações de conta e preferências",
+  "loading": "Carregando perfil...",
+  "tabs": {
+    "profile": "Perfil",
+    "security": "Segurança",
+    "preferences": "Preferências"
+  },
+  "personalInformation": {
+    "title": "Informações Pessoais",
+    "description": "Atualize suas informações pessoais e detalhes de contato",
+    "edit": "Editar",
+    "save": "Salvar",
+    "saving": "Salvando...",
+    "cancel": "Cancelar",
+    "name": "Nome",
+    "emailAddress": "Endereço de Email",
+    "walletAddress": "Endereço da Carteira (BEP-20)",
+    "phoneNumber": "Seu Número de Telefone",
+    "placeholder": {
+      "wallet": "0x...",
+      "phone": "Digite o número de telefone"
+    }
+  },
+  "accountSummary": {
+    "title": "Resumo da Conta",
+    "memberSince": "Membro desde",
+    "totalInvested": "Total Investido",
+    "totalEarned": "Total Ganho",
+    "potentialFromActive": "Potencial do Ativo",
+    "egdBalance": "Saldo EGD",
+    "availableWithdrawals": "Saque disponível"
+  },
+  "referralCode": {
+    "title": "Código de Referência",
+    "yourReferralCode": "Seu Código de Referência",
+    "copy": "Copiar",
+    "copied": "Copiado!",
+    "shareMessage": "Compartilhe este código com amigos para ganhar recompensas de referência!"
+  },
+  "security": {
+    "passwordSecurity": {
+      "title": "Senha e Segurança",
+      "description": "Gerencie sua senha e configurações de segurança",
+      "changePassword": "Alterar Senha",
+      "currentPassword": "Senha Atual",
+      "newPassword": "Nova Senha",
+      "confirmNewPassword": "Confirmar Nova Senha",
+      "savePassword": "Salvar Senha",
+      "saving": "Salvando...",
+      "cancel": "Cancelar"
+    },
+    "walletSecurity": {
+      "title": "Segurança da Carteira",
+      "description": "Gerencie sua conexão de carteira e segurança",
+      "walletConnected": "Carteira Conectada",
+      "noWalletConnected": "Nenhuma carteira conectada",
+      "connectWallet": "Conectar Carteira",
+      "copyAddress": "Copiar Endereço",
+      "addressCopied": "Endereço Copiado!"
+    },
+    "twoFactorAuth": "Ativar 2FA",
+    "loginHistory": "Histórico de Login"
+  },
+  "preferences": {
+    "title": "Preferências de Notificação",
+    "description": "Gerencie suas configurações de notificação",
+    "emailNotifications": {
+      "title": "Notificações por Email",
+      "description": "Receba atualizações por email",
+      "configure": "Configurar"
+    },
+    "stakingAlerts": {
+      "title": "Alertas de Staking",
+      "description": "Seja notificado sobre recompensas de staking",
+      "configure": "Configurar"
+    },
+    "referralNotifications": {
+      "title": "Notificações de Referência",
+      "description": "Seja notificado sobre novas referências",
+      "configure": "Configurar"
+    }
+  },
+  "alerts": {
+    "profileUpdated": "Perfil atualizado com sucesso!",
+    "profileUpdateFailed": "Falha ao atualizar perfil. Tente novamente.",
+    "fillAllPasswordFields": "Por favor, preencha todos os campos de senha.",
+    "passwordsDoNotMatch": "As novas senhas não coincidem.",
+    "passwordTooShort": "A nova senha deve ter pelo menos 3 caracteres.",
+    "passwordChanged": "Senha alterada com sucesso!",
+    "passwordChangeFailed": "Falha ao alterar senha."
+  }
+} 

@@ -1,0 +1,94 @@
+{
+  "title": "Profile Settings",
+  "subtitle": "Manage your account information and preferences",
+  "loading": "Loading profile...",
+  "tabs": {
+    "profile": "Profile",
+    "security": "Security",
+    "preferences": "Preferences"
+  },
+  "personalInformation": {
+    "title": "Personal Information",
+    "description": "Update your personal information and contact details",
+    "edit": "Edit",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "name": "Name",
+    "emailAddress": "Email Address",
+    "walletAddress": "Wallet Address (BEP-20)",
+    "phoneNumber": "Your Phone Number",
+    "placeholder": {
+      "wallet": "0x...",
+      "phone": "Enter phone number"
+    }
+  },
+  "accountSummary": {
+    "title": "Account Summary",
+    "memberSince": "Member Since",
+    "totalInvested": "Total Invested",
+    "totalEarned": "Total Earned",
+    "potentialFromActive": "Potential from Active",
+    "egdBalance": "EGD Balance",
+    "availableWithdrawals": "Available withdrawals"
+  },
+  "referralCode": {
+    "title": "Referral Code",
+    "yourReferralCode": "Your Referral Code",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "shareMessage": "Share this code with friends to earn referral rewards!"
+  },
+  "security": {
+    "passwordSecurity": {
+      "title": "Password & Security",
+      "description": "Manage your password and security settings",
+      "changePassword": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password",
+      "savePassword": "Save Password",
+      "saving": "Saving...",
+      "cancel": "Cancel"
+    },
+    "walletSecurity": {
+      "title": "Wallet Security",
+      "description": "Manage your wallet connection and security",
+      "walletConnected": "Wallet Connected",
+      "noWalletConnected": "No wallet connected",
+      "connectWallet": "Connect Wallet",
+      "copyAddress": "Copy Address",
+      "addressCopied": "Address Copied!"
+    },
+    "twoFactorAuth": "Enable 2FA",
+    "loginHistory": "Login History"
+  },
+  "preferences": {
+    "title": "Notification Preferences",
+    "description": "Manage your notification settings",
+    "emailNotifications": {
+      "title": "Email Notifications",
+      "description": "Receive updates via email",
+      "configure": "Configure"
+    },
+    "stakingAlerts": {
+      "title": "Staking Alerts",
+      "description": "Get notified about staking rewards",
+      "configure": "Configure"
+    },
+    "referralNotifications": {
+      "title": "Referral Notifications",
+      "description": "Get notified about new referrals",
+      "configure": "Configure"
+    }
+  },
+  "alerts": {
+    "profileUpdated": "Profile updated successfully!",
+    "profileUpdateFailed": "Failed to update profile. Please try again.",
+    "fillAllPasswordFields": "Please fill in all password fields.",
+    "passwordsDoNotMatch": "New passwords do not match.",
+    "passwordTooShort": "New password must be at least 3 characters.",
+    "passwordChanged": "Password changed successfully!",
+    "passwordChangeFailed": "Failed to change password."
+  }
+} 

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { FaTrophy, FaMedal, FaCrown, FaGem, FaCar, FaGlobe } from 'react-icons/fa';
 import type { RankPlan } from '@/types/landing';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface AffiliateRanksSectionProps {
   rankPlans: RankPlan[];
@@ -22,6 +23,7 @@ const rankDisplayMap: Record<string, { icon: React.ElementType; color: string; b
 };
 
 const AffiliateRanksSection: React.FC<AffiliateRanksSectionProps> = ({ rankPlans }) => {
+  const { t } = useTranslation('home');
   const navigate = useNavigate()
   return (
     <section className="py-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-50 via-white to-green-50">
@@ -36,10 +38,10 @@ const AffiliateRanksSection: React.FC<AffiliateRanksSectionProps> = ({ rankPlans
         >
           <div className="flex items-center justify-center mb-4">
             <FaTrophy className="w-10 h-10 text-purple-500 mr-3" />
-            <h2 className="text-2xl font-bold text-gray-700 mb-8">Affiliate Ranks and Rewards</h2>
+            <h2 className="text-2xl font-bold text-gray-700 mb-8">{t('affiliateRanks.title')}</h2>
           </div>
           <p className="text-xl text-gray-500 max-w-3xl mx-auto">
-            Earn ranks and rewards based on volume in your weaker leg to ensure sustainable, balanced growth.
+            {t('affiliateRanks.subtitle')}
           </p>
         </motion.div>
 
@@ -73,12 +75,12 @@ const AffiliateRanksSection: React.FC<AffiliateRanksSectionProps> = ({ rankPlans
                 
                 <div className="space-y-3">
                   <div className="bg-white rounded-md p-3">
-                    <div className="text-sm text-gray-500 mb-1">Volume Required (Weak Leg)</div>
+                    <div className="text-sm text-gray-500 mb-1">{t('affiliateRanks.volumeRequired')}</div>
                     <div className="text-lg font-bold text-gray-900">${parseFloat(rank.volume).toLocaleString()}</div>
                   </div>
                   
                   <div className="bg-white rounded-md p-3">
-                    <div className="text-sm text-gray-500 mb-1">Reward</div>
+                    <div className="text-sm text-gray-500 mb-1">{t('affiliateRanks.reward')}</div>
                     <div className="text-lg font-bold text-green-600">{rank.equivalent ? rank.equivalent : `$${(parseFloat(rank.volume) * 0.05).toLocaleString()}`}</div>
                   </div>
                 </div>
@@ -99,24 +101,24 @@ const AffiliateRanksSection: React.FC<AffiliateRanksSectionProps> = ({ rankPlans
           <div className="bg-white rounded-md shadow-lg p-6">
             <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
               <FaGlobe className="w-6 h-6 text-green-500 mr-2" />
-              How It Works
+              {t('affiliateRanks.howItWorks.title')}
             </h3>
             <ul className="space-y-3 text-gray-500">
               <li className="flex items-start">
                 <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                <span>Volume is calculated based on your <strong>weaker leg</strong> to ensure balanced growth</span>
+                <span>{t('affiliateRanks.howItWorks.point1')}</span>
               </li>
               <li className="flex items-start">
                 <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                <span>Ranks are achieved progressively as you reach volume milestones</span>
+                <span>{t('affiliateRanks.howItWorks.point2')}</span>
               </li>
               <li className="flex items-start">
                 <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                <span>Rewards include cash bonuses or luxury items like electric vehicles</span>
+                <span>{t('affiliateRanks.howItWorks.point3')}</span>
               </li>
               <li className="flex items-start">
                 <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                <span>Higher ranks unlock better rewards and additional benefits</span>
+                <span>{t('affiliateRanks.howItWorks.point4')}</span>
               </li>
             </ul>
           </div>
@@ -125,24 +127,24 @@ const AffiliateRanksSection: React.FC<AffiliateRanksSectionProps> = ({ rankPlans
           <div className="bg-white rounded-md shadow-lg p-6">
             <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
               <FaTrophy className="w-6 h-6 text-yellow-500 mr-2" />
-              Benefits
+              {t('affiliateRanks.benefits.title')}
             </h3>
             <ul className="space-y-3 text-gray-500">
               <li className="flex items-start">
                 <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                <span><strong>Immediate rewards</strong> upon reaching rank requirements</span>
+                <span>{t('affiliateRanks.benefits.point1')}</span>
               </li>
               <li className="flex items-start">
                 <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                <span><strong>Luxury items</strong> like electric vehicles from BYD</span>
+                <span>{t('affiliateRanks.benefits.point2')}</span>
               </li>
               <li className="flex items-start">
                 <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                <span><strong>Travel rewards</strong> including international and luxury trips</span>
+                <span>{t('affiliateRanks.benefits.point3')}</span>
               </li>
               <li className="flex items-start">
                 <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                <span><strong>Cash bonuses</strong> ranging from $500 to $100,000</span>
+                <span>{t('affiliateRanks.benefits.point4')}</span>
               </li>
             </ul>
           </div>
@@ -157,15 +159,15 @@ const AffiliateRanksSection: React.FC<AffiliateRanksSectionProps> = ({ rankPlans
           className="text-center mt-12"
         >
           <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-md p-8 text-white">
-            <h3 className="text-2xl font-bold mb-4">Ready to Start Earning?</h3>
+            <h3 className="text-2xl font-bold mb-4">{t('affiliateRanks.cta.title')}</h3>
             <p className="text-lg mb-6 opacity-90">
-              Join GreenDash today and start building your affiliate network to unlock these amazing rewards.
+              {t('affiliateRanks.cta.subtitle')}
             </p>
             <button
               className="inline-block px-8 py-4 bg-white text-purple-600 font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
               onClick={() => navigate('/login')}
             >
-              Get Started Now
+              {t('affiliateRanks.cta.button')}
             </button>
           </div>
         </motion.div>

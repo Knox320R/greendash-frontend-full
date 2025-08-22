@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { FaAward, FaBicycle, FaCar, FaUserTie, FaCrown, FaBuilding, FaRocket } from 'react-icons/fa';
 import type { StakingPackage, AdminSetting } from '@/types/landing';
+import { useTranslation } from 'react-i18next';
 
 interface StakingSectionProps {
   stakingPackages: StakingPackage[];
@@ -18,6 +19,7 @@ const packageIconMap: Record<string, React.ElementType> = {
 };
 
 const StakingSection: React.FC<StakingSectionProps> = ({ stakingPackages, adminSettings }) => {
+  const { t } = useTranslation(['home', 'common']);
   const token_price = parseFloat((adminSettings?.find(item => item.title === "token_price"))?.value) || 0.01
 
   return (
@@ -31,7 +33,7 @@ const StakingSection: React.FC<StakingSectionProps> = ({ stakingPackages, adminS
             transition={{ duration: 0.7, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            Choose Your Staking Package
+            {t('home:staking.title')}
           </motion.h2>
           <motion.p
             className="text-lg text-gray-500 max-w-2xl mx-auto"
@@ -40,7 +42,7 @@ const StakingSection: React.FC<StakingSectionProps> = ({ stakingPackages, adminS
             transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            Select a package that fits your goals and start earning daily rewards. It's simple, secure, and rewarding.
+            {t('home:staking.subtitle')}
           </motion.p>
         </div>
         <motion.div
@@ -50,7 +52,7 @@ const StakingSection: React.FC<StakingSectionProps> = ({ stakingPackages, adminS
           viewport={{ once: true, amount: 0.3 }}
           className="mb-10 max-w-5xl mx-auto"
         >
-          <h3 className="text-2xl font-bold text-green-700 mb-8 text-center">Investment Packages</h3>
+          <h3 className="text-2xl font-bold text-green-700 mb-8 text-center">{t('home:staking.investmentPackages')}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {stakingPackages.map((pkg, idx) => (
               <motion.div
@@ -70,18 +72,18 @@ const StakingSection: React.FC<StakingSectionProps> = ({ stakingPackages, adminS
                 </div>
                 <div className="mb-2 text-gray-500 text-[12px] text-center">{pkg.description}</div>
                 <div className="mb-2">
-                  <span className="block text-gray-500 text-sm">EGD</span>
+                  <span className="block text-gray-500 text-sm">{t('home:staking.egd')}</span>
                   <span className="text-lg font-semibold text-green-700">{parseFloat(pkg.stake_amount).toLocaleString()}</span>
                 </div>
                 <div className="mb-2">
-                  <span className="block text-gray-500 text-sm">USDT</span>
+                  <span className="block text-gray-500 text-sm">{t('home:staking.usdt')}</span>
                   <span className="text-lg font-semibold text-yellow-700">{(parseFloat(pkg.stake_amount) * token_price).toLocaleString()}</span>
                 </div>
                 <div className="mb-4">
-                  <span className="block text-gray-500 text-sm">Daily Return in EGD</span>
+                  <span className="block text-gray-500 text-sm">{t('home:staking.dailyReturn')}</span>
                   <span className="text-lg font-bold text-green-600">{pkg.daily_yield_percentage}%</span>
                 </div>
-                  <span className="block text-gray-500 text-[12px]">Total Earning</span>
+                  <span className="block text-gray-500 text-[12px]">{t('home:staking.totalEarning')}</span>
                 <div className="mb-4 text-[14px] flex justify-between w-full">
                   <span className="font-bold text-green-600">{pkg.daily_yield_percentage * parseFloat(pkg.stake_amount) / 100 * pkg.lock_period_days} EGD</span>
                   <span className="font-bold text-yellow-600">{pkg.daily_yield_percentage * parseFloat(pkg.stake_amount) / 100 * pkg.lock_period_days * token_price} USDT</span>
@@ -91,9 +93,9 @@ const StakingSection: React.FC<StakingSectionProps> = ({ stakingPackages, adminS
           </div>
           <div className="mt-8 flex flex-col items-center">
             <span className="inline-block bg-green-100 text-green-700 font-semibold px-4 py-2 rounded-md shadow-sm mb-2">
-              Initial Token EGD launch price: <span className="font-bold">${adminSettings.find(s => s.title === 'token_price')?.value || '0.01'}</span>
+              {t('home:staking.initialTokenPrice')} <span className="font-bold">${adminSettings.find(s => s.title === 'token_price')?.value || '0.01'}</span>
             </span>
-            <span className="text-xs text-gray-500 mt-1">⚠️ Investment package earnings are paid in EGD tokens. All Cashback earnings are paid in USDT.</span>
+            <span className="text-xs text-gray-500 mt-1">{t('home:staking.investmentNote')}</span>
           </div>
         </motion.div>
       </div>

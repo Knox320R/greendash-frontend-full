@@ -1,0 +1,42 @@
+{
+  "title": "Bảng điều khiển Staking",
+  "subtitle": "Quản lý khoản đầu tư staking và theo dõi tiến độ của bạn",
+  "packages": "Gói",
+  "activeStakings": "Staking đang hoạt động",
+  "pendingStakings": "Staking đang chờ",
+  "stats": "Thống kê",
+  "totalStaked": "Tổng Staked",
+  "totalEarned": "Tổng Thu nhập",
+  "activePackages": "Gói đang hoạt động",
+  "packageName": "Tên Gói",
+  "stakeAmount": "Số tiền Stake",
+  "dailyYield": "Lợi nhuận hàng ngày",
+  "lockPeriod": "Thời gian khóa",
+  "totalEarning": "Tổng Thu nhập",
+  "startStaking": "Bắt đầu Staking",
+  "connectWallet": "Kết nối Ví",
+  "walletRequired": "Vui lòng kết nối ví của bạn trước",
+  "incorrectWallet": "Vui lòng kết nối đúng địa chỉ ví",
+  "stakingInProgress": "Staking đang tiến hành...",
+  "stakingSuccess": "Staking đã bắt đầu thành công!",
+  "stakingError": "Không thể bắt đầu staking",
+  "noPackages": "Không có gói staking nào",
+  "noActiveStakings": "Không tìm thấy staking đang hoạt động",
+  "noPendingStakings": "Không tìm thấy staking đang chờ",
+  "noActiveStaking": "Không tìm thấy gói staking đang hoạt động",
+  "startStakingMessage": "Bắt đầu staking để xem tiến độ của bạn",
+  "trackStakingJourney": "Theo dõi hành trình staking và thu nhập của bạn",
+  "unknownPackage": "Gói Không xác định",
+  "status": {
+    "active": "Đang hoạt động",
+    "completed": "Hoàn thành",
+    "pending": "Đang chờ",
+    "free_staking": "Staking miễn phí"
+  },
+  "filters": {
+    "all": "Tất cả",
+    "active": "Đang hoạt động",
+    "completed": "Hoàn thành",
+    "pending": "Đang chờ"
+  }
+} 

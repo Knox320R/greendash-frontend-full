@@ -1,0 +1,327 @@
+{
+  "hero": {
+    "title": "Chào mừng đến với GreenDash",
+    "subtitle": "Tương lai của Staking và Đầu tư Bền vững",
+    "description": "Tham gia cùng hàng nghìn người dùng đang được hưởng lợi từ nền tảng staking sáng tạo của chúng tôi. Kiếm phần thưởng hàng ngày trong khi đóng góp cho một tương lai xanh hơn.",
+    "ctaPrimary": "Bắt đầu Staking Ngay",
+    "ctaSecondary": "Tìm hiểu thêm"
+  },
+  "benefits": {
+    "title": "Tại sao chọn GreenDash?",
+    "subtitle": "Khám phá những ưu điểm khiến chúng tôi trở thành lựa chọn hàng đầu",
+    "dailyRewards": {
+      "title": "Phần thưởng hàng ngày",
+      "description": "Kiếm phần thưởng hàng ngày ổn định từ các khoản đầu tư staking của bạn"
+    },
+    "sustainability": {
+      "title": "Tập trung vào tính bền vững",
+      "description": "Hỗ trợ các dự án thân thiện với môi trường trong khi kiếm lợi nhuận"
+    },
+    "security": {
+      "title": "Bảo mật tiên tiến",
+      "description": "Các khoản đầu tư của bạn được bảo vệ bởi các biện pháp bảo mật hiện đại nhất"
+    },
+    "community": {
+      "title": "Cộng đồng mạnh mẽ",
+      "description": "Tham gia cộng đồng ngày càng phát triển của những nhà đầu tư có cùng chí hướng"
+    }
+  },
+  "staking": {
+    "title": "Gói Staking",
+    "subtitle": "Chọn gói staking hoàn hảo cho mục tiêu của bạn",
+    "bronze": {
+      "name": "Gói Đồng",
+      "description": "Hoàn hảo cho người mới bắt đầu",
+      "dailyYield": "Lợi nhuận hàng ngày: 0.5%",
+      "lockPeriod": "Thời gian khóa: 30 ngày"
+    },
+    "silver": {
+      "name": "Gói Bạc",
+      "description": "Tuyệt vời cho nhà đầu tư thường xuyên",
+      "dailyYield": "Lợi nhuận hàng ngày: 0.8%",
+      "lockPeriod": "Thời gian khóa: 60 ngày"
+    },
+    "gold": {
+      "name": "Gói Vàng",
+      "description": "Lựa chọn đầu tư cao cấp",
+      "dailyYield": "Lợi nhuận hàng ngày: 1.2%",
+      "lockPeriod": "Thời gian khóa: 90 ngày"
+    }
+  },
+  "affiliateRanks": {
+    "title": "Cấp bậc và Phần thưởng Tiếp thị Liên kết",
+    "subtitle": "Kiếm cấp bậc và phần thưởng dựa trên khối lượng ở chân yếu hơn để đảm bảo tăng trưởng bền vững và cân bằng.",
+    "volumeRequired": "Khối lượng yêu cầu (Chân yếu)",
+    "reward": "Phần thưởng",
+    "howItWorks": {
+      "title": "Cách thức hoạt động",
+      "point1": "Khối lượng được tính toán dựa trên chân yếu hơn để đảm bảo tăng trưởng cân bằng",
+      "point2": "Cấp bậc được đạt được dần dần khi bạn đạt được các cột mốc khối lượng",
+      "point3": "Phần thưởng bao gồm tiền thưởng hoặc các mặt hàng xa xỉ như xe điện",
+      "point4": "Cấp bậc cao hơn mở khóa phần thưởng tốt hơn và các lợi ích bổ sung"
+    },
+    "benefits": {
+      "title": "Lợi ích",
+      "point1": "Phần thưởng ngay lập tức khi đạt yêu cầu cấp bậc",
+      "point2": "Các mặt hàng xa xỉ như xe điện từ BYD",
+      "point3": "Phần thưởng du lịch bao gồm các chuyến đi quốc tế và xa xỉ",
+      "point4": "Tiền thưởng từ $500 đến $100,000"
+    },
+    "cta": {
+      "title": "Sẵn sàng bắt đầu kiếm tiền?",
+      "subtitle": "Tham gia GreenDash ngay hôm nay và bắt đầu xây dựng mạng lưới tiếp thị liên kết để mở khóa những phần thưởng tuyệt vời này.",
+      "button": "Bắt đầu ngay"
+    }
+  },
+  "growthOpportunity": {
+    "title": "Cơ hội Tăng trưởng",
+    "subtitle": "Thị trường di chuyển rất lớn và đang phát triển. Đây là những gì chúng tôi nhắm đến:",
+    "marketCap": "Vốn hóa thị trường Uber 2025",
+    "ridesPerDay": "Chuyến đi mỗi ngày",
+    "ridesPerYear": "Chuyến đi mỗi năm",
+    "marketCapture": "Nếu GreenDash chiếm được chỉ 1% thị trường này, nó đã trở thành một doanh nghiệp tỷ đô.",
+    "growthComparison": {
+      "title": "So sánh Tăng trưởng – Uber vs. GreenDash",
+      "uberExample": {
+        "title": "Ví dụ Đầu tư Uber",
+        "initialInvestment": "Đầu tư ban đầu (2009)",
+        "initialValue": "$100 với $0.01/token",
+        "tokenAmount": "= 10,000 token",
+        "currentValue": "Giá trị hiện tại (2025)",
+        "currentAmount": "$1,700,000",
+        "marketCap": "Vốn hóa thị trường: $170B",
+        "totalReturn": "Tổng lợi nhuận",
+        "returnAmount": "Tăng 1,700,000%"
+      },
+      "greenDashAdvantage": {
+        "title": "Lợi thế GreenDash",
+        "competitiveAdvantages": "Mô hình tương tự + Lợi thế cạnh tranh",
+        "advantage1": "Tập trung vào di chuyển bền vững",
+        "advantage2": "Chia sẻ lợi nhuận cho tất cả các bên liên quan",
+        "advantage3": "Quản trị phi tập trung",
+        "advantage4": "Phí thấp hơn cho tài xế và hành khách",
+        "initialTokenPrice": "Giá token ban đầu",
+        "tokenPrice": "$0.01 cho mỗi token EGD",
+        "startingPoint": "Điểm khởi đầu giống như Uber",
+        "growthPotential": "Tiềm năng tăng trưởng",
+        "potential": "Cơ hội thị trường khổng lồ",
+        "marketCapture": "Chiếm 1% thị trường = doanh nghiệp $1B+"
+      },
+      "disclaimer": "Tuyên bố miễn trừ: Đây là mô phỏng dựa trên lịch sử của Uber. Kết quả trong quá khứ không đảm bảo lợi nhuận trong tương lai. Thành công của token phụ thuộc vào điều kiện thị trường, quy định và sự tăng trưởng của dự án."
+    },
+    "whyMoreAttractive": {
+      "title": "Tại sao GreenDash Hấp dẫn hơn",
+      "subtitle": "Mô hình GreenDash cung cấp:",
+      "lowerFees": "Phí thấp hơn cho tài xế",
+      "affordableFares": "Giá cước phù hợp cho hành khách",
+      "profitSharing": "Chia sẻ lợi nhuận cho tất cả các bên liên quan",
+      "conclusion": "Không giống như các nền tảng di chuyển khác, mọi người đều có thể trở thành bên liên quan và hưởng lợi từ sự tăng trưởng của nó."
+    }
+  },
+  "marketOpportunity": {
+    "title": "Cơ hội Thị trường",
+    "subtitle": "Thị trường tiền điện tử và DeFi mang đến những cơ hội chưa từng có cho sự tăng trưởng, đổi mới và bao gồm tài chính. Khám phá tại sao bây giờ là thời điểm hoàn hảo để tham gia.",
+    "opportunities": {
+      "growingDefi": {
+        "title": "Thị trường DeFi Đang phát triển",
+        "description": "Thị trường tài chính phi tập trung đang trải qua sự tăng trưởng theo cấp số nhân với việc áp dụng ngày càng tăng các giao thức staking và yield farming.",
+        "stats": "Vốn hóa thị trường: $50B+",
+        "trend": "+25% YoY"
+      },
+      "massAdoption": {
+        "title": "Áp dụng Đại chúng",
+        "description": "Việc áp dụng tiền điện tử đang tăng tốc trên toàn cầu, với hàng triệu người dùng mới tham gia thị trường mỗi tháng.",
+        "stats": "Người dùng hoạt động: 300M+",
+        "trend": "+40% YoY"
+      },
+      "institutionalInvestment": {
+        "title": "Đầu tư Tổ chức",
+        "description": "Các tổ chức tài chính lớn đang ngày càng phân bổ vốn cho tài sản kỹ thuật số và công nghệ blockchain.",
+        "stats": "AUM Tổ chức: $15B+",
+        "trend": "+60% YoY"
+      },
+      "globalAccessibility": {
+        "title": "Khả năng Tiếp cận Toàn cầu",
+        "description": "Công nghệ blockchain cho phép các dịch vụ tài chính cho dân số không có tài khoản ngân hàng trên toàn thế giới.",
+        "stats": "Dân số không có tài khoản ngân hàng: 1.7B",
+        "trend": "Thị trường mới"
+      }
+    },
+    "marketStatistics": {
+      "title": "Thống kê Thị trường & Xu hướng",
+      "totalCryptoMarketCap": {
+        "value": "$2.5T",
+        "label": "Tổng Vốn hóa Thị trường Tiền điện tử",
+        "trend": "+15% so với tháng trước"
+      },
+      "defiTotalValueLocked": {
+        "value": "$100B+",
+        "label": "Tổng Giá trị Bị khóa DeFi",
+        "trend": "+30% so với tháng trước"
+      },
+      "globalCryptoUsers": {
+        "value": "500M+",
+        "label": "Người dùng Tiền điện tử Toàn cầu",
+        "trend": "+20% so với tháng trước"
+      }
+    },
+    "cta": {
+      "title": "Sẵn sàng Nắm bắt Những Cơ hội này?",
+      "subtitle": "Tham gia cùng hàng nghìn người dùng đang được hưởng lợi từ nền tảng staking sáng tạo của chúng tôi",
+      "button": "Bắt đầu Hôm nay"
+    }
+  },
+  "token": {
+    "title": "Token GREEN",
+    "subtitle": "Trái tim của hệ sinh thái GreenDash. Kiếm tiền, staking, quản trị và tạo tác động thực tế với mỗi token.",
+    "symbol": "Ký hiệu: GREEN",
+    "totalSupply": "Tổng cung: {amount}",
+    "decimals": "Số thập phân: 18",
+    "price": "Giá: {price}",
+    "priceTBD": "Giá: Chưa xác định",
+    "loading": "Đang tải thông tin token...",
+    "tokenUtilities": {
+      "title": "Bạn có thể làm gì với GREEN?",
+      "stakeAndEarn": {
+        "title": "Stake & Kiếm tiền",
+        "description": "Khóa token GREEN để kiếm phần thưởng hàng ngày và tham gia vào sự tăng trưởng bền vững."
+      },
+      "governance": {
+        "title": "Quản trị",
+        "description": "Bỏ phiếu cho các đề xuất và giúp định hình tương lai của hệ sinh thái GreenDash."
+      },
+      "trade": {
+        "title": "Giao dịch",
+        "description": "Mua, bán hoặc hoán đổi token GREEN trên các sàn giao dịch phi tập trung lớn."
+      },
+      "supportGreenProjects": {
+        "title": "Hỗ trợ Dự án Xanh",
+        "description": "Tài trợ cho các sáng kiến thân thiện với môi trường và theo dõi tác động tích cực của bạn."
+      }
+    },
+    "cashback": {
+      "title": "Cashback Hoạt động như thế nào",
+      "mostPopular": "Phổ biến nhất",
+      "directCashback": {
+        "title": "Cashback Trực tiếp",
+        "description": "Kiếm 15% số tiền đầu tư của mỗi giới thiệu trực tiếp. Ví dụ: Giới thiệu ai đó đầu tư $1,000, bạn nhận được $150 USDT ngay lập tức."
+      },
+      "networkCashback": {
+        "title": "Cashback Mạng lưới",
+        "description": "Kiếm phần trăm phí được tạo ra từ các khoản đầu tư trong mạng lưới giới thiệu của bạn, lên đến 9 cấp độ sâu (7.5, 4%, 3%, 2.5%, 2%, 1%, 0.75%, 0.5%). Ví dụ: Giới thiệu cấp 3 tạo ra $10,000, bạn kiếm được $400 USDT."
+      },
+      "universalCashback": {
+        "title": "Cashback Toàn cầu",
+        "description": "10% phí từ TẤT CẢ các khoản đầu tư trong nền tảng được phân phối cho tất cả người nắm giữ token EGD. Ví dụ: $1,000,000 phí = $100,000 chia sẻ cho người nắm giữ."
+      },
+      "performanceCashback": {
+        "title": "Cashback Hiệu suất",
+        "description": "Tăng thu nhập của bạn bằng cách đạt được mục tiêu đầu tư hoặc khối lượng chuyến đi. Hàng tuần: $10,000 = $100 USDT, $50,000 = $500 USDT. Hàng tháng: $100,000 = $1,000 USDT."
+      },
+      "viralCashback": {
+        "title": "Cashback Viral",
+        "description": "Kiếm thêm cashback khi người dùng mới tham gia thông qua mạng lưới giới thiệu của bạn. Khoản đầu tư của họ sẽ nâng cao xếp hạng của bạn và bạn có thể nhận USDT hoặc tùy chọn xe theo xếp hạng của mình."
+      },
+      "note": "Tất cả phần thưởng Cashback được thanh toán bằng USDT để ổn định và sử dụng ngay lập tức."
+    },
+    "tokenomics": {
+      "title": "Tokenomics"
+    },
+    "cta": {
+      "title": "Sẵn sàng Tham gia Cuộc Cách mạng Xanh?",
+      "subtitle": "Bắt đầu kiếm tiền với token GREEN ngay hôm nay. Stake, kiếm phần thưởng và đóng góp cho một tương lai bền vững.",
+      "buyTokens": "Mua Token GREEN",
+      "learnMore": "Tìm hiểu thêm"
+    }
+  },
+  "conclusion": {
+    "title": "Sẵn sàng bắt đầu kiếm tiền?",
+    "subtitle": "Tham gia GreenDash ngay hôm nay và thực hiện bước đầu tiên hướng tới phần thưởng hàng ngày và một tương lai bền vững. Điều này dễ dàng, an toàn và mở cửa cho tất cả mọi người.",
+    "button": "Bắt đầu với GreenDash"
+  },
+  "testimonials": {
+    "title": "Người dùng của chúng tôi nói gì",
+    "subtitle": "Câu chuyện thực từ những nhà đầu tư thực",
+    "user1": {
+      "name": "John Smith",
+      "role": "Nhà đầu tư chuyên nghiệp",
+      "comment": "GreenDash đã thay đổi chiến lược đầu tư của tôi. Phần thưởng hàng ngày rất ổn định và nền tảng cực kỳ thân thiện với người dùng."
+    },
+    "user2": {
+      "name": "Sarah Johnson",
+      "role": "Chủ doanh nghiệp nhỏ",
+      "comment": "Tôi thích cách GreenDash kết hợp lợi nhuận với tính bền vững. Đó chính xác là những gì tôi đang tìm kiếm trong một nền tảng đầu tư."
+    },
+    "user3": {
+      "name": "Michael Chen",
+      "role": "Doanh nhân công nghệ",
+      "comment": "Chương trình giới thiệu thật tuyệt vời. Tôi đã kiếm được thu nhập bổ sung đáng kể trong khi giúp bạn bè khám phá nền tảng tuyệt vời này."
+    }
+  },
+  "roadmap": {
+    "title": "Lộ trình phát triển",
+    "subtitle": "Hành trình của chúng tôi để cách mạng hóa staking",
+    "phase1": {
+      "title": "Giai đoạn 1: Nền tảng",
+      "description": "Nền tảng staking cốt lõi và các tính năng cơ bản"
+    },
+    "phase2": {
+      "title": "Giai đoạn 2: Mở rộng",
+      "description": "Tính năng nâng cao và ứng dụng di động"
+    },
+    "phase3": {
+      "title": "Giai đoạn 3: Đổi mới",
+      "description": "Thông tin chi tiết được hỗ trợ bởi AI và tích hợp DeFi"
+    }
+  },
+  "contact": {
+    "title": "Liên hệ với chúng tôi",
+    "subtitle": "Chúng tôi rất muốn nghe từ bạn",
+    "email": "Gửi email cho chúng tôi tại",
+    "phone": "Gọi cho chúng tôi tại",
+    "address": "Ghé thăm chúng tôi tại",
+    "form": {
+      "name": "Tên của bạn",
+      "email": "Email của bạn",
+      "message": "Tin nhắn của bạn",
+      "send": "Gửi tin nhắn"
+    }
+  },
+  "investmentPackages": "Gói đầu tư",
+  "egd": "EGD",
+  "usdt": "USDT",
+  "dailyReturn": "Lợi nhuận hàng ngày bằng EGD",
+  "totalEarning": "Tổng thu nhập",
+  "initialTokenPrice": "Giá khởi điểm token EGD:",
+  "investmentNote": "⚠️ Thu nhập từ gói đầu tư được thanh toán bằng token EGD. Tất cả thu nhập Cashback được thanh toán bằng USDT.",
+  "testimonial1": {
+    "quote": "GreenDash đã hoàn toàn thay đổi cách tôi nghĩ về đầu tư bền vững. Phần thưởng hàng ngày thật đáng kinh ngạc!",
+    "name": "Sarah Johnson",
+    "role": "Tư vấn môi trường",
+    "duration": "6 tháng"
+  },
+  "testimonial2": {
+    "quote": "Là một tài xế, tôi thích kiếm nhiều hơn trong khi đóng góp cho một tương lai xanh hơn. Nền tảng này thật cách mạng.",
+    "name": "Michael Chen",
+    "role": "Tài xế xe điện",
+    "duration": "8 tháng"
+  },
+  "testimonial3": {
+    "quote": "Mô hình chia sẻ lợi nhuận thật thiên tài. Tôi kiếm được từ mọi giao dịch trong khi hỗ trợ tính bền vững.",
+    "name": "Emma Rodriguez",
+    "role": "Doanh nhân công nghệ",
+    "duration": "1 năm"
+  },
+  "testimonial4": {
+    "quote": "Cuối cùng, một nền tảng đặt con người và hành tinh lên đầu tiên. Lợi nhuận cũng thật tuyệt vời!",
+    "name": "David Kim",
+    "role": "Cố vấn đầu tư",
+    "duration": "4 tháng"
+  },
+  "testimonial5": {
+    "quote": "GreenDash chứng minh rằng bạn có thể làm điều tốt và làm tốt. Tôi tự hào là một phần của phong trào này.",
+    "name": "Lisa Thompson",
+    "role": "Chuyên gia bền vững",
+    "duration": "10 tháng"
+  }
+} 

@@ -1,0 +1,42 @@
+{
+  "title": "Staking Dashboard",
+  "subtitle": "Manage your staking investments and track your progress",
+  "packages": "Packages",
+  "activeStakings": "Active Stakings",
+  "pendingStakings": "Pending Stakings",
+  "stats": "Statistics",
+  "totalStaked": "Total Staked",
+  "totalEarned": "Total Earned",
+  "activePackages": "Active Packages",
+  "packageName": "Package Name",
+  "stakeAmount": "Stake Amount",
+  "dailyYield": "Daily Yield",
+  "lockPeriod": "Lock Period",
+  "totalEarning": "Total Earning",
+  "startStaking": "Start Staking",
+  "connectWallet": "Connect Wallet",
+  "walletRequired": "Please connect your wallet first",
+  "incorrectWallet": "Please connect the correct wallet address",
+  "stakingInProgress": "Staking in progress...",
+  "stakingSuccess": "Staking started successfully!",
+  "stakingError": "Failed to start staking",
+  "noPackages": "No staking packages available",
+  "noActiveStakings": "No active stakings found",
+  "noPendingStakings": "No pending stakings found",
+  "noActiveStaking": "No active staking package found",
+  "startStakingMessage": "Start staking to see your progress",
+  "trackStakingJourney": "Track your staking journey and earnings",
+  "unknownPackage": "Unknown Package",
+  "status": {
+    "active": "Active",
+    "completed": "Completed",
+    "pending": "Pending",
+    "free_staking": "Free Staking"
+  },
+  "filters": {
+    "all": "All",
+    "active": "Active",
+    "completed": "Completed",
+    "pending": "Pending"
+  }
+} 

@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
 import { FaTwitter, FaTelegramPlane, FaGithub, FaLinkedin, FaFacebook, FaInstagram, FaYoutube, FaDiscord } from 'react-icons/fa';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../components/ui/tooltip';
-
-const socialLinks = [
-  { name: 'Twitter', href: 'https://twitter.com/', icon: FaTwitter },
-  { name: 'Telegram', href: 'https://t.me/', icon: FaTelegramPlane },
-  { name: 'GitHub', href: 'https://github.com/', icon: FaGithub },
-  { name: 'LinkedIn', href: 'https://linkedin.com/', icon: FaLinkedin },
-  { name: 'Facebook', href: 'https://facebook.com/', icon: FaFacebook },
-  { name: 'Instagram', href: 'https://instagram.com/', icon: FaInstagram },
-  { name: 'YouTube', href: 'https://youtube.com/', icon: FaYoutube },
-  { name: 'Discord', href: 'https://discord.com/', icon: FaDiscord },
-];
+import { useTranslation } from 'react-i18next';
 
 const Footer: React.FC = () => {
+  const { t } = useTranslation('common');
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+
+  const socialLinks = [
+    { name: t('footer.social.twitter'), href: 'https://twitter.com/', icon: FaTwitter },
+    { name: t('footer.social.telegram'), href: 'https://t.me/', icon: FaTelegramPlane },
+    { name: t('footer.social.github'), href: 'https://github.com/', icon: FaGithub },
+    { name: t('footer.social.linkedin'), href: 'https://linkedin.com/', icon: FaLinkedin },
+    { name: t('footer.social.facebook'), href: 'https://facebook.com/', icon: FaFacebook },
+    { name: t('footer.social.instagram'), href: 'https://instagram.com/', icon: FaInstagram },
+    { name: t('footer.social.youtube'), href: 'https://youtube.com/', icon: FaYoutube },
+    { name: t('footer.social.discord'), href: 'https://discord.com/', icon: FaDiscord },
+  ];
 
   // Newsletter submit handler (placeholder)
   const handleNewsletterSubmit = (e: React.FormEvent) => {
@@ -36,7 +38,7 @@ const Footer: React.FC = () => {
               GreenDash
             </div>
             <div className="text-sm opacity-90 mb-4 max-w-xs">
-              Empowering sustainable urban mobility and rewarding every stakeholder. Join the movement for a greener, smarter future.
+              {t('footer.mission')}
             </div>
             {/* <div className="flex space-x-4 mt-2">
               {socialLinks.map(({ name, href, icon: Icon }) => (
@@ -65,17 +67,17 @@ const Footer: React.FC = () => {
 
           {/* Center: Newsletter Signup */}
           <div className="mb-8 md:mb-0 flex-1 min-w-[260px]">
-            <div className="font-semibold text-lg mb-2">Subscribe to our Newsletter</div>
+            <div className="font-semibold text-lg mb-2">{t('footer.newsletter.title')}</div>
             <form className="flex flex-col sm:flex-row gap-3" onSubmit={handleNewsletterSubmit}>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                placeholder="Your email address"
+                placeholder={t('footer.newsletter.placeholder')}
                 disabled
                 className="px-4 py-2 rounded-lg border border-green-200 text-green-900 focus:ring-2 focus:ring-green-400 focus:outline-none shadow-sm flex-1 min-w-[160px]"
-                aria-label="Email address"
+                aria-label={t('email')}
               />
               <button
                 type="submit"
@@ -83,15 +85,15 @@ const Footer: React.FC = () => {
                 disabled
                 // disabled={submitted}
               >
-                {submitted ? 'Subscribed!' : 'Subscribe'}
+                {submitted ? t('footer.newsletter.subscribed') : t('footer.newsletter.subscribe')}
               </button>
             </form>
-            <div className="text-xs text-white/80 mt-2">No spam. Unsubscribe anytime.</div>
+            <div className="text-xs text-white/80 mt-2">{t('footer.newsletter.noSpam')}</div>
           </div>
 
           {/* Right: Legal Links */}
           <div className="flex-1 min-w-[180px] flex flex-col items-start md:items-end">
-            <div className="font-semibold text-lg mb-2">Legal</div>
+            <div className="font-semibold text-lg mb-2">{t('footer.legal.title')}</div>
             <div className="flex flex-col gap-2 mb-4">
               <a
                 href="/privacy-policy"
@@ -99,7 +101,7 @@ const Footer: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Privacy Policy
+                {t('footer.legal.privacyPolicy')}
               </a>
               <a
                 href="/terms-of-service"
@@ -107,10 +109,10 @@ const Footer: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Terms of Service
+                {t('footer.legal.termsOfService')}
               </a>
             </div>
-            <div className="text-xs text-white/70">&copy; {new Date().getFullYear()} GreenDash. All rights reserved.</div>
+            <div className="text-xs text-white/70">{t('footer.legal.copyright', { year: new Date().getFullYear() })}</div>
           </div>
         </div>
       </TooltipProvider>

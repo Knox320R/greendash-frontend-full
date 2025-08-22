@@ -1,0 +1,22 @@
+{
+  "title": "Affiliate Program",
+  "subtitle": "Build your network and earn rewards.",
+  "referralCode": {
+    "title": "Referral Code",
+    "description": "Your unique code and invite link"
+  },
+  "copyLink": "Copy Link",
+  "copied": "Copied!",
+  "uplineUsers": {
+    "title": "Your Upline User",
+    "description": "See your sponsor lineage",
+    "referrer": "Your Referrer"
+  },
+  "referralNetwork": {
+    "title": "Referral Network Tree",
+    "description": "Visualize your direct and indirect referrals",
+    "level": "Level {{level}}",
+    "users": "users",
+    "noNetwork": "No referral network yet."
+  }
+} 

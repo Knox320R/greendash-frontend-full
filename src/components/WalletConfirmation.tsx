@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { FaWallet, FaCheckCircle, FaTimes, FaExclamationTriangle, FaPlug } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 interface WalletConfirmationProps {
   expectedAddress: string;
@@ -15,11 +16,16 @@ interface WalletConfirmationProps {
 
 const WalletConfirmation: React.FC<WalletConfirmationProps> = ({
   expectedAddress,
-  title = "Connect to Platform Wallet",
-  description = "Please connect your wallet to the platform address",
+  title,
+  description,
   showDetails = true
 }) => {
+  const { t } = useTranslation('common');
   const { walletAddress, isConnected, isCorrectWallet, confirmWalletAddress, connectWallet } = useWallet();
+  
+  // Use translations for default values if not provided
+  const displayTitle = title || t('walletConfirmation.defaultTitle');
+  const displayDescription = description || t('walletConfirmation.defaultDescription');
   
   const isCorrect = isCorrectWallet(expectedAddress);
   const truncatedExpected = `${expectedAddress.slice(0, 6)}...${expectedAddress.slice(-4)}`;
@@ -29,21 +35,21 @@ const WalletConfirmation: React.FC<WalletConfirmationProps> = ({
     if (!isConnected) {
       await connectWallet();
     } else if (!isCorrect) {
-      toast.info('Please switch to the correct wallet in MetaMask and try again.');
+      toast.info(t('walletConfirmation.switchWalletMessage'));
     } else {
       confirmWalletAddress(expectedAddress);
     }
   };
 
-  let buttonText = 'Connect Wallet';
+  let buttonText = t('walletConfirmation.connectWallet');
   let buttonIcon = <FaPlug className="w-4 h-4 mr-2" />;
   let buttonColor = 'bg-blue-600 hover:bg-blue-700';
   if (isConnected && !isCorrect) {
-    buttonText = 'Wrong Wallet';
+    buttonText = t('walletConfirmation.wrongWallet');
     buttonIcon = <FaTimes className="w-4 h-4 mr-2" />;
     buttonColor = 'bg-red-600 hover:bg-red-700';
   } else if (isConnected && isCorrect) {
-    buttonText = 'Wallet Connected';
+    buttonText = t('walletConfirmation.walletConnected');
     buttonIcon = <FaCheckCircle className="w-4 h-4 mr-2" />;
     buttonColor = 'bg-green-600 hover:bg-green-700';
   }
@@ -53,22 +59,22 @@ const WalletConfirmation: React.FC<WalletConfirmationProps> = ({
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg">
           <FaWallet className="text-blue-600" />
-          {title}
+          {displayTitle}
         </CardTitle>
-        <p className="text-sm text-gray-600">{description}</p>
+        <p className="text-sm text-gray-600">{displayDescription}</p>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Connection Status */}
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium">Connection Status:</span>
+          <span className="text-sm font-medium">{t('walletConfirmation.connectionStatus')}</span>
           <Badge variant={isConnected ? "default" : "secondary"}>
-            {isConnected ? "Connected" : "Not Connected"}
+            {isConnected ? t('walletConfirmation.connected') : t('walletConfirmation.notConnected')}
           </Badge>
         </div>
 
         {/* Expected Address */}
         <div className="space-y-2">
-          <span className="text-sm font-medium text-gray-700">Expected Address:</span>
+          <span className="text-sm font-medium text-gray-700">{t('walletConfirmation.expectedAddress')}</span>
           <div className="bg-gray-50 p-2 rounded border font-mono text-sm">
             {truncatedExpected}
           </div>
@@ -77,7 +83,7 @@ const WalletConfirmation: React.FC<WalletConfirmationProps> = ({
         {/* Connected Address */}
         {isConnected && (
           <div className="space-y-2">
-            <span className="text-sm font-medium text-gray-700">Connected Address:</span>
+            <span className="text-sm font-medium text-gray-700">{t('walletConfirmation.connectedAddress')}</span>
             <div className={`p-2 rounded border font-mono text-sm ${
               isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
             }`}>
@@ -92,12 +98,12 @@ const WalletConfirmation: React.FC<WalletConfirmationProps> = ({
             {isCorrect ? (
               <>
                 <FaCheckCircle className="text-green-500" />
-                <span className="text-sm text-green-700">Address matches correctly</span>
+                <span className="text-sm text-green-700">{t('walletConfirmation.addressMatchesCorrectly')}</span>
               </>
             ) : (
               <>
                 <FaExclamationTriangle className="text-red-500" />
-                <span className="text-sm text-red-700">Address does not match</span>
+                <span className="text-sm text-red-700">{t('walletConfirmation.addressDoesNotMatch')}</span>
               </>
             )}
           </div>
@@ -118,18 +124,18 @@ const WalletConfirmation: React.FC<WalletConfirmationProps> = ({
         {showDetails && (
           <details className="mt-4">
             <summary className="cursor-pointer text-sm font-medium text-gray-700">
-              Show Full Addresses
+              {t('walletConfirmation.showFullAddresses')}
             </summary>
             <div className="mt-2 space-y-2">
               <div>
-                <span className="text-xs text-gray-500">Expected:</span>
+                <span className="text-xs text-gray-500">{t('walletConfirmation.expected')}</span>
                 <div className="font-mono text-xs bg-gray-50 p-1 rounded">
                   {expectedAddress}
                 </div>
               </div>
               {walletAddress && (
                 <div>
-                  <span className="text-xs text-gray-500">Connected:</span>
+                  <span className="text-xs text-gray-500">{t('walletConfirmation.connected')}</span>
                   <div className="font-mono text-xs bg-gray-50 p-1 rounded">
                     {walletAddress}
                   </div>

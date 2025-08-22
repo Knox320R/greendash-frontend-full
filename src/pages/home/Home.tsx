@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import HeroSection from './sections/HeroSection';
 import BenefitsSection from './sections/BenefitsSection';
 import GrowthOpportunitySection from './sections/GrowthOpportunitySection';
@@ -19,6 +20,7 @@ import { useAuth } from '@/hooks/useAuth';
 // TODO: Import and wire up Redux, hooks, and props as needed for each section
 
 const Home: React.FC = () => {
+  const { t } = useTranslation(['home', 'common']);
   // State for carousel and other interactive elements
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate()
@@ -31,46 +33,46 @@ const Home: React.FC = () => {
 
   const adminData = useSelector((state: RootState) => state.adminData);
 
-  // Mock testimonials data
+  // Translated testimonials data
   const testimonials = [
     {
       id: 1,
-      quote: "GreenDash has completely transformed how I think about sustainable investing. The daily rewards are incredible!",
-      name: "Sarah Johnson",
-      role: "Environmental Consultant",
-      duration: "6 months",
+      quote: t('home:testimonials.testimonial1.quote'),
+      name: t('home:testimonials.testimonial1.name'),
+      role: t('home:testimonials.testimonial1.role'),
+      duration: t('home:testimonials.testimonial1.duration'),
       avatar: "https://randomuser.me/api/portraits/women/44.jpg"
     },
     {
       id: 2,
-      quote: "As a driver, I love earning more while contributing to a greener future. The platform is revolutionary.",
-      name: "Michael Chen",
-      role: "Electric Vehicle Driver",
-      duration: "8 months",
+      quote: t('home:testimonials.testimonial2.quote'),
+      name: t('home:testimonials.testimonial2.name'),
+      role: t('home:testimonials.testimonial2.role'),
+      duration: t('home:testimonials.testimonial2.duration'),
       avatar: "https://randomuser.me/api/portraits/men/32.jpg"
     },
     {
       id: 3,
-      quote: "The profit-sharing model is genius. I'm earning from every transaction while supporting sustainability.",
-      name: "Emma Rodriguez",
-      role: "Tech Entrepreneur",
-      duration: "1 year",
+      quote: t('home:testimonials.testimonial3.quote'),
+      name: t('home:testimonials.testimonial3.name'),
+      role: t('home:testimonials.testimonial3.role'),
+      duration: t('home:testimonials.testimonial3.duration'),
       avatar: "https://randomuser.me/api/portraits/women/68.jpg"
     },
     {
       id: 4,
-      quote: "Finally, a platform that puts people and planet first. The returns are amazing too!",
-      name: "David Kim",
-      role: "Investment Advisor",
-      duration: "4 months",
+      quote: t('home:testimonials.testimonial4.quote'),
+      name: t('home:testimonials.testimonial4.name'),
+      role: t('home:testimonials.testimonial4.role'),
+      duration: t('home:testimonials.testimonial4.duration'),
       avatar: "https://randomuser.me/api/portraits/men/65.jpg"
     },
     {
       id: 5,
-      quote: "GreenDash proves that you can do good and do well. I'm proud to be part of this movement.",
-      name: "Lisa Thompson",
-      role: "Sustainability Expert",
-      duration: "10 months",
+      quote: t('home:testimonials.testimonial5.quote'),
+      name: t('home:testimonials.testimonial5.name'),
+      role: t('home:testimonials.testimonial5.role'),
+      duration: t('home:testimonials.testimonial5.duration'),
       avatar: "https://randomuser.me/api/portraits/women/12.jpg"
     }
   ];

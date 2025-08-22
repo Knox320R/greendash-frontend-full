@@ -1,0 +1,113 @@
+{
+  "welcome": "Bem-vindo",
+  "dashboard": "Painel",
+  "staking": "Staking",
+  "referrals": "Referências",
+  "activity": "Atividade",
+  "withdrawals": "Saques",
+  "overview": "Visão Geral",
+  "logout": "Sair",
+  "login": "Entrar",
+  "register": "Registrar",
+  "email": "Email",
+  "password": "Senha",
+  "submit": "Enviar",
+  "cancel": "Cancelar",
+  "loading": "Carregando...",
+  "error": "Erro",
+  "success": "Sucesso",
+  "balance": "Saldo",
+  "amount": "Quantidade",
+  "status": "Status",
+  "date": "Data",
+  "actions": "Ações",
+  "learnMore": "Saiba Mais",
+  "getStarted": "Começar",
+  "contactUs": "Entre em Contato",
+  "about": "Sobre",
+  "features": "Recursos",
+  "pricing": "Preços",
+  "support": "Suporte",
+  "progress": "Progresso",
+  "notificationBanner": {
+    "withdrawalApproved": "Saque aprovado: {amount} USDT",
+    "withdrawalReturned": "Saque devolvido: {amount} USDT",
+    "approvedMessage": "Sua solicitação de saque foi aprovada. Clique em 'Sacar' para completar a transação.",
+    "returnedMessage": "O valor do saque foi devolvido ao saldo da sua conta.",
+    "withdraw": "Sacar",
+    "dismiss": "Dispensar"
+  },
+  "walletConfirmation": {
+    "defaultTitle": "Conectar à Carteira da Plataforma",
+    "defaultDescription": "Por favor, conecte sua carteira ao endereço da plataforma",
+    "connectionStatus": "Status da Conexão:",
+    "connected": "Conectado",
+    "notConnected": "Não Conectado",
+    "expectedAddress": "Endereço Esperado:",
+    "connectedAddress": "Endereço Conectado:",
+    "addressMatchesCorrectly": "Endereço corresponde corretamente",
+    "addressDoesNotMatch": "Endereço não corresponde",
+    "connectWallet": "Conectar Carteira",
+    "wrongWallet": "Carteira Errada",
+    "walletConnected": "Carteira Conectada",
+    "showFullAddresses": "Mostrar Endereços Completos",
+    "expected": "Esperado:",
+    "connected": "Conectado:",
+    "switchWalletMessage": "Por favor, mude para a carteira correta no MetaMask e tente novamente."
+  },
+  "header": {
+    "navigation": {
+      "staking": "Staking",
+      "benefits": "Benefícios",
+      "opportunity": "Oportunidade",
+      "tokens": "Tokens",
+      "ranks": "Classificações",
+      "roadmap": "Roteiro",
+      "testimonials": "Depoimentos",
+      "contact": "Contato",
+      "join": "Juntar-se"
+    },
+    "auth": {
+      "dashboard": "Painel",
+      "affiliates": "Afiliados",
+      "staking": "Staking",
+      "profile": "Perfil",
+      "admin": "Admin",
+      "login": "Entrar",
+      "register": "Registrar",
+      "logout": "Sair"
+    },
+    "ui": {
+      "goTo": "Ir para",
+      "more": "Mais",
+      "openMenu": "Abrir Menu",
+      "greenDashHome": "Página Inicial GreenDash"
+    }
+  },
+  "footer": {
+    "mission": "Empoderando a mobilidade urbana sustentável e recompensando todos os stakeholders. Junte-se ao movimento por um futuro mais verde e inteligente.",
+    "newsletter": {
+      "title": "Inscreva-se em nossa Newsletter",
+      "placeholder": "Seu endereço de email",
+      "subscribe": "Inscrever",
+      "subscribed": "Inscrito!",
+      "noSpam": "Sem spam. Cancele a inscrição a qualquer momento."
+    },
+    "legal": {
+      "title": "Legal",
+      "privacyPolicy": "Política de Privacidade",
+      "termsOfService": "Termos de Serviço",
+      "copyright": "© {year} GreenDash. Todos os direitos reservados."
+    },
+    "social": {
+      "twitter": "Twitter",
+      "telegram": "Telegram",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "discord": "Discord"
+    }
+  }
+} 

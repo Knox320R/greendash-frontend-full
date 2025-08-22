@@ -10,8 +10,10 @@ import { api } from '@/lib/api';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/store/auth';
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
+  const { t } = useTranslation(['auth', 'common']);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, isLoading, error, isAuthenticated } = useAuth();
@@ -89,8 +91,8 @@ const Login = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
             >
-              <CardTitle className="text-2xl font-bold text-green-800">Welcome Back</CardTitle>
-              <CardDescription>Sign in to your GreenDash account</CardDescription>
+              <CardTitle className="text-2xl font-bold text-green-800">{t('auth:loginTitle')}</CardTitle>
+              <CardDescription>{t('auth:loginSubtitle')}</CardDescription>
             </motion.div>
           </CardHeader>
           <CardContent>
@@ -118,14 +120,14 @@ const Login = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                  Email
+                  {t('common:email')}
                 </label>
                 <div className="relative">
                   <FaEnvelope className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
                   <Input
                     id="email"
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder={t('auth:emailPlaceholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10"
@@ -141,14 +143,14 @@ const Login = () => {
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
                 <label htmlFor="password" className="text-sm font-medium text-gray-700">
-                  Password
+                  {t('common:password')}
                 </label>
                 <div className="relative">
                   <FaLock className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
                   <Input
                     id="password"
                     type="password"
-                    placeholder="Enter your password"
+                    placeholder={t('auth:passwordPlaceholder')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-10"
@@ -170,10 +172,10 @@ const Login = () => {
                   {isLoading ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Signing In...
+                      {t('common:loading')}
                     </div>
                   ) : (
-                    'Sign In'
+                    t('auth:signIn')
                   )}
                 </Button>
               </motion.div>
@@ -185,14 +187,14 @@ const Login = () => {
               transition={{ duration: 0.7, delay: 0.7 }}
             >
               <p className="text-gray-600">
-                Don't have an account?{' '}
+                {t('auth:dontHaveAccount')}{' '}
                 <Link to="/register" className="text-green-600 hover:text-green-700 font-medium">
-                  Sign up
+                  {t('auth:signUp')}
                 </Link>
               </p>
               <p className="text-gray-600 mt-2">
                 <button onClick={handleForgotPassword} className="text-green-600 hover:text-green-700 font-medium">
-                  Forgot your password?
+                  {t('auth:forgotPassword')}
                 </button>
               </p>
             </motion.div>

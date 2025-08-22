@@ -1,0 +1,136 @@
+{
+  "hero": {
+    "title": "Welcome to GreenDash",
+    "subtitle": "The Future of Sustainable Staking and Investment",
+    "description": "Join thousands of users who are already benefiting from our innovative staking platform. Earn daily rewards while contributing to a greener future.",
+    "ctaPrimary": "Start Staking Now",
+    "ctaSecondary": "Learn More"
+  },
+  "benefits": {
+    "title": "Why Choose GreenDash?",
+    "subtitle": "Discover the advantages that make us the leading choice",
+    "dailyRewards": {
+      "title": "Daily Rewards",
+      "description": "Earn consistent daily rewards from your staking investments"
+    },
+    "sustainability": {
+      "title": "Sustainability Focus",
+      "description": "Support eco-friendly projects while earning returns"
+    },
+    "security": {
+      "title": "Advanced Security",
+      "description": "Your investments are protected by state-of-the-art security measures"
+    },
+    "community": {
+      "title": "Strong Community",
+      "description": "Join a growing community of like-minded investors"
+    }
+  },
+  "staking": {
+    "title": "Staking Packages",
+    "subtitle": "Choose the perfect staking plan for your goals",
+    "bronze": {
+      "name": "Bronze Package",
+      "description": "Perfect for beginners",
+      "dailyYield": "Daily Yield: 0.5%",
+      "lockPeriod": "Lock Period: 30 days"
+    },
+    "silver": {
+      "name": "Silver Package",
+      "description": "Great for regular investors",
+      "dailyYield": "Daily Yield: 0.8%",
+      "lockPeriod": "Lock Period: 60 days"
+    },
+    "gold": {
+      "name": "Gold Package",
+      "description": "Premium investment option",
+      "dailyYield": "Daily Yield: 1.2%",
+      "lockPeriod": "Lock Period: 90 days"
+    },
+    "investmentPackages": "Investment Packages",
+    "egd": "EGD",
+    "usdt": "USDT",
+    "dailyReturn": "Daily Return in EGD",
+    "totalEarning": "Total Earning",
+    "initialTokenPrice": "Initial Token EGD launch price:",
+    "investmentNote": "⚠️ Investment package earnings are paid in EGD tokens. All Cashback earnings are paid in USDT."
+  },
+  "testimonials": {
+    "title": "What Our Users Say",
+    "subtitle": "Real stories from real investors",
+    "user1": {
+      "name": "John Smith",
+      "role": "Professional Investor",
+      "comment": "GreenDash has transformed my investment strategy. The daily rewards are consistent and the platform is incredibly user-friendly."
+    },
+    "user2": {
+      "name": "Sarah Johnson",
+      "role": "Small Business Owner",
+      "comment": "I love how GreenDash combines profitability with sustainability. It's exactly what I was looking for in an investment platform."
+    },
+    "user3": {
+      "name": "Michael Chen",
+      "role": "Tech Entrepreneur",
+      "comment": "The referral program is fantastic. I've earned significant additional income while helping friends discover this amazing platform."
+    },
+    "testimonial1": {
+      "quote": "GreenDash has completely transformed how I think about sustainable investing. The daily rewards are incredible!",
+      "name": "Sarah Johnson",
+      "role": "Environmental Consultant",
+      "duration": "6 months"
+    },
+    "testimonial2": {
+      "quote": "As a driver, I love earning more while contributing to a greener future. The platform is revolutionary.",
+      "name": "Michael Chen",
+      "role": "Electric Vehicle Driver",
+      "duration": "8 months"
+    },
+    "testimonial3": {
+      "quote": "The profit-sharing model is genius. I'm earning from every transaction while supporting sustainability.",
+      "name": "Emma Rodriguez",
+      "role": "Tech Entrepreneur",
+      "duration": "1 year"
+    },
+    "testimonial4": {
+      "quote": "Finally, a platform that puts people and planet first. The returns are amazing too!",
+      "name": "David Kim",
+      "role": "Investment Advisor",
+      "duration": "4 months"
+    },
+    "testimonial5": {
+      "quote": "GreenDash proves that you can do good and do well. I'm proud to be part of this movement.",
+      "name": "Lisa Thompson",
+      "role": "Sustainability Expert",
+      "duration": "10 months"
+    }
+  },
+  "roadmap": {
+    "title": "Development Roadmap",
+    "subtitle": "Our journey to revolutionize staking",
+    "phase1": {
+      "title": "Phase 1: Foundation",
+      "description": "Core staking platform and basic features"
+    },
+    "phase2": {
+      "title": "Phase 2: Expansion",
+      "description": "Advanced features and mobile app"
+    },
+    "phase3": {
+      "title": "Phase 3: Innovation",
+      "description": "AI-powered insights and DeFi integration"
+    }
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "We'd love to hear from you",
+    "email": "Email us at",
+    "phone": "Call us at",
+    "address": "Visit us at",
+    "form": {
+      "name": "Your Name",
+      "email": "Your Email",
+      "message": "Your Message",
+      "send": "Send Message"
+    }
+  }
+} 

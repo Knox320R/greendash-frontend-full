@@ -1,0 +1,113 @@
+{
+  "welcome": "欢迎",
+  "dashboard": "仪表板",
+  "staking": "质押",
+  "referrals": "推荐",
+  "activity": "活动",
+  "withdrawals": "提款",
+  "overview": "概览",
+  "logout": "登出",
+  "login": "登录",
+  "register": "注册",
+  "email": "邮箱",
+  "password": "密码",
+  "submit": "提交",
+  "cancel": "取消",
+  "loading": "加载中...",
+  "error": "错误",
+  "success": "成功",
+  "balance": "余额",
+  "amount": "数量",
+  "status": "状态",
+  "date": "日期",
+  "actions": "操作",
+  "learnMore": "了解更多",
+  "getStarted": "开始",
+  "contactUs": "联系我们",
+  "about": "关于",
+  "features": "功能",
+  "pricing": "价格",
+  "support": "支持",
+  "progress": "进度",
+  "notificationBanner": {
+    "withdrawalApproved": "提现已批准：{amount} USDT",
+    "withdrawalReturned": "提现已退回：{amount} USDT",
+    "approvedMessage": "您的提现请求已获批准。点击"提现"完成交易。",
+    "returnedMessage": "提现金额已退回您的账户余额。",
+    "withdraw": "提现",
+    "dismiss": "关闭"
+  },
+  "walletConfirmation": {
+    "defaultTitle": "连接到平台钱包",
+    "defaultDescription": "请将您的钱包连接到平台地址",
+    "connectionStatus": "连接状态：",
+    "connected": "已连接",
+    "notConnected": "未连接",
+    "expectedAddress": "预期地址：",
+    "connectedAddress": "已连接地址：",
+    "addressMatchesCorrectly": "地址匹配正确",
+    "addressDoesNotMatch": "地址不匹配",
+    "connectWallet": "连接钱包",
+    "wrongWallet": "错误钱包",
+    "walletConnected": "钱包已连接",
+    "showFullAddresses": "显示完整地址",
+    "expected": "预期：",
+    "connected": "已连接：",
+    "switchWalletMessage": "请在MetaMask中切换到正确的钱包并重试。"
+  },
+  "header": {
+    "navigation": {
+      "staking": "质押",
+      "benefits": "优势",
+      "opportunity": "机会",
+      "tokens": "代币",
+      "ranks": "等级",
+      "roadmap": "路线图",
+      "testimonials": "用户评价",
+      "contact": "联系",
+      "join": "加入"
+    },
+    "auth": {
+      "dashboard": "仪表板",
+      "affiliates": "联盟",
+      "staking": "质押",
+      "profile": "个人资料",
+      "admin": "管理",
+      "login": "登录",
+      "register": "注册",
+      "logout": "登出"
+    },
+    "ui": {
+      "goTo": "前往",
+      "more": "更多",
+      "openMenu": "打开菜单",
+      "greenDashHome": "GreenDash首页"
+    }
+  },
+  "footer": {
+    "mission": "赋能可持续城市出行并奖励每个利益相关者。加入更绿色、更智能未来的运动。",
+    "newsletter": {
+      "title": "订阅我们的新闻通讯",
+      "placeholder": "您的邮箱地址",
+      "subscribe": "订阅",
+      "subscribed": "已订阅！",
+      "noSpam": "无垃圾邮件。随时取消订阅。"
+    },
+    "legal": {
+      "title": "法律",
+      "privacyPolicy": "隐私政策",
+      "termsOfService": "服务条款",
+      "copyright": "© {year} GreenDash。保留所有权利。"
+    },
+    "social": {
+      "twitter": "Twitter",
+      "telegram": "Telegram",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "discord": "Discord"
+    }
+  }
+} 

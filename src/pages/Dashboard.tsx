@@ -41,6 +41,7 @@ import USDT_ABI from '@/lib/usdt_abi.json';
 import { useWallet } from '@/hooks/WalletContext';
 import { USDT_ADDRESS } from '@/lib/constants';
 import StakingProgress from '@/components/StakingProgress';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -75,6 +76,7 @@ const ReferralTree: React.FC<{ nodes: ReferralNode[]; level?: number }> = ({ nod
 );
 
 const Dashboard = () => {
+  const { t } = useTranslation(['dashboard', 'common']);
   const { user, user_base_data, isLoading, confirmUpdateWithdrawal, isAuthenticated, staking_progress } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
   const { connectWallet, isConnected, isCorrectWallet } = useWallet();
@@ -98,11 +100,11 @@ const Dashboard = () => {
   function sendExchangeRequest() {
     const amount = Number(exchangeAmount);
     if (!exchangeAmount || isNaN(amount) || amount <= 0) {
-      setExchangeError('Please enter a valid amount.');
+      setExchangeError(t('dashboard:withdrawalDetails.pleaseEnterValidAmount'));
       return;
     }
     if (amount > Number(egd_balance)) {
-      setExchangeError('Amount exceeds available EGD balance.');
+      setExchangeError(t('dashboard:errors.amountExceedsEgdBalance'));
       return;
     }
     // if (amount < minExchange) {
@@ -195,7 +197,7 @@ const Dashboard = () => {
 
       // Validate withdrawal data
       if (!approvedWithdrawal.amount || approvedWithdrawal.amount <= 0) {
-        toast.error('Invalid withdrawal amount');
+        toast.error(t('dashboard:withdrawalDetails.invalidWithdrawalAmount'));
         return;
       }
 
@@ -224,7 +226,11 @@ const Dashboard = () => {
       const netAmountWei = ethers.parseUnits(netAmount.toFixed(8), decimals);
 
       // Show transaction pending message with fee breakdown
-      toast.info(`Processing withdrawal of ${netAmount.toFixed(2)} USDT (${originalAmount} - ${feeAmount.toFixed(2)} platform fee) from platform wallet...`);
+              toast.info(t('dashboard:withdrawalDetails.processingWithdrawal', {
+          netAmount: netAmount.toFixed(2),
+          originalAmount: originalAmount,
+          feeAmount: feeAmount.toFixed(2)
+        }));
 
       // Execute the transfer from platform wallet to user's wallet
       // The platform wallet has already approved the user to spend the net amount (after fee)
@@ -237,7 +243,10 @@ const Dashboard = () => {
 
       // Check if transaction was successful
       if (receipt.status === 1) {
-        toast.success(`Successfully received ${netAmount.toFixed(2)} USDT in your wallet! (${feeAmount.toFixed(2)} platform fee deducted)`);
+        toast.success(t('dashboard:withdrawalDetails.successfullyReceived', { 
+          netAmount: netAmount.toFixed(2), 
+          feeAmount: feeAmount.toFixed(2) 
+        }));
         // Close the notification after successful withdrawal
         confirmUpdateWithdrawal(approvedWithdrawal.id, index);
       } else {
@@ -249,15 +258,15 @@ const Dashboard = () => {
 
       // Provide specific error messages
       if (error.code === 'INSUFFICIENT_FUNDS') {
-        toast.error('Platform has insufficient USDT balance for withdrawal');
-      } else if (error.code === 'USER_REJECTED') {
-        toast.error('Transaction was rejected by user');
-      } else if (error.message?.includes('allowance')) {
-        toast.error('Withdrawal not approved yet. Please wait for admin approval.');
-      } else if (error.message?.includes('network')) {
-        toast.error('Network error. Please check your connection');
-      } else {
-        toast.error(`Failed to process withdrawal: ${'Unknown error'}`);
+        toast.error(t('dashboard:errors.insufficientUsdtBalance'));
+              } else if (error.code === 'USER_REJECTED') {
+          toast.error(t('dashboard:errors.transactionRejected'));
+              } else if (error.message?.includes('allowance')) {
+          toast.error(t('dashboard:errors.withdrawalNotApproved'));
+              } else if (error.message?.includes('network')) {
+          toast.error(t('dashboard:errors.networkError'));
+              } else {
+          toast.error(t('dashboard:errors.withdrawalFailed', { error: 'Unknown error' }));
       }
     } finally {
       dispatch(setLoading(false));
@@ -273,10 +282,10 @@ const Dashboard = () => {
           className="mb-8"
         >
           <h1 className="text-3xl font-bold text-gray-900">
-            Welcome back, {name}!
+            {t('dashboard:welcomeBack', { name: name })}
           </h1>
           <p className="text-gray-600 mt-2">
-            Here's your GreenDash overview
+            {t('dashboard:greendashOverview')}
           </p>
         </motion.div>
 
@@ -294,9 +303,9 @@ const Dashboard = () => {
                   <FaCheckCircle className="w-6 h-6 text-green-100" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold mb-2">🎉 Congratulations!</h3>
+                                      <h3 className="text-lg font-semibold mb-2">{t('dashboard:withdrawalDetails.congratulations')}</h3>
                   <p className="text-green-50 leading-relaxed">
-                    You've already earned 300% of your total staked amount. Therefore, your staking packages has been completed. If you want more daily rewards, you may purchase new packages.
+                    {t('dashboard:withdrawalDetails.stakingCompleted')}
                   </p>
                 </div>
               </div>
@@ -313,7 +322,7 @@ const Dashboard = () => {
         >
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">EGD Balance</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('dashboard:egdBalance')}</CardTitle>
               <FaCoins className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
@@ -322,39 +331,39 @@ const Dashboard = () => {
                 ≈ {(Number(egd_balance) * 0.01).toLocaleString(undefined, { style: 'currency', currency: 'USD' })}
               </p>
               <Button className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setExchangeModalOpen(true)}>
-                Convert to USDT
+                {t('dashboard:convertEgdToUsdt')}
               </Button>
               <Dialog open={exchangeModalOpen} onOpenChange={setExchangeModalOpen}>
                 <DialogContent className="max-w-sm">
                   <DialogHeader>
-                    <DialogTitle>Convert EGD to USDT</DialogTitle>
+                    <DialogTitle>{t('dashboard:convertEgdToUsdt')}</DialogTitle>
                   </DialogHeader>
                   <div className="mb-2">
-                    <label htmlFor="exchange-amount" className="block text-sm font-medium text-gray-700 mb-1">Amount of EGD</label>
-                    <Input
-                      id="exchange-amount"
-                      type="number"
-                      min="0"
-                      step="any"
-                      value={exchangeAmount}
-                      onChange={e => {
-                        setExchangeAmount(Number(e.target.value));
-                        setExchangeError('');
-                      }}
-                      placeholder="Enter amount"
-                      className="w-full"
-                    />
+                    <label htmlFor="exchange-amount" className="block text-sm font-medium text-gray-700 mb-1">{t('dashboard:amountOfEgd')}</label>
+                                          <Input
+                        id="exchange-amount"
+                        type="number"
+                        min="0"
+                        step="any"
+                        value={exchangeAmount}
+                        onChange={e => {
+                          setExchangeAmount(Number(e.target.value));
+                          setExchangeError('');
+                        }}
+                        placeholder={t('dashboard:enterAmount')}
+                        className="w-full"
+                      />
                     {exchangeError && <div className="text-red-600 text-xs mt-1">{exchangeError}</div>}
                   </div>
                   <DialogFooter className="flex gap-2 justify-end">
                     <Button variant="outline" onClick={() => setExchangeModalOpen(false)}>
-                      Cancel
+                      {t('dashboard:cancel')}
                     </Button>
                     <Button
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      className="bg-blue-700 text-white"
                       onClick={sendExchangeRequest}
                     >
-                      Exchange
+                      {t('dashboard:exchange')}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
@@ -364,24 +373,24 @@ const Dashboard = () => {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">USDT balance</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('dashboard:usdtBalance')}</CardTitle>
               <FaArrowDown className="h-4 w-4 text-blue-600" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{withdrawals.toFixed(2)} USDT</div>
               <p className="text-xs text-muted-foreground">
-                Total withdrawable amount
+                {t('dashboard:withdrawalDetails.totalWithdrawableAmount')}
               </p>
               <Button className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white" onClick={() => setWithdrawModalOpen(true)} >
-                Send Withdrawal Request
+                {t('dashboard:withdrawal.sendRequest')}
               </Button>
               <Dialog open={withdrawModalOpen} onOpenChange={setWithdrawModalOpen}>
                 <DialogContent className="max-w-sm">
                   <DialogHeader>
-                    <DialogTitle>Send Withdrawal Request</DialogTitle>
+                    <DialogTitle>{t('dashboard:withdrawal.title')}</DialogTitle>
                   </DialogHeader>
                   <div className="mb-2">
-                    <label htmlFor="withdraw-amount" className="block text-sm font-medium text-gray-700 mb-1">Amount of USDT</label>
+                    <label htmlFor="withdraw-amount" className="block text-sm font-medium text-gray-700 mb-1">{t('dashboard:withdrawalDetails.amountOfUsdt')}</label>
                     <Input
                       id="withdraw-amount"
                       type="number"
@@ -392,7 +401,7 @@ const Dashboard = () => {
                         setWithdrawAmount(e.target.value);
                         setWithdrawError('');
                       }}
-                      placeholder="Enter amount"
+                                              placeholder={t('dashboard:enterAmount')}
                       className="w-full"
                     />
                     {withdrawError && <div className="text-red-600 text-xs mt-1">{withdrawError}</div>}
@@ -400,7 +409,7 @@ const Dashboard = () => {
                     {/* Show fee breakdown when amount is entered */}
                     {withdrawAmount && !isNaN(Number(withdrawAmount)) && Number(withdrawAmount) > 0 && (
                       <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                        <div className="text-sm font-medium text-blue-900 mb-2">Fee Breakdown:</div>
+                        <div className="text-sm font-medium text-blue-900 mb-2">{t('dashboard:withdrawalDetails.feeBreakdown')}</div>
                         <div className="space-y-1 text-xs">
                           {(() => {
                             const withdrawal_fee_percentage = adminSettings.find(item => item.title === "withdrawal_fee_percentage")?.value || "10";
@@ -412,15 +421,15 @@ const Dashboard = () => {
                             return (
                               <>
                                 <div className="flex justify-between">
-                                  <span>Requested Amount:</span>
-                                  <span className="font-medium">{requestedAmount.toFixed(2)} USDT</span>
+                                                          <span>{t('dashboard:withdrawalDetails.requestedAmount')}</span>
+                        <span className="font-medium">{requestedAmount.toFixed(2)} USDT</span>
                                 </div>
                                 <div className="flex justify-between text-red-600">
-                                  <span>Platform Fee ({feePercentage}%):</span>
+                                  <span>{t('dashboard:withdrawalDetails.platformFee', { percentage: feePercentage })}</span>
                                   <span>-{feeAmount.toFixed(2)} USDT</span>
                                 </div>
                                 <div className="border-t border-blue-200 pt-1 flex justify-between font-semibold text-green-600">
-                                  <span>You'll Receive:</span>
+                                  <span>{t('dashboard:withdrawalDetails.youllReceive')}</span>
                                   <span>{netAmount.toFixed(2)} USDT</span>
                                 </div>
                               </>
@@ -432,25 +441,25 @@ const Dashboard = () => {
                   </div>
                   <DialogFooter className="flex gap-2 justify-end">
                     <Button variant="outline" onClick={() => setWithdrawModalOpen(false)}>
-                      Cancel
+                      {t('dashboard:cancel')}
                     </Button>
                     <Button
                       className="bg-green-600 hover:bg-green-700 text-white"
                       onClick={() => {
                         const amount = Number(withdrawAmount);
                         if (!withdrawAmount || isNaN(amount) || amount <= 0) {
-                          setWithdrawError('Please enter a valid amount.');
+                          setWithdrawError(t('dashboard:withdrawalDetails.pleaseEnterValidAmount'));
                           return;
                         }
                         if (amount > Number(withdrawals)) {
-                          setWithdrawError('Amount exceeds available USDT balance.');
+                          setWithdrawError(t('dashboard:errors.amountExceedsUsdtBalance'));
                           return;
                         }
                         setWithdrawModalOpen(false);
                         sendWithdrawRequest(amount);
                       }}
                     >
-                      Withdraw
+                      {t('dashboard:withdraw')}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
@@ -460,7 +469,7 @@ const Dashboard = () => {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Staked</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('dashboard:withdrawalDetails.totalStaked')}</CardTitle>
               <FaLock className="h-4 w-4 text-purple-600" />
             </CardHeader>
             <CardContent>
@@ -589,7 +598,7 @@ const Dashboard = () => {
                       <span className="font-semibold">{stakingSummary?.length || 0} times</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Total Staked</span>
+                                              <span className="text-sm font-medium">{t('dashboard:withdrawalDetails.totalStaked')}</span>
                       <span className="font-semibold">{stakingStats.total_staking_amount} EGD</span>
                     </div>
                     <div className="flex items-center justify-between">
@@ -689,10 +698,10 @@ const Dashboard = () => {
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <FaMoneyBillWave className="text-blue-600" />
-                        Withdrawal Requests
+                        {t('dashboard:withdrawal.requests')}
                       </CardTitle>
                       <CardDescription>
-                        You have {user_base_data.recent_withdrawals.length} withdrawal request(s)
+                        {t('dashboard:withdrawal.count', { count: user_base_data.recent_withdrawals.length })}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
@@ -710,14 +719,17 @@ const Dashboard = () => {
                               return {
                                 icon: <FaClock className="text-yellow-500" />,
                                 color: 'bg-yellow-100 text-yellow-800',
-                                description: 'Your withdrawal request is being reviewed by our team.',
+                                description: t('dashboard:withdrawal.reviewing'),
                                 button: null
                               };
                             case 'approved':
                               return {
                                 icon: <FaCheckCircle className="text-green-500" />,
                                 color: 'bg-green-100 text-green-800',
-                                description: `Your withdrawal has been approved! You will receive ${netAmount.toFixed(2)} USDT (${feeAmount.toFixed(2)} platform fee deducted). Click below to receive your USDT.`,
+                                description: t('dashboard:withdrawalDetails.withdrawalApproved', { 
+                                  netAmount: netAmount.toFixed(2), 
+                                  feeAmount: feeAmount.toFixed(2) 
+                                }),
                                 button: (
                                   <Button
                                     size="sm"
@@ -725,7 +737,7 @@ const Dashboard = () => {
                                     onClick={() => handleWithdrawal(idx)}
                                   >
                                     <FaDownload className="w-3 h-3 mr-1" />
-                                    Receive {netAmount.toFixed(2)} USDT
+                                    {t('dashboard:withdrawalDetails.receiveUsdt', { amount: netAmount.toFixed(2) })}
                                   </Button>
                                 )
                               };
@@ -733,21 +745,21 @@ const Dashboard = () => {
                               return {
                                 icon: <FaCheckCircle className="text-blue-500" />,
                                 color: 'bg-blue-100 text-blue-800',
-                                description: 'Withdrawal completed successfully. Funds have been transferred to your wallet.',
+                                description: t('dashboard:withdrawalDetails.withdrawalCompleted'),
                                 button: null
                               };
                             case 'rejected':
                               return {
                                 icon: <FaTimes className="text-red-500" />,
                                 color: 'bg-red-100 text-red-800',
-                                description: 'Your withdrawal request was rejected. Please contact support for more information.',
+                                description: t('dashboard:withdrawal.rejected'),
                                 button: null
                               };
                             default:
                               return {
                                 icon: <FaClock className="text-gray-500" />,
                                 color: 'bg-gray-100 text-gray-800',
-                                description: 'Processing your withdrawal request.',
+                                description: t('dashboard:withdrawal.processing'),
                                 button: null
                               };
                           }
@@ -768,17 +780,17 @@ const Dashboard = () => {
                                     {withdrawal.amount} USDT
                                   </p>
                                   <p className="text-sm text-gray-500">
-                                    Requested {formatDate(withdrawal.createdAt)}
+                                    {t('dashboard:withdrawalDetails.requested')} {formatDate(withdrawal.createdAt)}
                                   </p>
                                   {/* Show fee breakdown for approved withdrawals */}
                                   {withdrawal.status === 'approved' && (
                                     <div className="mt-2 text-xs text-gray-600">
                                       <div className="flex items-center gap-2">
-                                        <span>Platform Fee ({feePercentage}%):</span>
+                                        <span>{t('dashboard:withdrawalDetails.platformFee', { percentage: feePercentage })}</span>
                                         <span className="text-red-600">-{feeAmount.toFixed(2)} USDT</span>
                                       </div>
                                       <div className="flex items-center gap-2 font-semibold text-green-600">
-                                        <span>You'll Receive:</span>
+                                        <span>{t('dashboard:withdrawalDetails.youllReceive')}</span>
                                         <span>{netAmount.toFixed(2)} USDT</span>
                                       </div>
                                     </div>
@@ -809,9 +821,9 @@ const Dashboard = () => {
                 <Card>
                   <CardContent className="p-8 text-center">
                     <FaMoneyBillWave className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No Withdrawal Requests</h3>
+                    <h3 className="text-lg font-semibold mb-2">{t('dashboard:withdrawal.noRequests')}</h3>
                     <p className="text-muted-foreground">
-                      You don't have any withdrawal requests at the moment
+                      {t('dashboard:withdrawal.noRequestsMessage')}
                     </p>
                   </CardContent>
                 </Card>

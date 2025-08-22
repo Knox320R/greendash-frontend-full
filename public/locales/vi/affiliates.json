@@ -1,0 +1,22 @@
+{
+  "title": "Chương trình Liên kết",
+  "subtitle": "Xây dựng mạng lưới của bạn và kiếm phần thưởng.",
+  "referralCode": {
+    "title": "Mã Giới thiệu",
+    "description": "Mã duy nhất và liên kết mời của bạn"
+  },
+  "copyLink": "Sao chép Liên kết",
+  "copied": "Đã sao chép!",
+  "uplineUsers": {
+    "title": "Người dùng Upline của bạn",
+    "description": "Xem dòng dõi nhà tài trợ của bạn",
+    "referrer": "Người giới thiệu của bạn"
+  },
+  "referralNetwork": {
+    "title": "Cây Mạng lưới Giới thiệu",
+    "description": "Trực quan hóa các giới thiệu trực tiếp và gián tiếp của bạn",
+    "level": "Cấp {{level}}",
+    "users": "người dùng",
+    "noNetwork": "Chưa có mạng lưới giới thiệu."
+  }
+} 
