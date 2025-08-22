@@ -1,58 +1,103 @@
 {
   "hero": {
-    "title": "Bem-vindo ao GreenDash",
-    "subtitle": "O Futuro do Staking e Investimento Sustentável",
-    "description": "Junte-se a milhares de usuários que já estão se beneficiando de nossa plataforma de staking inovadora. Ganhe recompensas diárias enquanto contribui para um futuro mais verde.",
-    "ctaPrimary": "Começar Staking Agora",
-    "ctaSecondary": "Saiba Mais"
-  },
-  "benefits": {
-    "title": "Por que escolher o GreenDash?",
-    "subtitle": "Descubra as vantagens que nos tornam a escolha líder",
-    "dailyRewards": {
-      "title": "Recompensas Diárias",
-      "description": "Ganhe recompensas diárias consistentes de seus investimentos em staking"
-    },
-    "sustainability": {
-      "title": "Foco na Sustentabilidade",
-      "description": "Apoie projetos ecologicamente corretos enquanto ganha retornos"
-    },
-    "security": {
-      "title": "Segurança Avançada",
-      "description": "Seus investimentos são protegidos por medidas de segurança de última geração"
-    },
-    "community": {
-      "title": "Comunidade Forte",
-      "description": "Junte-se a uma comunidade crescente de investidores com ideias semelhantes"
-    }
+    "title": "GreenDash",
+    "subtitle": "Empoderando a Mobilidade Urbana Sustentável",
+    "description": "Junte-se ao futuro do transporte ecológico com nossa plataforma inovadora de staking. Ganhe recompensas enquanto contribui para um planeta mais verde.",
+    "cta": "Começar",
+    "ctaPrimary": "Começar",
+    "learnMore": "Saiba Mais"
   },
   "staking": {
-    "title": "Pacotes de Staking",
-    "subtitle": "Escolha o plano de staking perfeito para seus objetivos",
-    "bronze": {
-      "name": "Pacote Bronze",
-      "description": "Perfeito para iniciantes",
-      "dailyYield": "Rendimento Diário: 0.5%",
-      "lockPeriod": "Período de Bloqueio: 30 dias"
+    "title": "Staking para um Futuro Mais Verde",
+    "subtitle": "Invista em mobilidade sustentável e ganhe recompensas diárias. Nossos pacotes de staking oferecem retornos competitivos enquanto apoiam iniciativas de transporte ecológico.",
+    "investmentPackages": "Pacotes de Investimento",
+    "egd": "EGD",
+    "usdt": "USDT",
+    "dailyReturn": "Retorno Diário",
+    "totalEarning": "Ganho Total",
+    "initialTokenPrice": "Preço Inicial do Token:",
+    "investmentNote": "Valores de investimento e retornos estão sujeitos às condições de mercado e desempenho da plataforma."
+  },
+  "benefits": {
+    "title": "Por que Escolher GreenDash?",
+    "subtitle": "Descubra as vantagens de se juntar ao nosso ecossistema de mobilidade sustentável",
+    "benefit1": {
+      "title": "Recompensas Diárias",
+      "description": "Ganhe retornos diários consistentes em seus tokens staked"
     },
-    "silver": {
-      "name": "Pacote Prata",
-      "description": "Ótimo para investidores regulares",
-      "dailyYield": "Rendimento Diário: 0.8%",
-      "lockPeriod": "Período de Bloqueio: 60 dias"
+    "benefit2": {
+      "title": "Ecológico",
+      "description": "Apoie iniciativas de transporte sustentável"
     },
-    "gold": {
-      "name": "Pacote Ouro",
-      "description": "Opção de investimento premium",
-      "dailyYield": "Rendimento Diário: 1.2%",
-      "lockPeriod": "Período de Bloqueio: 90 dias"
+    "benefit3": {
+      "title": "Plataforma Segura",
+      "description": "Construída com tecnologia blockchain avançada"
+    },
+    "benefit4": {
+      "title": "Orientado pela Comunidade",
+      "description": "Junte-se a uma comunidade crescente de investidores conscientes do meio ambiente"
     }
   },
   "affiliateRanks": {
-    "title": "Classificações e Recompensas de Afiliados",
-    "subtitle": "Ganhe classificações e recompensas com base no volume em sua perna mais fraca para garantir crescimento sustentável e equilibrado.",
+    "title": "Classificações de Afiliados e Recompensas",
+    "subtitle": "Desbloqueie recompensas mais altas e benefícios exclusivos conforme você sobe nas classificações",
     "volumeRequired": "Volume Necessário (Perna Fraca)",
     "reward": "Recompensa",
+    "bronze": {
+      "title": "Classificação Bronze",
+      "requirements": "Referências diretas: 5 | Volume da equipe: $1,000",
+      "benefits": [
+        "5% de comissão sobre referências diretas",
+        "2% de comissão sobre volume da equipe",
+        "Acesso ao suporte básico"
+      ]
+    },
+    "silver": {
+      "title": "Classificação Prata",
+      "requirements": "Referências diretas: 15 | Volume da equipe: $5,000",
+      "benefits": [
+        "7% de comissão sobre referências diretas",
+        "3% de comissão sobre volume da equipe",
+        "Acesso ao suporte prioritário",
+        "Recompensas mensais"
+      ]
+    },
+    "gold": {
+      "title": "Classificação Ouro",
+      "requirements": "Referências diretas: 30 | Volume da equipe: $15,000",
+      "benefits": [
+        "10% de comissão sobre referências diretas",
+        "4% de comissão sobre volume da equipe",
+        "Acesso ao suporte VIP",
+        "Recompensas mensais",
+        "Acesso a eventos exclusivos"
+      ]
+    },
+    "platinum": {
+      "title": "Classificação Platina",
+      "requirements": "Referências diretas: 50 | Volume da equipe: $50,000",
+      "benefits": [
+        "12% de comissão sobre referências diretas",
+        "5% de comissão sobre volume da equipe",
+        "Suporte VIP 24/7",
+        "Recompensas mensais",
+        "Acesso a eventos exclusivos",
+        "Gerente de conta pessoal"
+      ]
+    },
+    "diamond": {
+      "title": "Classificação Diamante",
+      "requirements": "Referências diretas: 100 | Volume da equipe: $100,000",
+      "benefits": [
+        "15% de comissão sobre referências diretas",
+        "6% de comissão sobre volume da equipe",
+        "Suporte VIP 24/7",
+        "Recompensas mensais",
+        "Acesso a eventos exclusivos",
+        "Gerente de conta pessoal",
+        "Programas de recompensa personalizados"
+      ]
+    },
     "howItWorks": {
       "title": "Como Funciona",
       "point1": "O volume é calculado com base em sua perna mais fraca para garantir crescimento equilibrado",
@@ -73,115 +118,146 @@
       "button": "Começar Agora"
     }
   },
+  "conclusion": {
+    "title": "Pronto para Começar Sua Jornada Verde?",
+    "subtitle": "Junte-se a milhares de usuários que já estão ganhando recompensas enquanto fazem um impacto positivo no meio ambiente",
+    "cta": "Comece Agora",
+    "button": "Começar com o GreenDash"
+  },
   "growthOpportunity": {
-    "title": "A Oportunidade de Crescimento",
-    "subtitle": "O mercado de mobilidade é massivo e está crescendo. Aqui está o que estamos visando:",
-    "marketCap": "Capitalização de Mercado Uber 2025",
+    "title": "Oportunidade de Crescimento Massivo",
+    "subtitle": "O mercado de mobilidade urbana está experimentando crescimento sem precedentes, e o GreenDash está posicionado para capturar uma parcela significativa",
+    "marketCap": "Capitalização de Mercado",
     "ridesPerDay": "Corridas por Dia",
     "ridesPerYear": "Corridas por Ano",
-    "marketCapture": "Se o GreenDash capturar apenas 1% deste mercado, já se tornará um negócio bilionário.",
+    "marketCapture": "O GreenDash visa capturar 5% deste mercado massivo, representando uma oportunidade de $8.5B",
     "growthComparison": {
-      "title": "Comparação de Crescimento – Uber vs. GreenDash",
+      "title": "Comparação de Crescimento: Uber vs GreenDash",
       "uberExample": {
-        "title": "Exemplo de Investimento Uber",
-        "initialInvestment": "Investimento Inicial (2009)",
-        "initialValue": "$100 a $0.01/token",
-        "tokenAmount": "= 10.000 tokens",
-        "currentValue": "Valor Atual (2025)",
-        "currentAmount": "$1.700.000",
-        "marketCap": "Capitalização de Mercado: $170B",
+        "title": "Exemplo Uber",
+        "initialInvestment": "Investimento Inicial",
+        "initialValue": "$1,000",
+        "tokenAmount": "1,000 tokens a $1 cada",
+        "currentValue": "Valor Atual",
+        "currentAmount": "$170,000",
+        "marketCap": "Capitalização de mercado: $170B",
         "totalReturn": "Retorno Total",
-        "returnAmount": "Aumento de 1.700.000%"
+        "returnAmount": "170,000%"
       },
       "greenDashAdvantage": {
         "title": "Vantagem GreenDash",
-        "competitiveAdvantages": "Modelo Similar + Vantagens Competitivas",
-        "advantage1": "Foco em mobilidade sustentável",
-        "advantage2": "Compartilhamento de lucros para todos os stakeholders",
-        "advantage3": "Governança descentralizada",
-        "advantage4": "Taxas menores para motoristas e passageiros",
+        "competitiveAdvantages": "Vantagens Competitivas",
+        "advantage1": "Taxas de motorista mais baixas (10% vs 20-30%)",
+        "advantage2": "Foco em veículos elétricos para sustentabilidade",
+        "advantage3": "Compartilhamento de lucros baseado em tokens com a comunidade",
+        "advantage4": "Estrutura de governança descentralizada",
         "initialTokenPrice": "Preço Inicial do Token",
-        "tokenPrice": "$0.01 por token EGD",
-        "startingPoint": "Mesmo ponto de partida que o Uber",
+        "tokenPrice": "$0.01",
+        "startingPoint": "Ponto de partida para investidores iniciais",
         "growthPotential": "Potencial de Crescimento",
-        "potential": "Oportunidade de mercado massiva",
-        "marketCapture": "1% de captura de mercado = negócio de $1B+"
+        "potential": "Similar à trajetória do Uber",
+        "marketCapture": "Visando 5% de participação no mercado"
       },
-      "disclaimer": "Aviso Legal: Esta é uma simulação baseada na história do Uber. Resultados passados não garantem retornos futuros. O sucesso do token depende das condições de mercado, regulamentações e crescimento do projeto."
+      "disclaimer": "O desempenho passado não garante resultados futuros. O investimento envolve risco."
     },
     "whyMoreAttractive": {
       "title": "Por que o GreenDash é Mais Atraente",
-      "subtitle": "O modelo GreenDash oferece:",
-      "lowerFees": "Taxas menores para motoristas",
-      "affordableFares": "Tarifas acessíveis para passageiros",
-      "profitSharing": "Compartilhamento de lucros para todos os stakeholders",
-      "conclusion": "Diferente de outras plataformas de mobilidade, todos podem se tornar stakeholders e lucrar com seu crescimento."
-    }
+      "subtitle": "Nossa plataforma oferece vantagens significativas sobre serviços tradicionais de compartilhamento de carona",
+      "lowerFees": "Taxas de Motorista Mais Baixas",
+      "affordableFares": "Tarifas Acessíveis",
+      "profitSharing": "Compartilhamento de Lucros",
+      "conclusion": "O GreenDash combina o potencial de crescimento do Uber com práticas sustentáveis e benefícios comunitários, tornando-o uma oportunidade de investimento mais atraente."
+    },
+    "marketStats": {
+      "title": "Estatísticas do Mercado",
+      "urbanMobility": {
+        "value": "$500B+",
+        "label": "Mercado de Mobilidade Urbana",
+        "trend": "+15% anualmente"
+      },
+      "evAdoption": {
+        "value": "25%",
+        "label": "Taxa de Adoção de EV",
+        "trend": "+8% anualmente"
+      },
+      "sustainableTransport": {
+        "value": "$200B+",
+        "label": "Transporte Sustentável",
+        "trend": "+20% anualmente"
+      }
+    },
+    "uberComparison": {
+      "title": "Por que GreenDash vs Uber?",
+      "advantages": [
+        "Margens de lucro mais altas (25-30% vs 5-10%)",
+        "Modelo de negócio sustentável",
+        "Sistema de recompensas baseado em tokens",
+        "Estrutura de propriedade comunitária",
+        "Custos operacionais mais baixos",
+        "Expansão de mercado mais rápida"
+      ]
+    },
+    "disclaimer": "O desempenho passado não garante resultados futuros. O investimento envolve risco."
   },
   "marketOpportunity": {
     "title": "Oportunidades de Mercado",
-    "subtitle": "Os mercados de criptomoedas e DeFi apresentam oportunidades sem precedentes para crescimento, inovação e inclusão financeira. Descubra por que agora é o momento perfeito para participar.",
-    "opportunities": {
-      "growingDefi": {
-        "title": "Mercado DeFi em Crescimento",
-        "description": "O mercado de finanças descentralizadas está experimentando crescimento exponencial com adoção crescente de protocolos de staking e yield farming.",
-        "stats": "Capitalização de Mercado: $50B+",
-        "trend": "+25% YoY"
+    "subtitle": "Descubra o vasto potencial na paisagem de mobilidade urbana em evolução",
+    "opportunities": [
+      {
+        "title": "Revolução dos Veículos Elétricos",
+        "description": "Adoção rápida de EVs criando novas soluções de mobilidade",
+        "stats": "Mercado crescendo 25% anualmente",
+        "trend": "Crescente"
       },
-      "massAdoption": {
-        "title": "Adoção em Massa",
-        "description": "A adoção de criptomoedas está acelerando globalmente, com milhões de novos usuários entrando no mercado a cada mês.",
-        "stats": "Usuários Ativos: 300M+",
-        "trend": "+40% YoY"
+      {
+        "title": "Infraestrutura de Cidade Inteligente",
+        "description": "Cidades investindo em sistemas de transporte inteligentes",
+        "stats": "Investimento de $2.5T até 2030",
+        "trend": "Crescente"
       },
-      "institutionalInvestment": {
-        "title": "Investimento Institucional",
-        "description": "Grandes instituições financeiras estão cada vez mais alocando capital para ativos digitais e tecnologia blockchain.",
-        "stats": "AUM Institucional: $15B+",
-        "trend": "+60% YoY"
+      {
+        "title": "Transporte Sustentável",
+        "description": "Demanda crescente por opções de mobilidade ecológicas",
+        "stats": "40% dos consumidores preferem opções verdes",
+        "trend": "Crescente"
       },
-      "globalAccessibility": {
-        "title": "Acessibilidade Global",
-        "description": "A tecnologia blockchain permite serviços financeiros para a população não bancarizada em todo o mundo.",
-        "stats": "População Não Bancarizada: 1.7B",
-        "trend": "Novo Mercado"
+      {
+        "title": "Soluções de Micro-Mobilidade",
+        "description": "Transporte de última milha se tornando essencial",
+        "stats": "Valor de mercado $200B até 2030",
+        "trend": "Crescente"
       }
+    ],
+    "marketStats": {
+      "title": "Estatísticas do Mercado",
+      "values": [
+        { "value": "$500B+", "label": "Mercado de Mobilidade Urbana" },
+        { "value": "25%", "label": "Taxa de Crescimento Anual" },
+        { "value": "2.5B", "label": "População Urbana até 2050" },
+        { "value": "$2.5T", "label": "Investimento em Cidade Inteligente" }
+      ],
+      "trends": [
+        { "label": "Adoção de EV", "trend": "Aumentando Rapidamente" },
+        { "label": "Sustentabilidade", "trend": "Demanda Crescente" },
+        { "label": "Tecnologia", "trend": "Avançando Rapidamente" },
+        { "label": "Investimento", "trend": "Entrada Forte" }
+      ]
     },
-    "marketStatistics": {
-      "title": "Estatísticas de Mercado e Tendências",
-      "totalCryptoMarketCap": {
-        "value": "$2.5T",
-        "label": "Capitalização Total do Mercado de Criptomoedas",
-        "trend": "+15% do mês passado"
-      },
-      "defiTotalValueLocked": {
-        "value": "$100B+",
-        "label": "Valor Total Bloqueado DeFi",
-        "trend": "+30% do mês passado"
-      },
-      "globalCryptoUsers": {
-        "value": "500M+",
-        "label": "Usuários Globais de Criptomoedas",
-        "trend": "+20% do mês passado"
-      }
-    },
-    "cta": {
-      "title": "Pronto para Aproveitar Essas Oportunidades?",
-      "subtitle": "Junte-se a milhares de usuários que já estão se beneficiando de nossa plataforma de staking inovadora",
-      "button": "Começar Hoje"
-    }
+    "cta": "Explorar Oportunidades"
   },
   "token": {
-    "title": "O Token GREEN",
-    "subtitle": "O coração do ecossistema GreenDash. Ganhe, faça staking, governe e faça um impacto real com cada token.",
-    "symbol": "Símbolo: GREEN",
-    "totalSupply": "Fornecimento Total: {amount}",
-    "decimals": "Decimais: 18",
-    "price": "Preço: {price}",
-    "priceTBD": "Preço: A definir",
+    "title": "Token GREEN",
+    "subtitle": "O token de utilidade nativo que alimenta o ecossistema GreenDash",
+    "tokenDetails": {
+      "symbol": "GREEN",
+      "totalSupply": "1,000,000,000",
+      "decimals": "18",
+      "price": "Preço Atual: $0.01"
+    },
     "loading": "Carregando informações do token...",
+    "priceTBD": "Preço TBD",
     "tokenUtilities": {
-      "title": "O que você pode fazer com GREEN?",
+      "title": "Utilitários do Token",
       "stakeAndEarn": {
         "title": "Stake & Ganhe",
         "description": "Bloqueie tokens GREEN para ganhar recompensas diárias e participar do crescimento sustentável."
@@ -200,8 +276,7 @@
       }
     },
     "cashback": {
-      "title": "Como Funciona o Cashback",
-      "mostPopular": "Mais Popular",
+      "title": "Recompensas de Cashback",
       "directCashback": {
         "title": "Cashback Direto",
         "description": "Ganhe 15% do valor investido por cada indicação direta. Exemplo: Indique alguém que investe $1.000, você recebe $150 USDT instantaneamente."
@@ -222,40 +297,35 @@
         "title": "Cashback Viral",
         "description": "Ganhe cashback extra quando novos usuários se juntam através de sua rede de indicação. O investimento deles aumentará sua classificação e você pode receber USDT ou opção de veículo de acordo com sua classificação."
       },
-      "note": "Todas as recompensas de Cashback são pagas em USDT para estabilidade e usabilidade imediata."
+      "mostPopular": "Mais Popular",
+      "note": "Nota: As recompensas de cashback são distribuídas automaticamente e podem ser sacadas ou reinvestidas conforme necessário."
     },
     "tokenomics": {
-      "title": "Tokenomics"
+      "title": "Tokenomics",
+      "subtitle": "Entendendo a distribuição e economia do token GREEN",
+      "totalSupply": "Fornecimento Total: 1,000,000,000 GREEN",
+      "distribution": {
+        "title": "Distribuição de Tokens",
+        "staking": "40% - Recompensas de Staking",
+        "liquidity": "25% - Pool de Liquidez",
+        "team": "15% - Equipe & Desenvolvimento",
+        "marketing": "10% - Marketing & Parcerias",
+        "community": "10% - Comunidade & Governança"
+      },
+      "burnMechanism": {
+        "title": "Mecanismo de Queima",
+        "description": "2% de todas as transações são automaticamente queimados, reduzindo o fornecimento total ao longo do tempo e aumentando o valor do token."
+      },
+      "stakingRewards": {
+        "title": "Recompensas de Staking",
+        "description": "Recompensas diárias distribuídas aos stakers, com recompensas maiores para períodos de staking mais longos e valores maiores."
+      }
     },
     "cta": {
-      "title": "Pronto para se juntar à Revolução Verde?",
-      "subtitle": "Comece a ganhar com tokens GREEN hoje. Faça staking, ganhe recompensas e contribua para um futuro sustentável.",
+      "title": "Pronto para Começar?",
+      "subtitle": "Junte-se a milhares de usuários que já estão ganhando recompensas com o GreenDash",
       "buyTokens": "Comprar Tokens GREEN",
       "learnMore": "Saiba Mais"
-    }
-  },
-  "conclusion": {
-    "title": "Pronto para Começar a Ganhar?",
-    "subtitle": "Junte-se ao GreenDash hoje e dê seu primeiro passo em direção às recompensas diárias e um futuro sustentável. É fácil, seguro e aberto a todos.",
-    "button": "Começar com o GreenDash"
-  },
-  "testimonials": {
-    "title": "O que nossos usuários dizem",
-    "subtitle": "Histórias reais de investidores reais",
-    "user1": {
-      "name": "John Smith",
-      "role": "Investidor Profissional",
-      "comment": "O GreenDash transformou minha estratégia de investimento. As recompensas diárias são consistentes e a plataforma é incrivelmente fácil de usar."
-    },
-    "user2": {
-      "name": "Sarah Johnson",
-      "role": "Proprietária de Pequena Empresa",
-      "comment": "Adoro como o GreenDash combina lucratividade com sustentabilidade. É exatamente o que eu estava procurando em uma plataforma de investimento."
-    },
-    "user3": {
-      "name": "Michael Chen",
-      "role": "Empreendedor de Tecnologia",
-      "comment": "O programa de referência é fantástico. Ganhei renda adicional significativa enquanto ajudava amigos a descobrir esta plataforma incrível."
     }
   },
   "roadmap": {
@@ -276,52 +346,46 @@
   },
   "contact": {
     "title": "Entre em Contato",
-    "subtitle": "Adoraríamos ouvir de você",
-    "email": "Envie-nos um email em",
-    "phone": "Ligue para nós em",
-    "address": "Visite-nos em",
+    "subtitle": "Entre em contato com nossa equipe para suporte ou dúvidas",
     "form": {
       "name": "Seu Nome",
-      "email": "Seu Email",
       "message": "Sua Mensagem",
       "send": "Enviar Mensagem"
+    },
+    "email": "Para suporte imediato, envie-nos um email para:"
+  },
+  "testimonials": {
+    "title": "O que Nossos Usuários Dizem",
+    "subtitle": "Experiências reais de nossos membros da comunidade",
+    "testimonial1": {
+      "quote": "O GreenDash transformou minha estratégia de investimento. As recompensas diárias são incríveis, e eu adoro apoiar a mobilidade sustentável!",
+      "name": "Sarah Johnson",
+      "role": "Investidora Inicial",
+      "duration": "6 meses"
+    },
+    "testimonial2": {
+      "quote": "Tenho feito staking há 3 meses e os retornos são incríveis. A plataforma é fácil de usar e a comunidade é muito solidária.",
+      "name": "Michael Chen",
+      "role": "Investidor Individual",
+      "duration": "3 meses"
+    },
+    "testimonial3": {
+      "quote": "Melhor decisão que tomei este ano! O GreenDash combina ótimos retornos com uma missão significativa. Altamente recomendado!",
+      "name": "Emma Rodriguez",
+      "role": "Defensora da Sustentabilidade",
+      "duration": "8 meses"
+    },
+    "testimonial4": {
+      "quote": "O programa de afiliados é fantástico. Estou ganhando tanto com staking quanto com referências. Este é o futuro do investimento!",
+      "name": "David Kim",
+      "role": "Parceiro Afiliado",
+      "duration": "1 ano"
+    },
+    "testimonial5": {
+      "quote": "Plataforma profissional com operações transparentes. A equipe é responsiva e a tecnologia é sólida.",
+      "name": "Lisa Thompson",
+      "role": "Investidora de Tecnologia",
+      "duration": "5 meses"
     }
-  },
-  "investmentPackages": "Pacotes de Investimento",
-  "egd": "EGD",
-  "usdt": "USDT",
-  "dailyReturn": "Retorno Diário em EGD",
-  "totalEarning": "Ganho Total",
-  "initialTokenPrice": "Preço de lançamento inicial do token EGD:",
-  "investmentNote": "⚠️ Os ganhos dos pacotes de investimento são pagos em tokens EGD. Todos os ganhos de Cashback são pagos em USDT.",
-  "testimonial1": {
-    "quote": "O GreenDash transformou completamente como eu penso sobre investimento sustentável. As recompensas diárias são incríveis!",
-    "name": "Sarah Johnson",
-    "role": "Consultora Ambiental",
-    "duration": "6 meses"
-  },
-  "testimonial2": {
-    "quote": "Como motorista, adoro ganhar mais enquanto contribuo para um futuro mais verde. A plataforma é revolucionária.",
-    "name": "Michael Chen",
-    "role": "Motorista de Veículo Elétrico",
-    "duration": "8 meses"
-  },
-  "testimonial3": {
-    "quote": "O modelo de compartilhamento de lucros é genial. Estou ganhando de cada transação enquanto apoio a sustentabilidade.",
-    "name": "Emma Rodriguez",
-    "role": "Empreendedora de Tecnologia",
-    "duration": "1 ano"
-  },
-  "testimonial4": {
-    "quote": "Finalmente, uma plataforma que coloca as pessoas e o planeta em primeiro lugar. Os retornos também são incríveis!",
-    "name": "David Kim",
-    "role": "Consultor de Investimentos",
-    "duration": "4 meses"
-  },
-  "testimonial5": {
-    "quote": "O GreenDash prova que você pode fazer o bem e fazer bem. Tenho orgulho de fazer parte deste movimento.",
-    "name": "Lisa Thompson",
-    "role": "Especialista em Sustentabilidade",
-    "duration": "10 meses"
   }
 } 

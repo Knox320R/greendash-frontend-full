@@ -38,7 +38,7 @@ const ConclusionSection = () => {
           transition={{ duration: 0.9, delay: 0.2, ease: 'easeOut' }}
           viewport={{ once: true, amount: 0.3 }}
         >
-          {t('conclusion.button')}
+          {t('home:conclusion.button')}
         </motion.div>
       </div>
     </section>

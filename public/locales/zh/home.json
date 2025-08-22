@@ -1,190 +1,266 @@
 {
   "hero": {
-    "title": "欢迎来到GreenDash",
-    "subtitle": "可持续质押和投资的未来",
-    "description": "加入数千名已经在享受我们创新质押平台好处的用户。在赚取每日奖励的同时，为更绿色的未来做出贡献。",
-    "ctaPrimary": "立即开始质押",
-    "ctaSecondary": "了解更多"
+    "title": "GreenDash",
+    "subtitle": "赋能可持续城市出行",
+    "description": "加入我们创新的质押平台，参与环保交通的未来。在赚取奖励的同时为更绿色的地球做出贡献。",
+    "cta": "立即开始",
+    "ctaPrimary": "立即开始",
+    "learnMore": "了解更多"
+  },
+  "staking": {
+    "title": "为更绿色的未来而质押",
+    "subtitle": "投资可持续出行，赚取每日奖励。我们的质押套餐提供有竞争力的回报，同时支持环保交通倡议。",
+    "investmentPackages": "投资套餐",
+    "egd": "EGD",
+    "usdt": "USDT",
+    "dailyReturn": "日收益率",
+    "totalEarning": "总收益",
+    "initialTokenPrice": "初始代币价格：",
+    "investmentNote": "投资金额和回报受市场条件和平台表现影响。"
   },
   "benefits": {
     "title": "为什么选择GreenDash？",
-    "subtitle": "发现使我们成为领先选择的优势",
-    "dailyRewards": {
+    "subtitle": "发现加入我们可持续出行生态系统的优势",
+    "benefit1": {
       "title": "每日奖励",
-      "description": "从您的质押投资中获得稳定的每日奖励"
+      "description": "从质押的代币中获得稳定的每日回报"
     },
-    "sustainability": {
-      "title": "可持续发展重点",
-      "description": "在赚取回报的同时支持环保项目"
+    "benefit2": {
+      "title": "环保友好",
+      "description": "支持可持续交通倡议"
     },
-    "security": {
-      "title": "先进安全",
-      "description": "您的投资受到最先进安全措施的保护"
+    "benefit3": {
+      "title": "安全平台",
+      "description": "采用先进的区块链技术构建"
     },
-    "community": {
-      "title": "强大社区",
-      "description": "加入志同道合投资者不断发展的社区"
-    }
-  },
-  "staking": {
-    "title": "质押套餐",
-    "subtitle": "为您的目标选择完美的质押计划",
-    "bronze": {
-      "name": "青铜套餐",
-      "description": "初学者的完美选择",
-      "dailyYield": "日收益率：0.5%",
-      "lockPeriod": "锁定期：30天"
-    },
-    "silver": {
-      "name": "白银套餐",
-      "description": "适合常规投资者",
-      "dailyYield": "日收益率：0.8%",
-      "lockPeriod": "锁定期：60天"
-    },
-    "gold": {
-      "name": "黄金套餐",
-      "description": "高级投资选择",
-      "dailyYield": "日收益率：1.2%",
-      "lockPeriod": "锁定期：90天"
+    "benefit4": {
+      "title": "社区驱动",
+      "description": "加入不断增长的环保意识投资者社区"
     }
   },
   "affiliateRanks": {
-    "title": "联盟等级和奖励",
-    "subtitle": "基于您较弱分支的交易量赚取等级和奖励，确保可持续、平衡的增长。",
-    "volumeRequired": "所需交易量（较弱分支）",
+    "title": "联盟等级与奖励",
+    "subtitle": "随着等级提升，解锁更高奖励和专属福利",
+    "volumeRequired": "所需交易量（弱腿）",
     "reward": "奖励",
+    "bronze": {
+      "title": "青铜等级",
+      "requirements": "直接推荐：5人 | 团队交易量：$1,000",
+      "benefits": [
+        "直接推荐5%佣金",
+        "团队交易量2%佣金",
+        "基础支持服务"
+      ]
+    },
+    "silver": {
+      "title": "白银等级",
+      "requirements": "直接推荐：15人 | 团队交易量：$5,000",
+      "benefits": [
+        "直接推荐7%佣金",
+        "团队交易量3%佣金",
+        "优先支持服务",
+        "月度奖励"
+      ]
+    },
+    "gold": {
+      "title": "黄金等级",
+      "requirements": "直接推荐：30人 | 团队交易量：$15,000",
+      "benefits": [
+        "直接推荐10%佣金",
+        "团队交易量4%佣金",
+        "VIP支持服务",
+        "月度奖励",
+        "专属活动参与"
+      ]
+    },
+    "platinum": {
+      "title": "铂金等级",
+      "requirements": "直接推荐：50人 | 团队交易量：$50,000",
+      "benefits": [
+        "直接推荐12%佣金",
+        "团队交易量5%佣金",
+        "24/7 VIP支持",
+        "月度奖励",
+        "专属活动参与",
+        "个人账户经理"
+      ]
+    },
+    "diamond": {
+      "title": "钻石等级",
+      "requirements": "直接推荐：100人 | 团队交易量：$100,000",
+      "benefits": [
+        "直接推荐15%佣金",
+        "团队交易量6%佣金",
+        "24/7 VIP支持",
+        "月度奖励",
+        "专属活动参与",
+        "个人账户经理",
+        "定制奖励计划"
+      ]
+    },
     "howItWorks": {
       "title": "运作方式",
-      "point1": "交易量基于您较弱分支计算，确保平衡增长",
-      "point2": "随着您达到交易量里程碑，等级逐步提升",
+      "point1": "交易量基于较弱腿计算，确保平衡增长",
+      "point2": "随着达到交易量里程碑，等级逐步提升",
       "point3": "奖励包括现金奖金或豪华物品如电动汽车",
-      "point4": "更高等级解锁更好的奖励和额外福利"
+      "point4": "更高等级解锁更好奖励和额外福利"
     },
     "benefits": {
       "title": "福利",
       "point1": "达到等级要求后立即获得奖励",
-      "point2": "来自比亚迪的豪华物品如电动汽车",
+      "point2": "豪华物品如比亚迪电动汽车",
       "point3": "旅行奖励包括国际和豪华旅行",
-      "point4": "现金奖金从500美元到100,000美元不等"
+      "point4": "现金奖金从$500到$100,000不等"
     },
     "cta": {
       "title": "准备开始赚钱了吗？",
-      "subtitle": "立即加入GreenDash，开始建立您的联盟网络，解锁这些令人惊叹的奖励。",
+      "subtitle": "立即加入GreenDash，开始建立您的联盟网络，解锁这些惊人的奖励。",
       "button": "立即开始"
     }
   },
+  "conclusion": {
+    "title": "准备开始您的绿色之旅了吗？",
+    "subtitle": "加入数千名已经在赚取奖励的同时对环境产生积极影响的用户",
+    "cta": "立即开始",
+    "button": "开始使用GreenDash"
+  },
   "growthOpportunity": {
-    "title": "增长机会",
-    "subtitle": "移动出行市场巨大且不断增长。以下是我们瞄准的目标：",
-    "marketCap": "Uber 2025年市值",
-    "ridesPerDay": "每日行程数",
-    "ridesPerYear": "年度行程数",
-    "marketCapture": "如果GreenDash仅占据这个市场的1%，它就已经成为一个十亿美元的企业。",
+    "title": "巨大的增长机会",
+    "subtitle": "城市出行市场正在经历前所未有的增长，GreenDash定位为占据重要份额",
+    "marketCap": "市值",
+    "ridesPerDay": "每日出行次数",
+    "ridesPerYear": "年度出行次数",
+    "marketCapture": "GreenDash旨在占据这个巨大市场的5%，代表$8.5B的机会",
     "growthComparison": {
-      "title": "增长对比 – Uber vs. GreenDash",
+      "title": "增长对比：Uber vs GreenDash",
       "uberExample": {
-        "title": "Uber投资示例",
-        "initialInvestment": "初始投资（2009年）",
-        "initialValue": "$100以$0.01/代币",
-        "tokenAmount": "= 10,000代币",
-        "currentValue": "当前价值（2025年）",
-        "currentAmount": "$1,700,000",
+        "title": "Uber示例",
+        "initialInvestment": "初始投资",
+        "initialValue": "$1,000",
+        "tokenAmount": "1,000个代币，每个$1",
+        "currentValue": "当前价值",
+        "currentAmount": "$170,000",
         "marketCap": "市值：$170B",
         "totalReturn": "总回报",
-        "returnAmount": "增长1,700,000%"
+        "returnAmount": "170,000%"
       },
       "greenDashAdvantage": {
         "title": "GreenDash优势",
-        "competitiveAdvantages": "相似模式 + 竞争优势",
-        "advantage1": "可持续出行重点",
-        "advantage2": "所有利益相关者的利润分享",
-        "advantage3": "去中心化治理",
-        "advantage4": "司机和乘客的更低费用",
+        "competitiveAdvantages": "竞争优势",
+        "advantage1": "更低的司机费用（10% vs 20-30%）",
+        "advantage2": "专注于电动汽车以实现可持续性",
+        "advantage3": "基于代币的社区利润分享",
+        "advantage4": "去中心化治理结构",
         "initialTokenPrice": "初始代币价格",
-        "tokenPrice": "每个EGD代币$0.01",
-        "startingPoint": "与Uber相同的起点",
+        "tokenPrice": "$0.01",
+        "startingPoint": "早期投资者的起点",
         "growthPotential": "增长潜力",
-        "potential": "巨大的市场机会",
-        "marketCapture": "1%市场占有率 = $1B+企业"
+        "potential": "类似于Uber的轨迹",
+        "marketCapture": "目标5%市场份额"
       },
-      "disclaimer": "免责声明：这是基于Uber历史的模拟。过去的结果不能保证未来的回报。代币的成功取决于市场条件、法规和项目增长。"
+      "disclaimer": "过往表现不代表未来结果。投资有风险。"
     },
     "whyMoreAttractive": {
       "title": "为什么GreenDash更有吸引力",
-      "subtitle": "GreenDash模式提供：",
-      "lowerFees": "司机的更低费用",
-      "affordableFares": "乘客的实惠票价",
-      "profitSharing": "所有利益相关者的利润分享",
-      "conclusion": "与其他移动出行平台不同，每个人都可以成为利益相关者并从其增长中获利。"
-    }
+      "subtitle": "我们的平台相比传统拼车服务提供显著优势",
+      "lowerFees": "更低的司机费用",
+      "affordableFares": "实惠的车费",
+      "profitSharing": "利润分享",
+      "conclusion": "GreenDash结合了Uber的增长潜力与可持续实践和社区福利，使其成为更有吸引力的投资机会。"
+    },
+    "marketStats": {
+      "title": "市场统计",
+      "urbanMobility": {
+        "value": "$500B+",
+        "label": "城市出行市场",
+        "trend": "年增长15%"
+      },
+      "evAdoption": {
+        "value": "25%",
+        "label": "电动汽车采用率",
+        "trend": "年增长8%"
+      },
+      "sustainableTransport": {
+        "value": "$200B+",
+        "label": "可持续交通",
+        "trend": "年增长20%"
+      }
+    },
+    "uberComparison": {
+      "title": "为什么选择GreenDash vs Uber？",
+      "advantages": [
+        "更高的利润率（25-30% vs 5-10%）",
+        "可持续的商业模式",
+        "基于代币的奖励系统",
+        "社区所有权结构",
+        "更低的运营成本",
+        "更快的市场扩张"
+      ]
+    },
+    "disclaimer": "过往表现不代表未来结果。投资有风险。"
   },
   "marketOpportunity": {
     "title": "市场机会",
-    "subtitle": "加密货币和DeFi市场为增长、创新和金融包容性提供了前所未有的机会。发现为什么现在是参与的完美时机。",
-    "opportunities": {
-      "growingDefi": {
-        "title": "不断增长的DeFi市场",
-        "description": "去中心化金融市场正在经历指数级增长，质押和收益耕作协议的采用率不断提高。",
-        "stats": "市值：$50B+",
-        "trend": "+25% 年同比增长"
+    "subtitle": "发现不断发展的城市出行格局中的巨大潜力",
+    "opportunities": [
+      {
+        "title": "电动汽车革命",
+        "description": "电动汽车快速采用创造新的出行解决方案",
+        "stats": "市场年增长25%",
+        "trend": "上升"
       },
-      "massAdoption": {
-        "title": "大规模采用",
-        "description": "加密货币采用正在全球加速，每月有数百万新用户进入市场。",
-        "stats": "活跃用户：300M+",
-        "trend": "+40% 年同比增长"
+      {
+        "title": "智慧城市基础设施",
+        "description": "城市投资智能交通系统",
+        "stats": "2030年前投资$2.5T",
+        "trend": "上升"
       },
-      "institutionalInvestment": {
-        "title": "机构投资",
-        "description": "主要金融机构正在越来越多地将资金分配给数字资产和区块链技术。",
-        "stats": "机构资产管理规模：$15B+",
-        "trend": "+60% 年同比增长"
+      {
+        "title": "可持续交通",
+        "description": "对环保出行选项的需求不断增长",
+        "stats": "40%消费者偏好绿色选项",
+        "trend": "上升"
       },
-      "globalAccessibility": {
-        "title": "全球可访问性",
-        "description": "区块链技术为全球无银行账户人口提供金融服务。",
-        "stats": "无银行账户人口：17亿",
-        "trend": "新市场"
+      {
+        "title": "微出行解决方案",
+        "description": "最后一公里出行变得至关重要",
+        "stats": "2030年市场价值$200B",
+        "trend": "上升"
       }
+    ],
+    "marketStats": {
+      "title": "市场统计",
+      "values": [
+        { "value": "$500B+", "label": "城市出行市场" },
+        { "value": "25%", "label": "年增长率" },
+        { "value": "2.5B", "label": "2050年城市人口" },
+        { "value": "$2.5T", "label": "智慧城市投资" }
+      ],
+      "trends": [
+        { "label": "电动汽车采用", "trend": "快速增长" },
+        { "label": "可持续性", "trend": "需求增长" },
+        { "label": "技术", "trend": "快速进步" },
+        { "label": "投资", "trend": "强劲流入" }
+      ]
     },
-    "marketStatistics": {
-      "title": "市场统计和趋势",
-      "totalCryptoMarketCap": {
-        "value": "$2.5T",
-        "label": "加密货币总市值",
-        "trend": "比上月增长+15%"
-      },
-      "defiTotalValueLocked": {
-        "value": "$100B+",
-        "label": "DeFi总锁仓价值",
-        "trend": "比上月增长+30%"
-      },
-      "globalCryptoUsers": {
-        "value": "500M+",
-        "label": "全球加密货币用户",
-        "trend": "比上月增长+20%"
-      }
-    },
-    "cta": {
-      "title": "准备抓住这些机会了吗？",
-      "subtitle": "加入数千名已经在享受我们创新质押平台好处的用户",
-      "button": "今天就开始"
-    }
+    "cta": "探索机会"
   },
   "token": {
     "title": "GREEN代币",
-    "subtitle": "GreenDash生态系统的核心。赚取、质押、治理，用每个代币创造真实世界的影响。",
-    "symbol": "符号：GREEN",
-    "totalSupply": "总供应量：{amount}",
-    "decimals": "小数位：18",
-    "price": "价格：{price}",
-    "priceTBD": "价格：待定",
+    "subtitle": "为GreenDash生态系统提供动力的原生实用代币",
+    "tokenDetails": {
+      "symbol": "GREEN",
+      "totalSupply": "1,000,000,000",
+      "decimals": "18",
+      "price": "当前价格：$0.01"
+    },
     "loading": "正在加载代币信息...",
+    "priceTBD": "价格待定",
     "tokenUtilities": {
-      "title": "您可以用GREEN做什么？",
+      "title": "代币功能",
       "stakeAndEarn": {
-        "title": "质押和赚取",
-        "description": "锁定GREEN代币以赚取每日奖励并参与可持续增长。"
+        "title": "质押与赚取",
+        "description": "锁定GREEN代币赚取每日奖励并参与可持续增长。"
       },
       "governance": {
         "title": "治理",
@@ -192,70 +268,64 @@
       },
       "trade": {
         "title": "交易",
-        "description": "在主要去中心化交易所购买、出售或交换GREEN代币。"
+        "description": "在主要去中心化交易所买卖或交换GREEN代币。"
       },
       "supportGreenProjects": {
         "title": "支持绿色项目",
-        "description": "资助环保计划并跟踪您的积极影响。"
+        "description": "资助环保倡议并跟踪您的积极影响。"
       }
     },
     "cashback": {
-      "title": "返现如何运作",
-      "mostPopular": "最受欢迎",
+      "title": "返现奖励",
       "directCashback": {
         "title": "直接返现",
-        "description": "从每个直接推荐的投资中获得15%的金额。例如：推荐投资$1,000的人，您立即获得$150 USDT。"
+        "description": "从每个直接推荐的投资中获得15%的返现。例如：推荐投资$1,000的人，您立即获得$150 USDT。"
       },
       "networkCashback": {
         "title": "网络返现",
-        "description": "从您推荐网络内的投资产生的费用中获得百分比，最多9个深度级别（7.5、4%、3%、2.5%、2%、1%、0.75%、0.5%）。例如：3级推荐产生$10,000，您赚取$400 USDT。"
+        "description": "从您推荐网络中的投资产生的费用中获得百分比，最多9级深度（7.5, 4%, 3%, 2.5%, 2%, 1%, 0.75%, 0.5%）。例如：3级推荐产生$10,000，您获得$400 USDT。"
       },
       "universalCashback": {
-        "title": "全球返现",
-        "description": "平台上所有投资费用的10%分配给所有EGD代币持有者。例如：$1,000,000费用 = $100,000在持有者之间分享。"
+        "title": "通用返现",
+        "description": "平台中所有投资产生的费用的10%分配给所有EGD代币持有者。例如：$1,000,000费用 = $100,000在持有者中分享。"
       },
       "performanceCashback": {
         "title": "绩效返现",
-        "description": "通过达到投资或乘车量目标来提升您的收入。每周：$10,000 = $100 USDT，$50,000 = $500 USDT。每月：$100,000 = $1,000 USDT。"
+        "description": "通过达到投资或出行量目标来提升您的收益。每周：$10,000 = $100 USDT，$50,000 = $500 USDT。每月：$100,000 = $1,000 USDT。"
       },
       "viralCashback": {
         "title": "病毒式返现",
-        "description": "当新用户通过您的推荐网络加入时赚取额外返现。他们的投资将提高您的排名，您可以根据排名获得USDT或车辆选择。"
+        "description": "当新用户通过您的推荐网络加入时获得额外返现。他们的投资将提升您的等级，您可以根据等级获得USDT或车辆选项。"
       },
-      "note": "所有返现奖励均以USDT支付，以确保稳定性和即时可用性。"
+      "mostPopular": "最受欢迎",
+      "note": "注意：返现奖励会自动分配，可以根据需要提取或重新投资。"
     },
     "tokenomics": {
-      "title": "代币经济学"
+      "title": "代币经济学",
+      "subtitle": "了解 GREEN 代币的分配和经济学",
+      "totalSupply": "总供应量：1,000,000,000 GREEN",
+      "distribution": {
+        "title": "代币分配",
+        "staking": "40% - 质押奖励",
+        "liquidity": "25% - 流动性池",
+        "team": "15% - 团队和开发",
+        "marketing": "10% - 营销和合作",
+        "community": "10% - 社区和治理"
+      },
+      "burnMechanism": {
+        "title": "销毁机制",
+        "description": "所有交易的 2% 会自动销毁，随着时间推移减少总供应量并增加代币价值。"
+      },
+      "stakingRewards": {
+        "title": "质押奖励",
+        "description": "每日奖励分配给质押者，质押时间更长和金额更大的质押者获得更高奖励。"
+      }
     },
     "cta": {
-      "title": "准备加入绿色革命了吗？",
-      "subtitle": "今天就开始用GREEN代币赚钱。质押、赚取奖励并为可持续未来做出贡献。",
+      "title": "准备开始了吗？",
+      "subtitle": "加入数千名已经在GreenDash赚取奖励的用户",
       "buyTokens": "购买GREEN代币",
       "learnMore": "了解更多"
-    }
-  },
-  "conclusion": {
-    "title": "准备开始赚钱了吗？",
-    "subtitle": "立即加入GreenDash，迈出迈向每日奖励和可持续未来的第一步。这很简单、安全，对所有人开放。",
-    "button": "开始使用GreenDash"
-  },
-  "testimonials": {
-    "title": "我们的用户怎么说",
-    "subtitle": "真实投资者的真实故事",
-    "user1": {
-      "name": "John Smith",
-      "role": "专业投资者",
-      "comment": "GreenDash改变了我的投资策略。每日奖励很稳定，平台非常用户友好。"
-    },
-    "user2": {
-      "name": "Sarah Johnson",
-      "role": "小企业主",
-      "comment": "我喜欢GreenDash如何将盈利能力与可持续性相结合。这正是我在投资平台中寻找的。"
-    },
-    "user3": {
-      "name": "Michael Chen",
-      "role": "科技企业家",
-      "comment": "推荐计划很棒。我在帮助朋友发现这个令人惊叹的平台的同时，赚取了可观的额外收入。"
     }
   },
   "roadmap": {
@@ -276,52 +346,46 @@
   },
   "contact": {
     "title": "联系我们",
-    "subtitle": "我们很乐意听到您的声音",
-    "email": "给我们发邮件至",
-    "phone": "给我们打电话至",
-    "address": "访问我们位于",
+    "subtitle": "联系我们的团队获取支持或咨询",
     "form": {
       "name": "您的姓名",
-      "email": "您的邮箱",
       "message": "您的留言",
       "send": "发送留言"
+    },
+    "email": "如需即时支持，请发送邮件至："
+  },
+  "testimonials": {
+    "title": "用户评价",
+    "subtitle": "来自我们社区成员的真实体验",
+    "testimonial1": {
+      "quote": "GreenDash改变了我的投资策略。每日奖励令人难以置信，我喜欢支持可持续出行！",
+      "name": "Sarah Johnson",
+      "role": "早期投资者",
+      "duration": "6个月"
+    },
+    "testimonial2": {
+      "quote": "我已经质押了3个月，回报令人惊叹。平台用户友好，社区非常支持。",
+      "name": "Michael Chen",
+      "role": "零售投资者",
+      "duration": "3个月"
+    },
+    "testimonial3": {
+      "quote": "今年我做的最好的决定！GreenDash结合了巨大回报和有意义的使命。强烈推荐！",
+      "name": "Emma Rodriguez",
+      "role": "可持续性倡导者",
+      "duration": "8个月"
+    },
+    "testimonial4": {
+      "quote": "联盟计划太棒了。我从质押和推荐中都赚到了钱。这是投资的未来！",
+      "name": "David Kim",
+      "role": "联盟合作伙伴",
+      "duration": "1年"
+    },
+    "testimonial5": {
+      "quote": "专业的平台，运营透明。团队响应迅速，技术扎实。",
+      "name": "Lisa Thompson",
+      "role": "技术投资者",
+      "duration": "5个月"
     }
-  },
-  "investmentPackages": "投资套餐",
-  "egd": "EGD",
-  "usdt": "USDT",
-  "dailyReturn": "EGD日回报",
-  "totalEarning": "总收入",
-  "initialTokenPrice": "EGD代币初始发行价：",
-  "investmentNote": "⚠️ 投资套餐收益以EGD代币支付。所有返现收益以USDT支付。",
-  "testimonial1": {
-    "quote": "GreenDash完全改变了我对可持续投资的看法。每日奖励令人难以置信！",
-    "name": "Sarah Johnson",
-    "role": "环境顾问",
-    "duration": "6个月"
-  },
-  "testimonial2": {
-    "quote": "作为司机，我喜欢在为更绿色的未来做出贡献的同时赚更多钱。这个平台是革命性的。",
-    "name": "Michael Chen",
-    "role": "电动汽车司机",
-    "duration": "8个月"
-  },
-  "testimonial3": {
-    "quote": "利润分享模式很天才。我从每笔交易中赚钱，同时支持可持续性。",
-    "name": "Emma Rodriguez",
-    "role": "科技企业家",
-    "duration": "1年"
-  },
-  "testimonial4": {
-    "quote": "终于有一个将人和地球放在首位的平台。回报也很惊人！",
-    "name": "David Kim",
-    "role": "投资顾问",
-    "duration": "4个月"
-  },
-  "testimonial5": {
-    "quote": "GreenDash证明您可以做好事并做得好。我很自豪能成为这个运动的一部分。",
-    "name": "Lisa Thompson",
-    "role": "可持续发展专家",
-    "duration": "10个月"
   }
 } 

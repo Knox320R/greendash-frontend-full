@@ -159,13 +159,13 @@ const TokenSection = ({
             {t('token.subtitle')}
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-6 text-gray-700 text-sm">
-            <span className="bg-green-100 text-green-700 px-4 py-2 rounded-md font-semibold">{t('token.symbol')}</span>
-            <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-md font-semibold">{t('token.totalSupply', { amount: formatTokenAmount(totalSupply.toString()) })}</span>
-            <span className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-md font-semibold">{t('token.decimals')}</span>
+            <span className="bg-green-100 text-green-700 px-4 py-2 rounded-md font-semibold">{t('token.tokenDetails.symbol')}</span>
+            <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-md font-semibold">{t('token.tokenDetails.totalSupply')}</span>
+            <span className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-md font-semibold">{t('token.tokenDetails.decimals')}</span>
             {safeAdminSettings.length > 0 && (
               <span className="bg-purple-100 text-purple-700 px-4 py-2 rounded-md font-semibold">
                 {safeAdminSettings.find(setting => setting.title === 'token_price')?.value 
-                  ? t('token.price', { price: safeAdminSettings.find(setting => setting.title === 'token_price')?.value })
+                  ? t('token.tokenDetails.price')
                   : t('token.priceTBD')
                 }
               </span>
